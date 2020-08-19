@@ -3,8 +3,8 @@
 #include <iostream>
 #include <vector>
 #include <string>
-#include "include/doctest.h"
 #include "include/main.h"
+#include "include/Tuple.h"
 
 int main(int argc, char **argv)
 {
@@ -31,19 +31,13 @@ int program()
     }
     std::cout << "\n";
 
+    Tuple A = Tuple(1.0, 1.5, 0.5, 1.2);
+    Tuple B = Tuple(1.0, 1.5, 0.5, 1.2);
+    Tuple C = Tuple(1.0, 1.5, 0.5, 1.15);
+
+    std::cout << "A: " << A.X << " " << A.Y << " " << A.Z << " " << A.W << "\n";
+
+    std::cout << (equal(A.X, C.X) && equal(A.Y, C.Y) && equal(A.Z, C.Z) && equal(A.W, C.W)) << "\n";
+
     return 0;
-}
-
-int factorial(int number)
-{
-    return number <= 1 ? 1 : factorial(number - 1) * number;
-}
-
-TEST_CASE("testing the factorial function")
-{
-    CHECK(factorial(0) == 1);
-    CHECK(factorial(1) == 1);
-    CHECK(factorial(2) == 2);
-    CHECK(factorial(3) == 6);
-    CHECK(factorial(10) == 3628800);
 }

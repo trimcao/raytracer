@@ -1,3 +1,4 @@
+#include "doctest.h"
 
 class Vector {
 public:

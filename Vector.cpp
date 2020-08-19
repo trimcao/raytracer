@@ -1,7 +1,6 @@
 // #define DOCTEST_CONFIG_DISABLE
 #include "include/Vector.h"
 #include <stdexcept>
-#include "include/doctest.h"
 
 Vector::Vector(int s)
 {
