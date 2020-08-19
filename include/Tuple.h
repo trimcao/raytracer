@@ -7,7 +7,6 @@ class Tuple
 {
 
 public:
-
     float X = 0.f;
     float Y = 0.f;
     float Z = 0.f;
@@ -19,15 +18,17 @@ public:
 
     Tuple operator-() const { return Tuple(-X, -Y, -Z, -W); }
 
+    Tuple operator*(float Scalar) const { return Tuple(X * Scalar, Y * Scalar, Z * Scalar, W * Scalar); }
+
+    Tuple operator/(float Scalar) const { return Tuple(X / Scalar, Y / Scalar, Z / Scalar, W / Scalar); }
 };
 
-inline bool operator==(const Tuple& LHS, const Tuple& RHS)
+inline bool operator==(const Tuple &LHS, const Tuple &RHS)
 {
-    return (equal(LHS.X, RHS.X) && equal(LHS.Y, RHS.Y) && equal(LHS.Z, RHS.Z) && equal(LHS.W, RHS.W));
+    return (Util::Equal(LHS.X, RHS.X) && Util::Equal(LHS.Y, RHS.Y) && Util::Equal(LHS.Z, RHS.Z) && Util::Equal(LHS.W, RHS.W));
 }
 
-inline bool operator!=(const Tuple& LHS, const Tuple& RHS)
+inline bool operator!=(const Tuple &LHS, const Tuple &RHS)
 {
-    return ( !(LHS == RHS) );
+    return (!(LHS == RHS));
 }
-
