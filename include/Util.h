@@ -1,3 +1,5 @@
+#pragma once
+
 #include <cmath>
 
 inline float EPSILON = 0.00001;

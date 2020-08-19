@@ -5,15 +5,15 @@ Tuple::Tuple()
 
 }
 
-Tuple::Tuple(float X, float Y, float Z, float W)
+Tuple::Tuple(float XIn, float YIn, float ZIn, float WIn)
 {
-    this->X = X;
-    this->Y = Y;
-    this->Z = Z;
-    this->W = W;
+    X = XIn;
+    Y = YIn;
+    Z = ZIn;
+    W = WIn;
 }
 
-TEST_CASE("test comparison Tuple")
+TEST_CASE("test comparison tuple")
 {
     Tuple A = Tuple(1.0, 1.5, 0.5, 1.2);
     Tuple B = Tuple(1.0, 1.5, 0.5, 1.2);
@@ -23,4 +23,12 @@ TEST_CASE("test comparison Tuple")
     CHECK(B == A);
     CHECK(A != C);
     CHECK(C != B);
+}
+
+TEST_CASE("test negate tuple")
+{
+    Tuple A = Tuple(1.f, -2.f, 3.f, -4.f);
+    Tuple B = -A;
+
+    CHECK(B == Tuple(-1.f, 2.f, -3.f, 4.f));
 }

@@ -1,29 +1,25 @@
 // #define DOCTEST_CONFIG_DISABLE
 #include "include/Vector.h"
-#include <stdexcept>
 
-Vector::Vector(int s)
-{
-    if (s<0)
-        throw std::length_error("Vector constructor: negative size");
-    elem = new double[s];
-    sz = s;
-}
+Vector::Vector() {}
 
-double &Vector::operator[](int i)
+Vector::Vector(float XIn, float YIn, float ZIn)
 {
-    if (i<0 || size() <=i)
-        throw std::out_of_range("Vector:operator[]");
-    return elem[i];
-}
-
-int Vector::size()
-{
-    return sz;
+    X = XIn;
+    Y = YIn;
+    Z = ZIn;
+    W = 0.f;
 }
 
 TEST_CASE("testing the Vector")
 {
-    Vector v = Vector(6);
-    CHECK(v.size() == 6);
+    Vector v = Vector(4.3f, -4.2f, 3.1f);
+    CHECK(v == Tuple(4.3f, -4.2f, 3.1f, 0.f));
+}
+
+TEST_CASE("subtracting two vectors")
+{
+    Vector A = Vector(3.f, 2.f, 1.f);
+    Vector B = Vector(5.f, 6.f, 7.f);
+    CHECK((A - B) == Vector(-2.f, -4.f, -6.f));
 }

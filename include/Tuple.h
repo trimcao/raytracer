@@ -1,3 +1,5 @@
+#pragma once
+
 #include "doctest.h"
 #include "Util.h"
 
@@ -6,11 +8,16 @@ class Tuple
 
 public:
 
-    float X, Y, Z, W;
+    float X = 0.f;
+    float Y = 0.f;
+    float Z = 0.f;
+    float W = 0.f;
 
     Tuple();
 
-    Tuple(float X, float Y, float Z, float W);
+    Tuple(float XIn, float YIn, float ZIn, float WIn);
+
+    Tuple operator-() const { return Tuple(-X, -Y, -Z, -W); }
 
 };
 
