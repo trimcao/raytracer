@@ -1,6 +1,5 @@
 // #define DOCTEST_CONFIG_DISABLE
 #include "include/Point.h"
-#include <iostream>
 
 Point::Point() {}
 

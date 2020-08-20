@@ -3,6 +3,7 @@
 #include "doctest.h"
 #include "Tuple.h"
 #include "Vector.h"
+#include <iostream>
 
 class Point : public Tuple
 {
@@ -30,3 +31,5 @@ inline Point operator-(const Point &A, const Vector &B)
 {
     return Point(A.X - B.X, A.Y - B.Y, A.Z - B.Z);
 }
+
+std::ostream &operator<<(std::ostream &os, const Point &P);

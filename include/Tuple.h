@@ -32,3 +32,5 @@ inline bool operator!=(const Tuple &LHS, const Tuple &RHS)
 {
     return (!(LHS == RHS));
 }
+
+std::ostream &operator<<(std::ostream &os, const Tuple &T);

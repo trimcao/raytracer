@@ -21,3 +21,10 @@ inline Vector operator-(const Vector &A, const Vector &B)
 {
     return Vector(A.X - B.X, A.Y - B.Y, A.Z - B.Z);
 }
+
+inline Vector operator+(const Vector &A, const Vector &B)
+{
+    return Vector(A.X + B.X, A.Y + B.Y, A.Z + B.Z);
+}
+
+std::ostream &operator<<(std::ostream &os, const Vector &V);
