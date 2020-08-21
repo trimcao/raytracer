@@ -3,18 +3,27 @@
 #include "doctest.h"
 #include "Tuple.h"
 #include <iostream>
+#include <string>
+#include <vector>
 
 class Color : public Tuple
 {
 public:
     Color();
-    Color(float XIn, float YIn, float ZIn);
+    Color(float R, float G, float B);
 
     Color operator-() const { return Color(-X, -Y, -Z); }
 
     Color operator*(float Scalar) const { return Color(X * Scalar, Y * Scalar, Z * Scalar); }
 
     Color operator/(float Scalar) const { return Color(X / Scalar, Y / Scalar, Z / Scalar); }
+
+    inline float R() { return X; };
+    inline float G() { return Y; };
+    inline float B() { return Z; };
+
+    // convert a Color object to a PPM int values
+    std::vector<int> ToPPMVal(int MaxColorValue);
 };
 
 inline Color operator-(const Color &A, const Color &B)

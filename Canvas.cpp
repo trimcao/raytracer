@@ -6,6 +6,8 @@ Canvas::Canvas(int Width, int Height)
 {
     width = Width;
     height = Height;
+    // set default max color value to 255
+    maxColorValue = 255;
     canvas = std::vector<std::vector<Color>>(Height, std::vector<Color>(Width, Color(0.f, 0.f, 0.f)));
 }
 
@@ -40,6 +42,16 @@ Color *Canvas::GetPixel(int X, int Y)
     if (ValidPixel(X, Y))
         return &canvas[Y][X];
     return nullptr;
+}
+
+std::string Canvas::ToPPM()
+{
+    std::string s = "P3\n";
+    s += std::to_string(width) + ' ';
+    s += std::to_string(height) + '\n';
+    s += "255\n";
+
+    return s;
 }
 
 TEST_CASE("creating a canvas")

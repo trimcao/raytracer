@@ -1,14 +1,29 @@
 // #define DOCTEST_CONFIG_DISABLE
 #include "include/Color.h"
+#include <cmath>
+#include <algorithm>
 
 Color::Color() {}
 
-Color::Color(float XIn, float YIn, float ZIn)
+Color::Color(float R, float G, float B)
 {
-    X = XIn;
-    Y = YIn;
-    Z = ZIn;
+    X = R;
+    Y = G;
+    Z = B;
     W = 0.f;
+}
+
+std::vector<int> Color::ToPPMVal(int MaxColorValue)
+{
+    int Red = std::round(MaxColorValue * this->R());
+    Red = std::clamp(Red, 0, MaxColorValue);
+    int Green = std::round(MaxColorValue * this->G());
+    Green = std::clamp(Green, 0, MaxColorValue);
+    int Blue = std::round(MaxColorValue * this->B());
+    Blue = std::clamp(Blue, 0, MaxColorValue);
+
+    std::vector<int> result = {Red, Green, Blue};
+    return result;
 }
 
 std::ostream &operator<<(std::ostream &os, const Color &P)
@@ -43,4 +58,18 @@ TEST_CASE("multiplying color")
     Color A = Color(1.f, 0.2f, 0.4f);
     Color B = Color(0.9f, 1.f, 0.1f);
     CHECK((A * B) == Color(0.9f, 0.2f, 0.04f));
+}
+
+TEST_CASE("convert color to ppm string")
+{
+    Color A = Color(1.5f, 0.f, 0.f);
+    Color B = Color(0.f, 0.5f, 0.f);
+    Color C = Color(-0.5f, 0.f, 1.f);
+    std::vector<int> APPM = {255, 0, 0};
+    std::vector<int> BPPM = {0, 128, 0};
+    std::vector<int> CPPM = {0, 0, 255};
+    
+    CHECK(A.ToPPMVal(255) == APPM);
+    CHECK(B.ToPPMVal(255) == BPPM);
+    CHECK(C.ToPPMVal(255) == CPPM);
 }
