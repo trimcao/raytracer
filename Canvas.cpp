@@ -36,7 +36,7 @@ int Canvas::GetHeight()
 
 bool Canvas::ValidPixel(int X, int Y)
 {
-    return (X >= 0) && (X <= width) && (Y >= 0) && (Y <= height);
+    return (X >= 0) && (X < width) && (Y >= 0) && (Y < height);
 }
 
 int Canvas::WritePixel(int X, int Y, Color C)
