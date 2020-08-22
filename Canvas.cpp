@@ -1,5 +1,10 @@
-#include "include/Canvas.h"
+#include "include/doctest.h"
+#include "include/Color.h"
+#include <iostream>
+#include <vector>
+#include <string>
 #include <sstream>
+#include "include/Canvas.h"
 
 const int Canvas::MAX_LINE_LENGTH = 70;
 const int Canvas::MAX_COLOR_VALUE = 255;

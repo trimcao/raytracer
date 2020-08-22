@@ -1,7 +1,10 @@
 // #define DOCTEST_CONFIG_DISABLE
-#include "include/Vector.h"
+#include "include/doctest.h"
+#include "include/Tuple.h"
+#include "include/Util.h"
 #include <cmath>
 #include <iostream>
+#include "include/Vector.h"
 
 Vector::Vector() {}
 

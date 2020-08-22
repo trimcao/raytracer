@@ -1,9 +1,6 @@
 #pragma once
 
-#include "doctest.h"
 #include "Tuple.h"
-#include <iostream>
-#include <string>
 #include <vector>
 
 class Color : public Tuple

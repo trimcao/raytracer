@@ -1,9 +1,7 @@
 #pragma once
 
-#include "doctest.h"
 #include "Tuple.h"
 #include "Vector.h"
-#include <iostream>
 
 class Point : public Tuple
 {

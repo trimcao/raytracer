@@ -1,7 +1,11 @@
 // #define DOCTEST_CONFIG_DISABLE
-#include "include/Color.h"
+#include "include/doctest.h"
+#include <iostream>
+#include <string>
+#include <vector>
 #include <cmath>
 #include <algorithm>
+#include "include/Color.h"
 
 Color::Color() {}
 

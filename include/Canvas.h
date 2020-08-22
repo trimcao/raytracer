@@ -1,11 +1,5 @@
 #pragma once
 
-#include "doctest.h"
-#include "Color.h"
-#include <iostream>
-#include <vector>
-#include <string>
-
 class Canvas
 {
 private:

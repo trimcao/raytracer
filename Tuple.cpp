@@ -1,5 +1,6 @@
-#include "include/Tuple.h"
+#include "include/doctest.h"
 #include <iostream>
+#include "include/Tuple.h"
 
 Tuple::Tuple()
 {

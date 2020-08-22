@@ -8,6 +8,7 @@
 #include "../../include/Tuple.h"
 #include "../../include/Point.h"
 #include "../../include/Vector.h"
+#include "../../include/Color.h"
 #include "../../include/Util.h"
 #include "../../include/Canvas.h"
 
@@ -36,22 +37,21 @@ int main(int argc, char **argv)
     E.Wind = Vector(-0.01f, 0.f, 0.f);
 
     Canvas CV = Canvas(900, 550);
+    int Height = CV.GetHeight();
 
     while (P.Position.Y >= 0)
     {
         std::cout << "Current Position: " << P.Position << "\n";
         int X = std::round(P.Position.X);
         int Y = std::round(P.Position.Y);
-        std::cout << "X, Y: " << X << ' ' << 550 - Y << "\n";
+        std::cout << "X, Y: " << X << ' ' << Height - Y << "\n";
         Color Green = Color(0.f, 1.f, 0.f);
 
-        int Width = CV.GetWidth();
-
         // draw a square instead of a pixel so it's easier to see
-        CV.WritePixel(X, Width - Y, Green);
-        CV.WritePixel(X + 1, Width - Y + 1, Green);
-        CV.WritePixel(X + 1, Width - Y, Green);
-        CV.WritePixel(X, Width - Y + 1, Green);
+        CV.WritePixel(X, Height - Y, Green);
+        CV.WritePixel(X + 1, Height - Y + 1, Green);
+        CV.WritePixel(X + 1, Height - Y, Green);
+        CV.WritePixel(X, Height - Y + 1, Green);
 
         P = Tick(E, P);
     }

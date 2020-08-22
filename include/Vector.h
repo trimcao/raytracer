@@ -1,9 +1,5 @@
 #pragma once
 
-#include "doctest.h"
-#include "Tuple.h"
-#include "Util.h"
-
 class Vector : public Tuple
 {
 public:
