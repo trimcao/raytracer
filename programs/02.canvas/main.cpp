@@ -45,10 +45,13 @@ int main(int argc, char **argv)
         std::cout << "X, Y: " << X << ' ' << 550 - Y << "\n";
         Color Green = Color(0.f, 1.f, 0.f);
 
-        CV.WritePixel(X, 550 - Y, Green);
-        CV.WritePixel(X + 1, 550 - Y + 1, Green);
-        CV.WritePixel(X + 1, 550 - Y, Green);
-        CV.WritePixel(X, 550 - Y + 1, Green);
+        int Width = CV.GetWidth();
+
+        // draw a square instead of a pixel so it's easier to see
+        CV.WritePixel(X, Width - Y, Green);
+        CV.WritePixel(X + 1, Width - Y + 1, Green);
+        CV.WritePixel(X + 1, Width - Y, Green);
+        CV.WritePixel(X, Width - Y + 1, Green);
 
         P = Tick(E, P);
     }
