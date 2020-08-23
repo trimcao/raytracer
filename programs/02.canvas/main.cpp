@@ -5,7 +5,7 @@
 #include <string>
 #include <cmath>
 #include <fstream>
-#include "../../include/Tuple.h"
+#include "../../include/Matrix.h"
 #include "../../include/Point.h"
 #include "../../include/Vector.h"
 #include "../../include/Color.h"
@@ -39,11 +39,11 @@ int main(int argc, char **argv)
     Canvas CV = Canvas(900, 550);
     int Height = CV.GetHeight();
 
-    while (P.Position.Y >= 0)
+    while (P.Position.Y() >= 0)
     {
         std::cout << "Current Position: " << P.Position << "\n";
-        int X = std::round(P.Position.X);
-        int Y = std::round(P.Position.Y);
+        int X = std::round(P.Position.X());
+        int Y = std::round(P.Position.Y());
         std::cout << "X, Y: " << X << ' ' << Height - Y << "\n";
         Color Green = Color(0.f, 1.f, 0.f);
 

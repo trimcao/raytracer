@@ -1,5 +1,8 @@
 #pragma once
 
+#include "doctest.h"
+#include <iostream>
+
 class Vector : public Matrix
 {
 public:

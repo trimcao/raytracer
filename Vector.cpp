@@ -1,5 +1,4 @@
 // #define DOCTEST_CONFIG_DISABLE
-#include "include/doctest.h"
 #include "include/Matrix.h"
 #include "include/Util.h"
 #include <cmath>

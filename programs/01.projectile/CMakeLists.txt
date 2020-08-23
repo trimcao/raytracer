@@ -10,7 +10,7 @@ enable_testing()
 
 get_filename_component(PARENT_DIR ../../ ABSOLUTE)
 
-add_executable(projectile main.cpp ${PARENT_DIR}/Vector.cpp ${PARENT_DIR}/Tuple.cpp ${PARENT_DIR}/Point.cpp ${PARENT_DIR}/Util.cpp)
+add_executable(projectile main.cpp ${PARENT_DIR}/Matrix.cpp ${PARENT_DIR}/Vector.cpp ${PARENT_DIR}/Point.cpp ${PARENT_DIR}/Util.cpp)
 
 set(CPACK_PROJECT_NAME ${PROJECT_NAME})
 set(CPACK_PROJECT_VERSION ${PROJECT_VERSION})

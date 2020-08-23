@@ -1,5 +1,6 @@
 #pragma once
 
+#include "doctest.h"
 class Canvas
 {
 private:

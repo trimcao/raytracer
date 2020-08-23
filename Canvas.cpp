@@ -1,4 +1,3 @@
-#include "include/doctest.h"
 #include "include/Color.h"
 #include <iostream>
 #include <vector>

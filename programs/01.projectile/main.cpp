@@ -1,9 +1,8 @@
 #define DOCTEST_CONFIG_IMPLEMENT
-// #define DOCTEST_CONFIG_DISABLE
 #include <iostream>
 #include <vector>
 #include <string>
-#include "../../include/Tuple.h"
+#include "../../include/Matrix.h"
 #include "../../include/Point.h"
 #include "../../include/Vector.h"
 #include "../../include/Util.h"
@@ -32,7 +31,7 @@ int main(int argc, char **argv)
     E.Gravity = Vector(0.f, -0.1f, 0.f);
     E.Wind = Vector(-0.01f, 0.f, 0.f);
 
-    while (P.Position.Y >= 0)
+    while (P.Position.Y() >= 0)
     {
         std::cout << "Current Position: " << P.Position << "\n";
         P = Tick(E, P);

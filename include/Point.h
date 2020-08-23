@@ -1,7 +1,7 @@
 #pragma once
 
+#include "doctest.h"
 #include "Matrix.h"
-// #include "Tuple.h"
 #include "Vector.h"
 
 class Point : public Matrix

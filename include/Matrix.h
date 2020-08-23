@@ -1,6 +1,9 @@
 #pragma once
 
+#include "doctest.h"
+#include <iostream>
 #include <vector>
+
 class Matrix
 {
 private:
