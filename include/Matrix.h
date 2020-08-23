@@ -40,11 +40,10 @@ public:
 
     Matrix operator/(float S) const { return (*this) * (1.f / S); }
 
+    Matrix Mul(const Matrix &RHS);
+
     int GetNumRows() const;
     int GetNumCols() const;
-
-    // void SetNumRows(float NumRows);
-    // void SetNumCols(float NumCols);
 
 };
 
@@ -54,5 +53,13 @@ inline bool operator!=(const Matrix &LHS, const Matrix &RHS)
 {
     return (!(LHS == RHS));
 }
+
+Matrix operator+(const Matrix &LHS, const Matrix &RHS);
+
+Matrix operator-(const Matrix &LHS, const Matrix &RHS);
+
+Matrix operator*(const Matrix &LHS, const Matrix &RHS);
+
+Matrix operator/(const Matrix &LHS, const Matrix &RHS);
 
 std::ostream &operator<<(std::ostream &os, const Matrix &M);
