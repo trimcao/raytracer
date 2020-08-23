@@ -11,28 +11,27 @@ Color::Color() {}
 
 Color::Color(float R, float G, float B)
 {
-    X = R;
-    Y = G;
-    Z = B;
-    W = 0.f;
+    this->R = R;
+    this->G = G;
+    this->B = B;
 }
 
 std::vector<int> Color::ToPPMVal(int MaxColorValue)
 {
-    int Red = std::round(MaxColorValue * this->R());
+    int Red = std::round(MaxColorValue * this->R);
     Red = std::clamp(Red, 0, MaxColorValue);
-    int Green = std::round(MaxColorValue * this->G());
+    int Green = std::round(MaxColorValue * this->G);
     Green = std::clamp(Green, 0, MaxColorValue);
-    int Blue = std::round(MaxColorValue * this->B());
+    int Blue = std::round(MaxColorValue * this->B);
     Blue = std::clamp(Blue, 0, MaxColorValue);
 
     std::vector<int> result = {Red, Green, Blue};
     return result;
 }
 
-std::ostream &operator<<(std::ostream &os, const Color &P)
+std::ostream &operator<<(std::ostream &os, const Color &C)
 {
-    os << "Color{ " << P.X << ", " << P.Y << ", " << P.Z << " }";
+    os << "Color{ " << C.R << ", " << C.G << ", " << C.B << " }";
     return os;
 }
 
