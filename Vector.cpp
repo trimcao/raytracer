@@ -1,6 +1,6 @@
 // #define DOCTEST_CONFIG_DISABLE
 #include "include/doctest.h"
-#include "include/Tuple.h"
+#include "include/Matrix.h"
 #include "include/Util.h"
 #include <cmath>
 #include <iostream>
@@ -8,47 +8,47 @@
 
 Vector::Vector() {}
 
-Vector::Vector(float XIn, float YIn, float ZIn)
+Vector::Vector(float X, float Y, float Z) : Matrix(4, 1)
 {
-    X = XIn;
-    Y = YIn;
-    Z = ZIn;
-    W = 0.f;
+    this->Set(0, 0, X);
+    this->Set(1, 0, Y);
+    this->Set(2, 0, Z);
+    this->Set(3, 0, 0.f);
 }
 
 float Vector::Magnitude()
 {
-    return std::sqrt(pow(X, 2.f) + pow(Y, 2.f) + pow(Z, 2.f));
+    return std::sqrt(pow(X(), 2.f) + pow(Y(), 2.f) + pow(Z(), 2.f));
 }
 
 Vector Vector::Normalize()
 {
     float Mag = this->Magnitude();
-    return Vector(X / Mag, Y / Mag, Z / Mag);
+    return Vector(X()/ Mag, Y() / Mag, Z() / Mag);
 }
 
 float Vector::Dot(const Vector &V)
 {
-    return (X * V.X + Y * V.Y + Z * V.Z);
+    return (X() * V.X() + Y() * V.Y() + Z() * V.Z());
 }
 
 Vector Vector::Cross(const Vector &V)
 {
-    return Vector(Y * V.Z - Z * V.Y,
-                  Z * V.X - X * V.Z,
-                  X * V.Y - Y * V.X);
+    return Vector(Y() * V.Z() - Z() * V.Y(),
+                  Z() * V.X() - X() * V.Z(),
+                  X() * V.Y() - Y() * V.X());
 }
 
 std::ostream &operator<<(std::ostream &os, const Vector &V)
 {
-    os << "Vector{ " << V.X << ", " << V.Y << ", " << V.Z << " }";
+    os << "Vector{ " << V.X() << ", " << V.Y() << ", " << V.Z() << " }";
     return os;
 }
 
 TEST_CASE("testing the Vector")
 {
     Vector v = Vector(4.3f, -4.2f, 3.1f);
-    CHECK(v == Tuple(4.3f, -4.2f, 3.1f, 0.f));
+    CHECK(v == Matrix(4.3f, -4.2f, 3.1f, 0.f));
 }
 
 TEST_CASE("subtracting two vectors")

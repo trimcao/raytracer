@@ -1,5 +1,6 @@
 #pragma once
 
+#include <vector>
 class Matrix
 {
 private:
@@ -11,9 +12,13 @@ public:
     Matrix(int NumRows, int NumCols, float Val);
     Matrix(int NumRows, int NumCols);
 
+    // create a 4x1 Tuple
+    Matrix(float X, float Y, float Z, float W);
+
     float &operator()(const int R, const int C) { return m[R][C]; }
 
     inline float At(const int R, const int C) const { return m[R][C]; }
+    inline void Set(const int R, const int C, float Val) { m[R][C] = Val; }
 
     Matrix operator*(float S) const
     {
@@ -34,6 +39,9 @@ public:
 
     int GetNumRows() const;
     int GetNumCols() const;
+
+    // void SetNumRows(float NumRows);
+    // void SetNumCols(float NumCols);
 
 };
 

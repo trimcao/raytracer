@@ -19,6 +19,14 @@ Matrix::Matrix(int NumRows, int NumCols) : Matrix(NumRows, NumCols, 0.f)
 {
 }
 
+Matrix::Matrix(float X, float Y, float Z, float W) : Matrix(4, 1, 0.f)
+{
+    m[0][0] = X;
+    m[1][0] = Y;
+    m[2][0] = Z;
+    m[3][0] = W;
+}
+
 int Matrix::GetNumRows() const
 {
     return numRows;

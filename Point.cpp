@@ -5,24 +5,36 @@
 
 Point::Point() {}
 
-Point::Point(float XIn, float YIn, float ZIn)
+Point::Point(float X, float Y, float Z) : Matrix(4, 1)
 {
-    X = XIn;
-    Y = YIn;
-    Z = ZIn;
-    W = 1.f;
+    this->Set(0, 0, X);
+    this->Set(1, 0, Y);
+    this->Set(2, 0, Z);
+    this->Set(3, 0, 1.f);
 }
 
 std::ostream &operator<<(std::ostream &os, const Point &P)
 {
-    os << "Point{ " << P.X << ", " << P.Y << ", " << P.Z << " }";
+    os << "Point{ " << P.X() << ", " << P.Y() << ", " << P.Z() << " }";
     return os;
 }
 
 TEST_CASE("testing the Point")
 {
     Point v = Point(4.3f, -4.2f, 3.1f);
-    CHECK(v == Tuple(4.3f, -4.2f, 3.1f, 1.f));
+    CHECK(v == Matrix(4.3f, -4.2f, 3.1f, 1.f));
+}
+
+TEST_CASE("multiplying a point with a scalar")
+{
+    Point v = Point(1.f, -1.f, 3.f);
+    Matrix M = Matrix(4, 1);
+    M(0, 0) = 2.f;
+    M(1, 0) = -2.f;
+    M(2, 0) = 6.f;
+    M(3, 0) = 1.f;
+
+    CHECK(v * 2 == M);
 }
 
 TEST_CASE("subtracting two points")
