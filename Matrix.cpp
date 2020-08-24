@@ -164,6 +164,16 @@ Matrix Matrix::Mul(const Matrix &RHS)
     return Res;
 }
 
+Matrix Matrix::IdentityMatrix(int Size)
+{
+    Matrix I(Size, Size);
+    for (int i = 0; i < Size; ++i)
+    {
+        I(i, i) = 1.f;
+    }
+    return I;
+}
+
 TEST_CASE("constructing and inspecting a 4x4 matrix")
 {
     Matrix M(4, 4);
@@ -382,4 +392,44 @@ TEST_CASE("a matrix multiplied by a tuple")
     Point A(18.f, 24.f, 33.f);
 
     CHECK(M.Mul(N) == A);
+}
+
+TEST_CASE("test identity matrix")
+{
+    Matrix M(3, 3);
+    M(0, 0) = 1.f;
+    M(1, 1) = 1.f;
+    M(2, 2) = 1.f;
+
+    CHECK(M == Matrix::IdentityMatrix(3));
+}
+
+TEST_CASE("multiplying a matrix by the identity matrix")
+{
+    Matrix M(4, 4);
+    M(0, 0) = 0.f;
+    M(0, 1) = 1.f;
+    M(0, 2) = 2.f;
+    M(0, 3) = 4.f;
+    M(1, 0) = 1.f;
+    M(1, 1) = 2.f;
+    M(1, 2) = 4.f;
+    M(1, 3) = 8.f;
+    M(2, 0) = 2.f;
+    M(2, 1) = 4.f;
+    M(2, 2) = 8.f;
+    M(2, 3) = 16.f;
+    M(3, 0) = 4.f;
+    M(3, 1) = 8.f;
+    M(3, 2) = 16.f;
+    M(3, 3) = 32.f;
+
+    CHECK(M.Mul(Matrix::IdentityMatrix(4)) == M);
+}
+
+TEST_CASE("multiplying the identity matrix by a tuple")
+{
+    Point T(1.f, 2.f, 3.f);
+
+    CHECK(Matrix::IdentityMatrix(4).Mul(T) == T);
 }

@@ -45,6 +45,8 @@ public:
     int GetNumRows() const;
     int GetNumCols() const;
 
+    static Matrix IdentityMatrix(int Size);
+
 };
 
 bool operator==(const Matrix &LHS, const Matrix &RHS);
