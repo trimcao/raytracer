@@ -945,3 +945,37 @@ TEST_CASE("multiplying a product by its inverse")
     Matrix C = A.Mul(B);
     CHECK(A == C.Mul(B.Inverse()));
 }
+
+TEST_CASE("Test matrix properties")
+{
+    Matrix I = Matrix::IdentityMatrix(4);
+    CHECK(I.Inverse() == I);
+
+    Matrix A(4, 4);
+    A(0, 0) = 3.f;
+    A(0, 1) = -9.f;
+    A(0, 2) = 7.f;
+    A(0, 3) = 3.f;
+    A(1, 0) = 3.f;
+    A(1, 1) = -8.f;
+    A(1, 2) = 2.f;
+    A(1, 3) = -9.f;
+    A(2, 0) = -4.f;
+    A(2, 1) = 4.f;
+    A(2, 2) = 4.f;
+    A(2, 3) = 1.f;
+    A(3, 0) = -6.f;
+    A(3, 1) = 5.f;
+    A(3, 2) = -1.f;
+    A(3, 3) = 1.f;
+
+    CHECK(A.Mul(A.Inverse()) == I);
+
+    CHECK(A.Inverse().T() == A.T().Inverse());
+
+    Matrix I2 = Matrix::IdentityMatrix(4);
+    I2(0, 1) = 2.f;
+    Tuple B = Tuple(4.f, 5.f, 6.f, 7.f);
+
+    CHECK(I2.Mul(B) != B);
+}
