@@ -6,6 +6,7 @@
 #include "include/Util.h"
 #include "include/Matrix.h"
 #include "include/Point.h"
+#include "include/Tuple.h"
 
 Matrix::Matrix() {}
 
@@ -429,7 +430,7 @@ TEST_CASE("multiplying a matrix by the identity matrix")
 
 TEST_CASE("multiplying the identity matrix by a tuple")
 {
-    Point T(1.f, 2.f, 3.f);
+    Tuple T(1.f, 2.f, 3.f, 4.f);
 
     CHECK(Matrix::IdentityMatrix(4).Mul(T) == T);
 }

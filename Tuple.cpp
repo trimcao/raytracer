@@ -1,4 +1,3 @@
-#include "include/doctest.h"
 #include <iostream>
 #include "include/Tuple.h"
 
@@ -6,17 +5,17 @@ Tuple::Tuple()
 {
 }
 
-Tuple::Tuple(float XIn, float YIn, float ZIn, float WIn)
+Tuple::Tuple(float X, float Y, float Z, float W) : Matrix(4, 1)
 {
-    X = XIn;
-    Y = YIn;
-    Z = ZIn;
-    W = WIn;
+    this->Set(0, 0, X);
+    this->Set(1, 0, Y);
+    this->Set(2, 0, Z);
+    this->Set(3, 0, W);
 }
 
 std::ostream &operator<<(std::ostream &os, const Tuple &T)
 {
-    os << "Tuple{ " << T.X << ", " << T.Y << ", " << T.Z << ", " << T.W << " }";
+    os << "Tuple{ " << T.X() << ", " << T.Y() << ", " << T.Z() << ", " << T.W() << " }";
     return os;
 }
 
