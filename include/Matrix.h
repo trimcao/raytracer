@@ -40,7 +40,27 @@ public:
 
     Matrix operator/(float S) const { return (*this) * (1.f / S); }
 
+    inline bool IsValid(int Row, int Col) const
+    {
+        return Row >= 0 && Row < numRows && Col >= 0 && Col < numCols;
+    }
+
     Matrix Mul(const Matrix &RHS);
+
+    // transpose
+    Matrix T();
+
+    float Determinant();
+
+    Matrix Submatrix(int RowRemoved, int ColRemoved);
+
+    float Minor(int Row, int Col);
+
+    float Cofactor(int Row, int Col);
+
+    bool IsInvertible();
+
+    Matrix Inverse();
 
     int GetNumRows() const;
     int GetNumCols() const;
