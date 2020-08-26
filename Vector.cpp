@@ -3,9 +3,17 @@
 #include "include/Util.h"
 #include <cmath>
 #include <iostream>
+#include <exception>
+#include <stdexcept>
 #include "include/Vector.h"
 
 Vector::Vector() {}
+
+Vector::Vector(int NumRows, int NumCols) : Matrix(4, 1)
+{
+    if (NumRows != 4 && NumCols != 1)
+        throw std::invalid_argument("size of a Vector must be 4x1");
+}
 
 Vector::Vector(float X, float Y, float Z) : Matrix(4, 1)
 {

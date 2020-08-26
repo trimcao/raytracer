@@ -11,6 +11,7 @@ public:
     public:
     Tuple();
     Tuple(float X, float Y, float Z, float W);
+    Tuple(int NumRows, int NumCols);
 
     inline float X() const { return this->At(0, 0); }
     inline float Y() const { return this->At(1, 0); }

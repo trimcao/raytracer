@@ -1,8 +1,19 @@
 // #define DOCTEST_CONFIG_DISABLE
 #include <iostream>
+#include <exception>
+#include <stdexcept>
 #include "include/Point.h"
 
-Point::Point() {}
+Point::Point() : Matrix(4, 1)
+{
+    this->Set(3, 0, 1.f);
+}
+
+Point::Point(int NumRows, int NumCols) : Matrix(4, 1)
+{
+    if (NumRows != 4 && NumCols != 1)
+        throw std::invalid_argument("size of a Point must be 4x1");
+}
 
 Point::Point(float X, float Y, float Z) : Matrix(4, 1)
 {

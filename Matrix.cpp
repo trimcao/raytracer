@@ -144,14 +144,17 @@ Matrix operator/(const Matrix &LHS, const Matrix &RHS)
     return Res;
 }
 
-Matrix Matrix::Mul(const Matrix &RHS)
+template<class Derived>
+Derived Matrix::Mul(const Derived &RHS)
 {
+    static_assert(std::is_base_of<Matrix, Derived>::value, "Derived not derived from Matrix");
+
     if (this->GetNumCols() != RHS.GetNumRows())
         throw std::invalid_argument("LHS matrix's rows must match RHS matrix's columns.");
 
     int Dim = this->GetNumCols();
 
-    Matrix Res(this->GetNumRows(), RHS.GetNumCols());
+    Derived Res(this->GetNumRows(), RHS.GetNumCols());
     for (int r = 0; r < Res.GetNumRows(); ++r)
     {
         for (int c = 0; c < Res.GetNumCols(); ++c)

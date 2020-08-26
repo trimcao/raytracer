@@ -45,7 +45,8 @@ public:
         return Row >= 0 && Row < numRows && Col >= 0 && Col < numCols;
     }
 
-    Matrix Mul(const Matrix &RHS);
+    template<class Derived>
+    Derived Mul(const Derived &RHS);
 
     // transpose
     Matrix T();

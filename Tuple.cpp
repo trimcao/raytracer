@@ -1,8 +1,16 @@
 #include <iostream>
+#include <exception>
+#include <stdexcept>
 #include "include/Tuple.h"
 
 Tuple::Tuple()
 {
+}
+
+Tuple::Tuple(int NumRows, int NumCols) : Matrix(4, 1)
+{
+    if (NumRows != 4 && NumCols != 1)
+        throw std::invalid_argument("size of a Tuple must be 4x1");
 }
 
 Tuple::Tuple(float X, float Y, float Z, float W) : Matrix(4, 1)
