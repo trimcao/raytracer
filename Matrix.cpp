@@ -3,6 +3,7 @@
 #include <stdexcept>
 #include <vector>
 #include <string>
+#include <cmath>
 #include "include/Util.h"
 #include "include/Matrix.h"
 #include "include/Point.h"
@@ -282,6 +283,27 @@ Matrix Matrix::Translation(float X, float Y, float Z)
     Res(0, 3) = X;
     Res(1, 3) = Y;
     Res(2, 3) = Z;
+    return Res;
+}
+
+Matrix Matrix::Scaling(float X, float Y, float Z)
+{
+    Matrix Res = Identity(4);
+    Res(0, 0) = X;
+    Res(1, 1) = Y;
+    Res(2, 2) = Z;
+    return Res;
+}
+
+Matrix Matrix::RotationX(float Rad)
+{
+    Matrix Res = Identity(4);
+    float Sin = std::sin(Rad);
+    float Cos = std::cos(Rad);
+    Res(1, 1) = Cos;
+    Res(1, 2) = -Sin;
+    Res(2, 1) = Sin;
+    Res(2, 2) = Cos;
     return Res;
 }
 
@@ -1016,4 +1038,54 @@ TEST_CASE("Translation does not affect vectors")
     Vector V(-3.f, 4.f, 5.f);
 
     CHECK(T.Mul(V) == V);
+}
+
+TEST_CASE("A scaling matrix applied to a point")
+{
+    Matrix S = Matrix::Scaling(2.f, 3.f, 4.f);
+    Point P(-4.f, 6.f, 8.f);
+
+    CHECK(S.Mul(P) == Point(-8.f, 18.f, 32.f));
+}
+
+TEST_CASE("A scaling matrix applied to a vector")
+{
+    Matrix S = Matrix::Scaling(2.f, 3.f, 4.f);
+    Vector V(-4.f, 6.f, 8.f);
+
+    CHECK(S.Mul(V) == Vector(-8.f, 18.f, 32.f));
+}
+
+TEST_CASE("Multiplying by the inverse of a scaling matrix")
+{
+    Matrix S = Matrix::Scaling(2.f, 3.f, 4.f);
+    Vector V(-4.f, 6.f, 8.f);
+
+    CHECK(S.Inverse().Mul(V) == Vector(-2.f, 2.f, 2.f));
+}
+
+TEST_CASE("Reflection is scaling by a negative value")
+{
+    Matrix S = Matrix::Scaling(-1.f, 1.f, 1.f);
+    Point P(2.f, 3.f, 4.f);
+
+    CHECK(S.Mul(P) == Point(-2.f, 3.f, 4.f));
+}
+
+TEST_CASE("Rotating a point around the x axis")
+{
+    Point P(0.f, 1.f, 0.f);
+    Matrix R4 = Matrix::RotationX(M_PI/4);
+    Matrix R2 = Matrix::RotationX(M_PI/2);
+
+    CHECK(R4.Mul(P) == Point(0.f, std::sqrt(2.f)/2, std::sqrt(2.f)/2));
+    CHECK(R2.Mul(P) == Point(0.f, 0.f, 1.f));
+}
+
+TEST_CASE("The inverse of an x-rotation rotate in the opposite direction")
+{
+    Point P(0.f, 1.f, 0.f);
+    Matrix R4 = Matrix::RotationX(M_PI/4);
+
+    CHECK(R4.Inverse().Mul(P) == Point(0.f, std::sqrt(2.f)/2, -std::sqrt(2.f)/2));
 }

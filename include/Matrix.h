@@ -69,7 +69,8 @@ public:
     static Matrix Identity(int Size);
 
     static Matrix Translation(float X, float Y, float Z);
-
+    static Matrix Scaling(float X, float Y, float Z);
+    static Matrix RotationX(float Rad);
 };
 
 bool operator==(const Matrix &LHS, const Matrix &RHS);
