@@ -66,7 +66,9 @@ public:
     int GetNumRows() const;
     int GetNumCols() const;
 
-    static Matrix IdentityMatrix(int Size);
+    static Matrix Identity(int Size);
+
+    static Matrix Translation(float X, float Y, float Z);
 
 };
 

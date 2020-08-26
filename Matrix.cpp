@@ -168,7 +168,7 @@ Derived Matrix::Mul(const Derived &RHS)
     return Res;
 }
 
-Matrix Matrix::IdentityMatrix(int Size)
+Matrix Matrix::Identity(int Size)
 {
     Matrix I(Size, Size);
     for (int i = 0; i < Size; ++i)
@@ -273,6 +273,15 @@ Matrix Matrix::Inverse()
         }
     }
 
+    return Res;
+}
+
+Matrix Matrix::Translation(float X, float Y, float Z)
+{
+    Matrix Res = Identity(4);
+    Res(0, 3) = X;
+    Res(1, 3) = Y;
+    Res(2, 3) = Z;
     return Res;
 }
 
@@ -503,7 +512,7 @@ TEST_CASE("test identity matrix")
     M(1, 1) = 1.f;
     M(2, 2) = 1.f;
 
-    CHECK(M == Matrix::IdentityMatrix(3));
+    CHECK(M == Matrix::Identity(3));
 }
 
 TEST_CASE("multiplying a matrix by the identity matrix")
@@ -526,14 +535,14 @@ TEST_CASE("multiplying a matrix by the identity matrix")
     M(3, 2) = 16.f;
     M(3, 3) = 32.f;
 
-    CHECK(M.Mul(Matrix::IdentityMatrix(4)) == M);
+    CHECK(M.Mul(Matrix::Identity(4)) == M);
 }
 
 TEST_CASE("multiplying the identity matrix by a tuple")
 {
     Tuple T(1.f, 2.f, 3.f, 4.f);
 
-    CHECK(Matrix::IdentityMatrix(4).Mul(T) == T);
+    CHECK(Matrix::Identity(4).Mul(T) == T);
 }
 
 TEST_CASE("transposing a matrix")
@@ -693,6 +702,7 @@ TEST_CASE("calculating the determinant of a 3x3 matrix")
     CHECK(Util::Equal(A.Cofactor(0, 0), 56.f));
     CHECK(Util::Equal(A.Cofactor(0, 1), 12.f));
     CHECK(Util::Equal(A.Cofactor(0, 2), -46.f));
+ 
     CHECK(Util::Equal(A.Determinant(), -196.f));
 }
 
@@ -951,7 +961,7 @@ TEST_CASE("multiplying a product by its inverse")
 
 TEST_CASE("Test matrix properties")
 {
-    Matrix I = Matrix::IdentityMatrix(4);
+    Matrix I = Matrix::Identity(4);
     CHECK(I.Inverse() == I);
 
     Matrix A(4, 4);
@@ -976,9 +986,34 @@ TEST_CASE("Test matrix properties")
 
     CHECK(A.Inverse().T() == A.T().Inverse());
 
-    Matrix I2 = Matrix::IdentityMatrix(4);
+    Matrix I2 = Matrix::Identity(4);
     I2(0, 1) = 2.f;
     Tuple B = Tuple(4.f, 5.f, 6.f, 7.f);
 
     CHECK(I2.Mul(B) != B);
+}
+
+TEST_CASE("Multiplying by a translation matrix")
+{
+    Matrix T = Matrix::Translation(5.f, -3.f, 2.f);
+    Point P(-3.f, 4.f, 5.f);
+
+    CHECK(T.Mul(P) == Point(2.f, 1.f, 7.f));
+}
+
+TEST_CASE("Multiplying by the inverse of a translation matrix")
+{
+    Matrix T = Matrix::Translation(5.f, -3.f, 2.f);
+    auto Inv = T.Inverse();
+    Point P(-3.f, 4.f, 5.f);
+
+    CHECK(Inv.Mul(P) == Point(-8.f, 7.f, 3.f));
+}
+
+TEST_CASE("Translation does not affect vectors")
+{
+    Matrix T = Matrix::Translation(5.f, -3.f, 2.f);
+    Vector V(-3.f, 4.f, 5.f);
+
+    CHECK(T.Mul(V) == V);
 }
