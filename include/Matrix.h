@@ -76,6 +76,14 @@ public:
     
     // param XY means: how much we move X in proportion to Y
     static Matrix Shearing(float XY, float XZ, float YX, float YZ, float ZX, float ZY);
+
+    Matrix Translate(float X, float Y, float Z);
+    Matrix Scale(float X, float Y, float Z);
+    Matrix RotateX(float Rad);
+    Matrix RotateY(float Rad);
+    Matrix RotateZ(float Rad);
+    Matrix Shear(float XY, float XZ, float YX, float YZ, float ZX, float ZY);
+
 };
 
 bool operator==(const Matrix &LHS, const Matrix &RHS);

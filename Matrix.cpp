@@ -343,6 +343,35 @@ Matrix Matrix::Shearing(float XY, float XZ, float YX, float YZ, float ZX, float 
     return Res;
 }
 
+Matrix Matrix::Translate(float X, float Y, float Z)
+{
+    return Translation(X, Y, Z).Mul(*this);
+}
+
+Matrix Matrix::Scale(float X, float Y, float Z)
+{
+    return Scaling(X, Y, Z).Mul(*this);
+}
+
+Matrix Matrix::RotateX(float Rad)
+{
+    return RotationX(Rad).Mul(*this);
+}
+
+Matrix Matrix::RotateY(float Rad)
+{
+    return RotationY(Rad).Mul(*this);
+}
+Matrix Matrix::RotateZ(float Rad)
+{
+    return RotationZ(Rad).Mul(*this);
+}
+
+Matrix Matrix::Shear(float XY, float XZ, float YX, float YZ, float ZX, float ZY)
+{
+    return Shearing(XY, XZ, YX, YZ, ZX, ZY).Mul(*this);
+}
+
 TEST_CASE("constructing and inspecting a 4x4 matrix")
 {
     Matrix M(4, 4);
@@ -1057,6 +1086,8 @@ TEST_CASE("Multiplying by a translation matrix")
     Point P(-3.f, 4.f, 5.f);
 
     CHECK(T.Mul(P) == Point(2.f, 1.f, 7.f));
+
+    CHECK(P.Translate(5.f, -3.f, 2.f) == Point(2.f, 1.f, 7.f));
 }
 
 TEST_CASE("Multiplying by the inverse of a translation matrix")
@@ -1202,4 +1233,17 @@ TEST_CASE("A shearing transformation moves z in proportion to y")
     Matrix S = Matrix::Shearing(0.f, 0.f, 0.f, 0.f, 0.f, 1.f);
 
     CHECK(S.Mul(P) == Point(2.f, 3.f, 7.f));
+}
+
+TEST_CASE("Individual transformations are applied in sequence")
+{
+    Point P(1.f, 0.f, 1.f);
+    Matrix A = Matrix::RotationX(M_PI/2);
+    Matrix B = Matrix::Scaling(5.f, 5.f, 5.f);
+    Matrix C = Matrix::Translation(10.f, 5.f, 7.f);
+
+    CHECK(C.Mul(B).Mul(A).Mul(P) == Point(15.f, 0.f, 7.f));
+    CHECK(C.Mul(B.Mul(A.Mul(P))) == Point(15.f, 0.f, 7.f));
+
+    CHECK(P.RotateX(M_PI/2).Scale(5.f, 5.f, 5.f).Translate(10.f, 5.f, 7.f) == Point(15.f, 0.f, 7.f));
 }
