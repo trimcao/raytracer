@@ -71,6 +71,11 @@ public:
     static Matrix Translation(float X, float Y, float Z);
     static Matrix Scaling(float X, float Y, float Z);
     static Matrix RotationX(float Rad);
+    static Matrix RotationY(float Rad);
+    static Matrix RotationZ(float Rad);
+    
+    // param XY means: how much we move X in proportion to Y
+    static Matrix Shearing(float XY, float XZ, float YX, float YZ, float ZX, float ZY);
 };
 
 bool operator==(const Matrix &LHS, const Matrix &RHS);

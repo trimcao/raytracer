@@ -307,6 +307,42 @@ Matrix Matrix::RotationX(float Rad)
     return Res;
 }
 
+Matrix Matrix::RotationY(float Rad)
+{
+    Matrix Res = Identity(4);
+    float Sin = std::sin(Rad);
+    float Cos = std::cos(Rad);
+    Res(0, 0) = Cos;
+    Res(0, 2) = Sin;
+    Res(2, 0) = -Sin;
+    Res(2, 2) = Cos;
+    return Res;
+}
+
+Matrix Matrix::RotationZ(float Rad)
+{
+    Matrix Res = Identity(4);
+    float Sin = std::sin(Rad);
+    float Cos = std::cos(Rad);
+    Res(0, 0) = Cos;
+    Res(0, 1) = -Sin;
+    Res(1, 0) = Sin;
+    Res(1, 1) = Cos;
+    return Res;
+}
+
+Matrix Matrix::Shearing(float XY, float XZ, float YX, float YZ, float ZX, float ZY)
+{
+    Matrix Res = Identity(4);
+    Res(0, 1) = XY;
+    Res(0, 2) = XZ;
+    Res(1, 0) = YX;
+    Res(1, 2) = YZ;
+    Res(2, 0) = ZX;
+    Res(2, 1) = ZY;
+    return Res;
+}
+
 TEST_CASE("constructing and inspecting a 4x4 matrix")
 {
     Matrix M(4, 4);
@@ -1088,4 +1124,82 @@ TEST_CASE("The inverse of an x-rotation rotate in the opposite direction")
     Matrix R4 = Matrix::RotationX(M_PI/4);
 
     CHECK(R4.Inverse().Mul(P) == Point(0.f, std::sqrt(2.f)/2, -std::sqrt(2.f)/2));
+}
+
+TEST_CASE("Rotating a point around the x axis")
+{
+    Point P(0.f, 1.f, 0.f);
+    Matrix R4 = Matrix::RotationX(M_PI/4);
+    Matrix R2 = Matrix::RotationX(M_PI/2);
+
+    CHECK(R4.Mul(P) == Point(0.f, std::sqrt(2.f)/2, std::sqrt(2.f)/2));
+    CHECK(R2.Mul(P) == Point(0.f, 0.f, 1.f));
+}
+
+TEST_CASE("Rotating a point around the y axis")
+{
+    Point P(0.f, 0.f, 1.f);
+    Matrix R4 = Matrix::RotationY(M_PI/4);
+    Matrix R2 = Matrix::RotationY(M_PI/2);
+
+    CHECK(R4.Mul(P) == Point(std::sqrt(2.f)/2, 0.f, std::sqrt(2.f)/2));
+    CHECK(R2.Mul(P) == Point(1.f, 0.f, 0.f));
+}
+
+TEST_CASE("Rotating a point around the z axis")
+{
+    Point P(0.f, 1.f, 0.f);
+    Matrix R4 = Matrix::RotationZ(M_PI/4);
+    Matrix R2 = Matrix::RotationZ(M_PI/2);
+
+    CHECK(R4.Mul(P) == Point(-std::sqrt(2.f)/2, std::sqrt(2.f)/2, 0.f));
+    CHECK(R2.Mul(P) == Point(-1.f, 0.f, 0.f));
+}
+
+TEST_CASE("A shearing transformation moves x in proportion to y")
+{
+    Point P(2.f, 3.f, 4.f);
+    Matrix S = Matrix::Shearing(1.f, 0.f, 0.f, 0.f, 0.f, 0.f);
+
+    CHECK(S.Mul(P) == Point(5.f, 3.f, 4.f));
+}
+
+TEST_CASE("A shearing transformation moves x in proportion to z")
+{
+    Point P(2.f, 3.f, 4.f);
+    Matrix S = Matrix::Shearing(0.f, 1.f, 0.f, 0.f, 0.f, 0.f);
+
+    CHECK(S.Mul(P) == Point(6.f, 3.f, 4.f));
+}
+
+TEST_CASE("A shearing transformation moves y in proportion to x")
+{
+    Point P(2.f, 3.f, 4.f);
+    Matrix S = Matrix::Shearing(0.f, 0.f, 1.f, 0.f, 0.f, 0.f);
+
+    CHECK(S.Mul(P) == Point(2.f, 5.f, 4.f));
+}
+
+TEST_CASE("A shearing transformation moves y in proportion to z")
+{
+    Point P(2.f, 3.f, 4.f);
+    Matrix S = Matrix::Shearing(0.f, 0.f, 0.f, 1.f, 0.f, 0.f);
+
+    CHECK(S.Mul(P) == Point(2.f, 7.f, 4.f));
+}
+
+TEST_CASE("A shearing transformation moves z in proportion to x")
+{
+    Point P(2.f, 3.f, 4.f);
+    Matrix S = Matrix::Shearing(0.f, 0.f, 0.f, 0.f, 1.f, 0.f);
+
+    CHECK(S.Mul(P) == Point(2.f, 3.f, 6.f));
+}
+
+TEST_CASE("A shearing transformation moves z in proportion to y")
+{
+    Point P(2.f, 3.f, 4.f);
+    Matrix S = Matrix::Shearing(0.f, 0.f, 0.f, 0.f, 0.f, 1.f);
+
+    CHECK(S.Mul(P) == Point(2.f, 3.f, 7.f));
 }
