@@ -23,6 +23,17 @@ public:
     Tuple operator*(float S) const { return Tuple(this->X() * S, this->Y() * S, this->Z() * S, this->W() * S); }
 
     Tuple operator/(float S) const { return Tuple(this->X() / S, this->Y() / S, this->Z() / S, this->W() / S); }
+
+    void operator=(const Matrix &M)
+    {
+        if (M.GetNumRows() != 4 && M.GetNumCols() != 1)
+            throw std::invalid_argument("size of a Tuple must be 4x1");
+
+        this->Set(0, 0, M.At(0, 0));
+        this->Set(1, 0, M.At(1, 0));
+        this->Set(2, 0, M.At(2, 0));
+        this->Set(3, 0, M.At(3, 0));
+    }
 };
 
 std::ostream &operator<<(std::ostream &os, const Tuple &T);

@@ -3,6 +3,7 @@
 #include "doctest.h"
 #include "Matrix.h"
 #include "Vector.h"
+#include "Util.h"
 
 class Point : public Matrix
 {
@@ -10,6 +11,7 @@ public:
     Point();
     Point(float X, float Y, float Z);
     Point(int NumRows, int NumCols);
+    Point(Matrix &M);
 
     inline float X() const { return this->At(0, 0); }
     inline float Y() const { return this->At(1, 0); }
@@ -20,6 +22,19 @@ public:
     Point operator*(float Scalar) const { return Point(this->X() * Scalar, this->Y() * Scalar, this->Z() * Scalar); }
 
     Point operator/(float Scalar) const { return Point(this->X() / Scalar, this->Y() / Scalar, this->Z() / Scalar); }
+
+    void operator=(const Matrix &M)
+    {
+        if (M.GetNumRows() != 4 && M.GetNumCols() != 1)
+            throw std::invalid_argument("size of a Point must be 4x1");
+        if (!Util::Equal(M.At(3, 0), 1.f))
+            throw std::invalid_argument("W value must be 1.0");
+
+        this->Set(0, 0, M.At(0, 0));
+        this->Set(1, 0, M.At(1, 0));
+        this->Set(2, 0, M.At(2, 0));
+        this->Set(3, 0, M.At(3, 0));
+    }
 };
 
 inline Vector operator-(const Point &A, const Point &B)

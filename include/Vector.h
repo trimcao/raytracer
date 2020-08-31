@@ -2,6 +2,7 @@
 
 #include "doctest.h"
 #include <iostream>
+#include "Util.h"
 
 class Vector : public Matrix
 {
@@ -19,6 +20,19 @@ public:
     Vector operator*(float Scalar) const { return Vector(this->X() * Scalar, this->Y() * Scalar, this->Z() * Scalar); }
 
     Vector operator/(float Scalar) const { return Vector(this->X() / Scalar, this->Y() / Scalar, this->Z() / Scalar); }
+
+    void operator=(const Matrix &M)
+    {
+        if (M.GetNumRows() != 4 && M.GetNumCols() != 1)
+            throw std::invalid_argument("size of a Vector must be 4x1");
+        if (!Util::Equal(M.At(3, 0), 0.f))
+            throw std::invalid_argument("W value must be 0.0");
+
+        this->Set(0, 0, M.At(0, 0));
+        this->Set(1, 0, M.At(1, 0));
+        this->Set(2, 0, M.At(2, 0));
+        this->Set(3, 0, M.At(3, 0));
+    }
 
     float Magnitude();
     Vector Normalize();

@@ -23,6 +23,19 @@ Point::Point(float X, float Y, float Z) : Matrix(4, 1)
     this->Set(3, 0, 1.f);
 }
 
+Point::Point(Matrix &M)
+{
+    if (M.GetNumRows() != 4 && M.GetNumCols() != 1)
+        throw std::invalid_argument("size of a Point must be 4x1");
+    if (!Util::Equal(M.At(3,0), 1.f))
+        throw std::invalid_argument("W value must be 1.0");
+
+    this->Set(0, 0, M.At(0, 0));
+    this->Set(1, 0, M.At(1, 0));
+    this->Set(2, 0, M.At(2, 0));
+    this->Set(3, 0, M.At(3, 0));
+}
+
 std::ostream &operator<<(std::ostream &os, const Point &P)
 {
     os << "Point{ " << P.X() << ", " << P.Y() << ", " << P.Z() << " }";
