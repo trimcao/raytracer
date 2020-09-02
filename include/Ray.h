@@ -6,6 +6,7 @@
 #include "Point.h"
 #include "Util.h"
 #include "Sphere.h"
+#include "Intersection.h"
 #include <vector>
 
 class Ray
@@ -23,4 +24,4 @@ public:
     Point Position(float T);
 };
 
-std::vector<float> Intersect(const Ray &R, const Sphere &S);
+std::vector<Intersection> Intersect(const Ray &R, const Sphere &S);

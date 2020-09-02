@@ -2,8 +2,10 @@
 #include <exception>
 #include <stdexcept>
 #include <cmath>
+#include <memory>
 #include "include/Ray.h"
 #include "include/Sphere.h"
+#include "include/Intersection.h"
 
 Ray::Ray() {}
 
@@ -28,9 +30,9 @@ Point Ray::Position(float T)
     return Origin + Direction * T;
 }
 
-std::vector<float> Intersect(const Ray &R, const Sphere &S)
+std::vector<Intersection> Intersect(const Ray &R, const Sphere &S)
 {
-    std::vector<float> Intersections;
+    std::vector<Intersection> Intersections;
 
     // assume the origin of Sphere is always (0.f, 0.f, 0.f)
     Vector SphereToRay = R.GetOrigin() - Point(0.f, 0.f, 0.f);
@@ -42,8 +44,8 @@ std::vector<float> Intersect(const Ray &R, const Sphere &S)
 
     if (Discriminant >= 0.f)
     {
-        Intersections.push_back((-B - std::sqrt(Discriminant)) / (2 * A));
-        Intersections.push_back((-B + std::sqrt(Discriminant)) / (2 * A));
+        Intersections.push_back(Intersection((-B - std::sqrt(Discriminant)) / (2 * A), S));
+        Intersections.push_back(Intersection((-B + std::sqrt(Discriminant)) / (2 * A), S));
     }
     return Intersections;
 }
@@ -73,8 +75,8 @@ TEST_CASE("A ray intersects a sphere at two points")
 
     auto XS = Intersect(R, S);
     CHECK(XS.size() == 2);
-    CHECK(Util::Equal(XS[0], 4.0));
-    CHECK(Util::Equal(XS[1], 6.0));
+    CHECK(Util::Equal(XS[0].GetT(), 4.0));
+    CHECK(Util::Equal(XS[1].GetT(), 6.0));
 }
 
 TEST_CASE("A ray misses a sphere")
@@ -93,8 +95,8 @@ TEST_CASE("A ray originates inside a sphere")
 
     auto XS = Intersect(R, S);
     CHECK(XS.size() == 2);
-    CHECK(Util::Equal(XS[0], -1.0));
-    CHECK(Util::Equal(XS[1], 1.0));
+    CHECK(Util::Equal(XS[0].GetT(), -1.0));
+    CHECK(Util::Equal(XS[1].GetT(), 1.0));
 }
 
 TEST_CASE("A sphere is behind a ray")
@@ -104,6 +106,6 @@ TEST_CASE("A sphere is behind a ray")
 
     auto XS = Intersect(R, S);
     CHECK(XS.size() == 2);
-    CHECK(Util::Equal(XS[0], -6.0));
-    CHECK(Util::Equal(XS[1], -4.0));
+    CHECK(Util::Equal(XS[0].GetT(), -6.0));
+    CHECK(Util::Equal(XS[1].GetT(), -4.0));
 }
