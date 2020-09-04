@@ -22,6 +22,9 @@ public:
     Vector GetDirection() const;
 
     Point Position(float T);
+
+    Ray Transform(Matrix &M) const;
+    Ray Transform(Matrix &&M) const;
 };
 
 std::vector<Intersection> Intersect(const Ray &R, const Sphere &S);
