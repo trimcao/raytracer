@@ -10,6 +10,7 @@
 class Sphere : public Object
 {
     Matrix Transform;
+    Point Origin;
 
 public:
     Sphere();
@@ -21,4 +22,7 @@ public:
 
     inline void SetTransform(Matrix &M) { Transform = M; }
     inline void SetTransform(Matrix &&M) { Transform = M; }
+
+    Vector NormalAt(Point &P);
+    Vector NormalAt(Point &&P);
 };

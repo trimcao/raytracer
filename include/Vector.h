@@ -15,6 +15,8 @@ public:
     inline float Y() const { return this->At(1, 0); }
     inline float Z() const { return this->At(2, 0); }
 
+    inline void SetW(float Val) { this->Set(3, 0, Val); }
+
     Vector operator-() const { return Vector(-this->X(), -this->Y(), -this->Z()); }
 
     Vector operator*(float Scalar) const { return Vector(this->X() * Scalar, this->Y() * Scalar, this->Z() * Scalar); }
@@ -39,6 +41,8 @@ public:
 
     float Dot(const Vector &V);
     Vector Cross(const Vector &V);
+
+    Vector Reflect(const Vector &N);
 };
 
 inline Vector operator-(const Vector &A, const Vector &B)

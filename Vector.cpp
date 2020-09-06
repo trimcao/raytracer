@@ -46,6 +46,11 @@ Vector Vector::Cross(const Vector &V)
                   X() * V.Y() - Y() * V.X());
 }
 
+Vector Vector::Reflect(const Vector &N)
+{
+    return *this - (N * 2 * this->Dot(N));
+}
+
 std::ostream &operator<<(std::ostream &os, const Vector &V)
 {
     os << "Vector{ " << V.X() << ", " << V.Y() << ", " << V.Z() << " }";
@@ -107,4 +112,20 @@ TEST_CASE("cross product of two vectors")
 
     CHECK(A.Cross(B) == Vector(-1.f, 2.f, -1.f));
     CHECK(B.Cross(A) == Vector(1.f, -2.f, 1.f));
+}
+
+TEST_CASE("Reflecting a vector approaching at 45 degrees")
+{
+    Vector V(1.f, -1.f, 0.f);
+    Vector N(0.f, 1.f, 0.f);
+    auto R = V.Reflect(N);
+    CHECK(R == Vector(1.f, 1.f, 0.f));
+}
+
+TEST_CASE("Reflecting a vector off a slanted surface")
+{
+    Vector V(0.f, -1.f, 0.f);
+    Vector N(std::sqrt(2.f)/2, std::sqrt(2.f)/2, 0.f);
+    auto R = V.Reflect(N);
+    CHECK(R == Vector(1.f, 0.f, 0.f));
 }
