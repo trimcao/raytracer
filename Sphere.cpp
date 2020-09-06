@@ -4,11 +4,13 @@
 #include <cmath>
 #include "include/Sphere.h"
 #include "include/Ray.h"
+// #include "include/Material.h"
 
 Sphere::Sphere()
 {
     Transform = Matrix::Identity(4);
     Origin = Point(0.f, 0.f, 0.f);
+    AMaterial = Material();
 }
 
 Sphere::Sphere(int ID) : Sphere()
@@ -21,14 +23,6 @@ int Sphere::GetID()
     return ID;
 }
 
-Vector Sphere::NormalAt(Point &&P)
-{
-    auto ObjectPoint = Transform.Inverse().Mul(P);
-    auto ObjectNormal = ObjectPoint - Origin;
-    auto WorldNormal = Transform.Inverse().T().Mul(ObjectNormal);
-    return WorldNormal.Normalize();
-}
-
 Vector Sphere::NormalAt(Point &P)
 {
     auto ObjectPoint = Transform.Inverse().Mul(P);
@@ -36,6 +30,11 @@ Vector Sphere::NormalAt(Point &P)
     auto WorldNormal = Transform.Inverse().T().Mul(ObjectNormal);
     WorldNormal.SetW(0.f);
     return WorldNormal.Normalize();
+}
+
+Vector Sphere::NormalAt(Point &&P)
+{
+    return NormalAt(P);
 }
 
 TEST_CASE("A sphere's default transformation")
@@ -120,4 +119,24 @@ TEST_CASE("Computing the normal on a transformed sphere")
     S.SetTransform(M);
     auto N = S.NormalAt(Point(0.f, std::sqrt(2.f) / 2, -std::sqrt(2.f) / 2));
     CHECK(N == Vector(0.f, 0.97014f, -0.24254f));
+}
+
+TEST_CASE("A sphere has a default material")
+{
+    Sphere S(1);
+    Material M;
+
+    CHECK(S.GetMaterial() == Material());
+}
+
+TEST_CASE("A sphere may be assigned a material")
+{
+    Sphere S(1);
+    Material M;
+    M.SetAmbient(1.f);
+    S.SetMaterial(M);
+    Material N;
+    N.SetAmbient(1.f);
+
+    CHECK(S.GetMaterial() == N);
 }
