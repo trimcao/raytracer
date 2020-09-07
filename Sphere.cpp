@@ -6,16 +6,16 @@
 #include "include/Ray.h"
 // #include "include/Material.h"
 
-Sphere::Sphere()
+Sphere::Sphere(int ID)
 {
     Transform = Matrix::Identity(4);
     Origin = Point(0.f, 0.f, 0.f);
     AMaterial = Material();
+    this->ID = ID;
 }
 
-Sphere::Sphere(int ID) : Sphere()
+Sphere::Sphere() : Sphere(0)
 {
-    this->ID = ID;
 }
 
 int Sphere::GetID()
