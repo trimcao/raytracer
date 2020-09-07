@@ -1,3 +1,3 @@
-## Clock face visualization
+## Simple casting a sphere's shadow
 
-![alt text](output.png "Clock face visualization")
+![alt text](output.png "A sphere's shadow")

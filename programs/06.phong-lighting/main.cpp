@@ -6,15 +6,12 @@
 #include <cmath>
 #include <fstream>
 
-#include "../../include/Matrix.h"
 #include "../../include/Point.h"
 #include "../../include/Vector.h"
 #include "../../include/Color.h"
-#include "../../include/Util.h"
 #include "../../include/Canvas.h"
 #include "../../include/Sphere.h"
 #include "../../include/Ray.h"
-#include "../../include/Intersection.h"
 #include "../../include/Light.h"
 
 int main(int argc, char **argv)

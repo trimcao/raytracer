@@ -52,9 +52,9 @@ Ray Ray::Transform(Matrix &&M) const
     return Ray(M.Mul(Origin), M.Mul(Direction));
 }
 
-std::vector<Intersection> Intersect(const Ray &R, const Sphere &S)
+std::vector<Intersection<Sphere>> Intersect(const Ray &R, const Sphere &S)
 {
-    std::vector<Intersection> Intersections;
+    std::vector<Intersection<Sphere>> Intersections;
 
     auto TransformedRay = R.Transform(S.GetTransform().Inverse());
 

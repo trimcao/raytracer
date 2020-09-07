@@ -29,4 +29,4 @@ public:
     Ray Transform(Matrix &&M) const;
 };
 
-std::vector<Intersection> Intersect(const Ray &R, const Sphere &S);
+std::vector<Intersection<Sphere>> Intersect(const Ray &R, const Sphere &S);

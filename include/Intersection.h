@@ -6,34 +6,42 @@
 #include <memory>
 #include <vector>
 
+template <class ObjectType>
 class Intersection
 {
     float T;
-    std::shared_ptr<Object> O;
+    std::shared_ptr<ObjectType> O;
 
 public:
     Intersection();
-    Intersection(float T, const Object &O);
+    Intersection(float T, const ObjectType &O);
 
     float GetT() const;
-    std::shared_ptr<Object> GetObject() const;
+    std::shared_ptr<ObjectType> GetObject() const;
 
     bool operator<(const Intersection &RHS) const { return T < RHS.GetT(); }
 };
 
-inline bool operator==(const Intersection &LHS, const Intersection &RHS)
+template <class OT>
+inline bool operator==(const Intersection<OT> &LHS, const Intersection<OT> &RHS)
 {
     return Util::Equal(LHS.GetT(), RHS.GetT()) && LHS.GetObject()->GetID() == RHS.GetObject()->GetID();
 }
 
-inline bool operator!=(const Intersection &LHS, const Intersection &RHS)
+template <class OT>
+inline bool operator!=(const Intersection<OT> &LHS, const Intersection<OT> &RHS)
 {
     return (!(LHS == RHS));
 }
 
-std::ostream &operator<<(std::ostream &os, const Intersection &M);
+template <class OT>
+std::ostream &operator<<(std::ostream &os, const Intersection<OT> &M);
 
-std::shared_ptr<Intersection> Hit(std::vector<Intersection> &Intersections);
+template <class OT>
+std::shared_ptr<Intersection<OT>> Hit(std::vector<Intersection<OT>> &Intersections);
 
-void Intersections(std::vector<Intersection> &I);
-std::vector<Intersection> Intersections(std::vector<Intersection> &&I);
+template <class OT>
+void Intersections(std::vector<Intersection<OT>> &I);
+
+template <class OT>
+std::vector<Intersection<OT>> Intersections(std::vector<Intersection<OT>> &&I);
