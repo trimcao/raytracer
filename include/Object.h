@@ -21,8 +21,6 @@ public:
 
     int GetID();
 
-    virtual ~Object()=default;
-
     Matrix GetTransform() const { return Transform; }
     Material GetMaterial() const { return AMaterial; }
 
