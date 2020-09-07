@@ -1,5 +1,7 @@
 #pragma once
 
+#include "doctest.h"
+
 namespace Util
 {
     const float EPSILON = 0.00001;

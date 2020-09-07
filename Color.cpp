@@ -6,7 +6,11 @@
 #include <algorithm>
 #include "include/Color.h"
 
-Color::Color() {}
+Color::Color() {
+    R = 0.f;
+    G = 0.f;
+    B = 0.f;
+}
 
 Color::Color(float R, float G, float B)
 {

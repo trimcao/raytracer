@@ -2,9 +2,9 @@
 
 #include "doctest.h"
 // #include <iostream>
-// #include "Util.h"
 #include "Color.h"
 #include "Point.h"
+#include "Material.h"
 
 class Light
 {
@@ -21,3 +21,5 @@ public:
     inline void SetIntensity(Color &C) { Intensity = C; }
     inline void SetPosition(Point &P) { Position = P; }
 };
+
+Color Lighting(Material &M, Light &L, Point &Pos, Vector &EyeV, Vector &NormalV);
