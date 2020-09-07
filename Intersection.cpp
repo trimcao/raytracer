@@ -32,6 +32,13 @@ Intersection<OT>::Intersection(float T, const OT &O)
 }
 
 template<class OT>
+Intersection<OT>::Intersection(float T, std::shared_ptr<OT> &O)
+{
+    this->T = T;
+    this->O = O;
+}
+
+template<class OT>
 std::ostream &operator<<(std::ostream &os, const Intersection<OT> &I)
 {
     os << "Intersection{ " << I.GetT() << ", ";
@@ -87,6 +94,36 @@ std::vector<Intersection<Sphere>> Intersect(const Ray &R, const Sphere &S)
         Intersections.push_back(Intersection((-B - std::sqrt(Discriminant)) / (2 * A), S));
         Intersections.push_back(Intersection((-B + std::sqrt(Discriminant)) / (2 * A), S));
     }
+
+    return Intersections;
+}
+
+std::vector<Intersection<Object>> Intersect(const Ray &R, const World &W)
+{
+    std::vector<Intersection<Object>> Intersections;
+
+    // now all objects are sphere
+    for (auto O : W.GetObjects())
+    {
+        auto TransformedRay = R.Transform(O->GetTransform().Inverse());
+
+        // assume the origin of Sphere is always (0.f, 0.f, 0.f)
+        Vector SphereToRay = TransformedRay.GetOrigin() - Point(0.f, 0.f, 0.f);
+        float A = TransformedRay.GetDirection().Dot(TransformedRay.GetDirection());
+        float B = 2 * TransformedRay.GetDirection().Dot(SphereToRay);
+        float C = SphereToRay.Dot(SphereToRay) - 1.f;
+
+        float Discriminant = B * B - 4 * A * C;
+
+        if (Discriminant >= 0.f)
+        {
+            Intersections.push_back(Intersection((-B - std::sqrt(Discriminant)) / (2 * A), O));
+            Intersections.push_back(Intersection((-B + std::sqrt(Discriminant)) / (2 * A), O));
+        }
+    }
+
+    // sort the intersections
+    std::sort(Intersections.begin(), Intersections.end());
 
     return Intersections;
 }
@@ -182,4 +219,21 @@ TEST_CASE("A sphere is behind a ray")
     CHECK(XS.size() == 2);
     CHECK(Util::Equal(XS[0].GetT(), -6.0));
     CHECK(Util::Equal(XS[1].GetT(), -4.0));
+}
+
+TEST_CASE("Intersect a world with a ray")
+{
+    World W = World::DefaultWorld();
+    Ray R(Point(0.f, 0.f, -5.f), Vector(0.f, 0.f, 1.f));
+
+    auto XS = Intersect(R, W);
+    CHECK(Util::Equal(XS[0].GetT(), 4.f));
+    CHECK(Util::Equal(XS[1].GetT(), 4.5f));
+    CHECK(Util::Equal(XS[2].GetT(), 5.5f));
+    CHECK(Util::Equal(XS[3].GetT(), 6.f));
+
+    // the following value is 4 because two intersections keep a shared_ptr to the object
+    // another owner is World
+    // the last user is the pointer that prints use_count()
+    // std::cout << "Object 1 num user: " << XS[1].GetObject().use_count() << '\n';
 }

@@ -4,6 +4,7 @@
 #include "Ray.h"
 #include "Object.h"
 #include "Sphere.h"
+#include "World.h"
 #include "Util.h"
 #include <memory>
 #include <vector>
@@ -17,6 +18,7 @@ class Intersection
 public:
     Intersection();
     Intersection(float T, const ObjectType &O);
+    Intersection(float T, std::shared_ptr<ObjectType> &O);
 
     float GetT() const;
     std::shared_ptr<ObjectType> GetObject() const;
@@ -49,3 +51,4 @@ template <class OT>
 std::vector<Intersection<OT>> Intersections(std::vector<Intersection<OT>> &&I);
 
 std::vector<Intersection<Sphere>> Intersect(const Ray &R, const Sphere &S);
+std::vector<Intersection<Object>> Intersect(const Ray &R, const World &W);
