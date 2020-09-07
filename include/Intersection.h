@@ -1,7 +1,9 @@
 #pragma once
 
 #include "doctest.h"
+#include "Ray.h"
 #include "Object.h"
+#include "Sphere.h"
 #include "Util.h"
 #include <memory>
 #include <vector>
@@ -45,3 +47,5 @@ void Intersections(std::vector<Intersection<OT>> &I);
 
 template <class OT>
 std::vector<Intersection<OT>> Intersections(std::vector<Intersection<OT>> &&I);
+
+std::vector<Intersection<Sphere>> Intersect(const Ray &R, const Sphere &S);

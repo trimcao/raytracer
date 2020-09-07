@@ -6,7 +6,6 @@
 #include "Point.h"
 #include "Util.h"
 #include "Sphere.h"
-#include "Intersection.h"
 #include <vector>
 
 class Ray
@@ -28,5 +27,3 @@ public:
     Ray Transform(Matrix &M) const;
     Ray Transform(Matrix &&M) const;
 };
-
-std::vector<Intersection<Sphere>> Intersect(const Ray &R, const Sphere &S);

@@ -4,7 +4,7 @@
 #include <cmath>
 #include "include/Sphere.h"
 #include "include/Ray.h"
-// #include "include/Material.h"
+#include "include/Intersection.h"
 
 Sphere::Sphere(int ID)
 {
