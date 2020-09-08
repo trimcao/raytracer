@@ -75,6 +75,19 @@ std::shared_ptr<Intersection<OT>> Hit(std::vector<Intersection<OT>> &Intersectio
     return nullptr;
 }
 
+template<class OT>
+PreComputations<OT> Intersection<OT>::PrepareComputations(Ray &R)
+{
+    PreComputations<OT> Comps;
+    Comps.T = T;
+    Comps.AObject = O;
+    Comps.Position = R.Position(T);
+    Comps.EyeV = -R.GetDirection();
+    Comps.NormalV = Comps.AObject->NormalAt(Comps.Position);
+
+    return Comps;
+}
+
 std::vector<Intersection<Sphere>> Intersect(const Ray &R, const Sphere &S)
 {
     std::vector<Intersection<Sphere>> Intersections;
@@ -236,4 +249,17 @@ TEST_CASE("Intersect a world with a ray")
     // another owner is World
     // the last user is the pointer that prints use_count()
     // std::cout << "Object 1 num user: " << XS[1].GetObject().use_count() << '\n';
+}
+
+TEST_CASE("Precomputing the state of an intersection")
+{
+    Ray R(Point(0.f, 0.f, -5.f), Vector(0.f, 0.f, 1.f));
+    Sphere Shape(1);
+    auto I = Intersection<Object>(4.f, Shape);
+    auto Comps = I.PrepareComputations(R);
+
+    CHECK(Comps.AObject->GetID() == Shape.GetID());
+    CHECK(Comps.Position == Point(0.f, 0.f, -1.f));
+    CHECK(Comps.EyeV == Vector(0.f, 0.f, -1.f));
+    CHECK(Comps.NormalV == Vector(0.f, 0.f, -1.f));
 }

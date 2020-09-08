@@ -10,6 +10,16 @@
 #include <vector>
 
 template <class ObjectType>
+struct PreComputations
+{
+    std::shared_ptr<ObjectType> AObject;
+    float T;
+    Point Position;
+    Vector EyeV;
+    Vector NormalV;
+};
+
+template <class ObjectType>
 class Intersection
 {
     float T;
@@ -24,6 +34,8 @@ public:
     std::shared_ptr<ObjectType> GetObject() const;
 
     bool operator<(const Intersection &RHS) const { return T < RHS.GetT(); }
+
+    PreComputations<ObjectType> PrepareComputations(Ray &R);
 };
 
 template <class OT>
