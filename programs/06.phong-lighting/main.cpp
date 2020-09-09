@@ -13,6 +13,7 @@
 #include "../../include/Sphere.h"
 #include "../../include/Ray.h"
 #include "../../include/Light.h"
+#include "../../include/Intersection.h"
 
 int main(int argc, char **argv)
 {
@@ -42,11 +43,17 @@ int main(int argc, char **argv)
     // add a light source
     Light L(Color(1.f, 1.f, 1.f), Point(-10.f, 10.f, -10.f));
 
+    // variables for progress bar
+    int TotalPixels = CV.GetHeight() * CV.GetWidth();
+    int CurPixel = 0;
+    int Step = 1;
+    int DisplayNext = 1;
+
     for (int CanvasY = 0; CanvasY < CV.GetHeight(); ++CanvasY)
     {
         for (int CanvasX = 0; CanvasX < CV.GetWidth(); ++CanvasX)
         {
-            std::cout << "X: " << CanvasX << ", Y: " << CanvasY << "\n";
+            // std::cout << "X: " << CanvasX << ", Y: " << CanvasY << "\n";
 
             // we need to flip the Y coordinate because of the convention of
             // Y-coordinate of the canvas
@@ -84,8 +91,21 @@ int main(int argc, char **argv)
                     CV.WritePixel(CanvasX, CanvasY, ColorToDraw);
                 }
             }
+
+            // Formatted progress indicator
+            ++CurPixel;
+            auto Percent = (100 * (CurPixel + 1)) / TotalPixels ;
+            if (Percent >= DisplayNext)
+            {
+                std::cout << "\r" << "Progress [" << std::string(Percent / 5, '=') << std::string(100 / 5 - Percent / 5, ' ') << "]";
+                std::cout << ' ' << Percent << "%";
+                std::cout.flush();
+                DisplayNext += Step;
+            }
         }        
     }
+
+    std::cout << std::endl;
 
     std::ofstream out("output.ppm");
     out << CV.ToPPM();
