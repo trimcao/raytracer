@@ -68,3 +68,5 @@ std::vector<Intersection<Sphere>> Intersect(const Ray &R, const Sphere &S);
 std::vector<Intersection<Object>> Intersect(const Ray &R, const World &W);
 
 Color ShadeHit(World &W, PreComputations<Object> &Comps);
+
+Color ColorAt(World &W, Ray &R);

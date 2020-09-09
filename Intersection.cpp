@@ -153,9 +153,17 @@ Color ShadeHit(World &W, PreComputations<Object> &Comps)
     return Lighting(Comps.AObject->GetMaterial(), *W.GetLight(), Comps.Position, Comps.EyeV, Comps.NormalV);
 }
 
-Color ShadeHit(World &W, PreComputations<Sphere> &Comps)
+Color ColorAt(World &W, Ray &R)
 {
-    return Lighting(Comps.AObject->GetMaterial(), *W.GetLight(), Comps.Position, Comps.EyeV, Comps.NormalV);
+    auto Intersects = Intersect(R, W);
+    auto H = Hit(Intersects);
+    if (H != nullptr)
+    {
+        auto Comps = H->PrepareComputations(R);
+        return ShadeHit(W, Comps);
+    }
+
+    return Color(0.f, 0.f, 0.f);
 }
 
 TEST_CASE("An intersection encapsulates t and object")
@@ -346,4 +354,43 @@ TEST_CASE("Smart pointer and polymorphism")
     // std::cout << "Vector location: " << &X << '\n';
     // std::cout << "Normal vector value: " << V << '\n';
     // std::cout << "Normal vector value from vector X: " << X[0]->NormalAt(Point(0.5f, 0.f, 0.f)) << '\n';
+}
+
+TEST_CASE("The color when a ray misses")
+{
+    auto W = World::DefaultWorld();
+    Ray R(Point(0.f, 0.f, -5.f), Vector(0.f, 1.f, 0.f));
+
+    auto C = ColorAt(W, R);
+    CHECK(C == Color(0.f, 0.f, 0.f));
+}
+
+TEST_CASE("The color when a ray hits")
+{
+    auto W = World::DefaultWorld();
+    Ray R(Point(0.f, 0.f, -5.f), Vector(0.f, 0.f, 1.f));
+
+    auto C = ColorAt(W, R);
+    CHECK(C == Color(0.38066f, 0.47583f, 0.2855f));
+}
+
+TEST_CASE("The color with an intersection behind the ray")
+{
+    auto W = World::DefaultWorld();
+    auto Outer = W.GetObjectAt(0);
+    auto Mat = Outer->GetMaterial();
+    Mat.SetAmbient(1.f);
+    Outer->SetMaterial(Mat);
+
+    auto Inner = W.GetObjectAt(1);
+    Mat = Inner->GetMaterial();
+    Mat.SetAmbient(1.f);
+    Inner->SetMaterial(Mat);
+
+    std::cout << "Inner ambient:" << Inner->GetMaterial().GetAmbient() << '\n';
+
+    Ray R(Point(0.f, 0.f, 0.75f), Vector(0.f, 0.f, -1.f));
+
+    auto C = ColorAt(W, R);
+    CHECK(C == Inner->GetMaterial().GetColor());
 }

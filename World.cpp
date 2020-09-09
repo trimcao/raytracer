@@ -29,8 +29,8 @@ World World::DefaultWorld()
 
     World W;
     W.SetLight(L);
-    W.AddObject(S1);
-    W.AddObject(S2);
+    W.AddObject<Sphere>(S1);
+    W.AddObject<Sphere>(S2);
 
     return W;
 }
