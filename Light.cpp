@@ -57,6 +57,11 @@ Color Lighting(Material &M, Light &L, Point &Pos, Vector &EyeV, Vector &NormalV)
     return Ambient + Diffuse + Specular;
 }
 
+Color Lighting(Material &&M, Light &L, Point &Pos, Vector &EyeV, Vector &NormalV)
+{
+    return Lighting(M, L, Pos, EyeV, NormalV);
+}
+
 TEST_CASE("A point light has a position and intensity")
 {
     Color I(1.f, 1.f, 1.f);

@@ -23,3 +23,4 @@ public:
 };
 
 Color Lighting(Material &M, Light &L, Point &Pos, Vector &EyeV, Vector &NormalV);
+Color Lighting(Material &&M, Light &L, Point &Pos, Vector &EyeV, Vector &NormalV);

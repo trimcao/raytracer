@@ -26,6 +26,6 @@ public:
     // inline void SetMaterial(Material &M) { AMaterial = M; }
     // inline void SetMaterial(Material &&M) { AMaterial = M; }
 
-    Vector NormalAt(Point &P);
-    Vector NormalAt(Point &&P);
+    virtual Vector NormalAt(Point &P) override;
+    virtual Vector NormalAt(Point &&P) override;
 };

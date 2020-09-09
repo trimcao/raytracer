@@ -8,6 +8,7 @@
 #include "include/Ray.h"
 #include "include/Sphere.h"
 #include "include/Util.h"
+#include "include/Light.h"
 
 template <class OT>
 Intersection<OT>::Intersection() {}
@@ -85,6 +86,12 @@ PreComputations<OT> Intersection<OT>::PrepareComputations(Ray &R)
     Comps.EyeV = -R.GetDirection();
     Comps.NormalV = Comps.AObject->NormalAt(Comps.Position);
 
+    if (Comps.NormalV.Dot(Comps.EyeV) < 0.f)
+    {
+        Comps.IsInside = true;
+        Comps.NormalV = -Comps.NormalV;
+    }
+
     return Comps;
 }
 
@@ -139,6 +146,16 @@ std::vector<Intersection<Object>> Intersect(const Ray &R, const World &W)
     std::sort(Intersections.begin(), Intersections.end());
 
     return Intersections;
+}
+
+Color ShadeHit(World &W, PreComputations<Object> &Comps)
+{
+    return Lighting(Comps.AObject->GetMaterial(), *W.GetLight(), Comps.Position, Comps.EyeV, Comps.NormalV);
+}
+
+Color ShadeHit(World &W, PreComputations<Sphere> &Comps)
+{
+    return Lighting(Comps.AObject->GetMaterial(), *W.GetLight(), Comps.Position, Comps.EyeV, Comps.NormalV);
 }
 
 TEST_CASE("An intersection encapsulates t and object")
@@ -255,11 +272,78 @@ TEST_CASE("Precomputing the state of an intersection")
 {
     Ray R(Point(0.f, 0.f, -5.f), Vector(0.f, 0.f, 1.f));
     Sphere Shape(1);
-    auto I = Intersection<Object>(4.f, Shape);
+    auto I = Intersection<Sphere>(4.f, Shape);
     auto Comps = I.PrepareComputations(R);
 
     CHECK(Comps.AObject->GetID() == Shape.GetID());
     CHECK(Comps.Position == Point(0.f, 0.f, -1.f));
     CHECK(Comps.EyeV == Vector(0.f, 0.f, -1.f));
     CHECK(Comps.NormalV == Vector(0.f, 0.f, -1.f));
+}
+
+TEST_CASE("The hit, when an intersection occurs on the outside")
+{
+    Ray R(Point(0.f, 0.f, -5.f), Vector(0.f, 0.f, 1.f));
+    Sphere Shape(1);
+    auto I = Intersection<Object>(4.f, Shape);
+    auto Comps = I.PrepareComputations(R);
+
+    CHECK(Comps.IsInside == false);
+}
+
+TEST_CASE("The hit, when an intersection occurs on the inside")
+{
+    Ray R(Point(0.f, 0.f, 0.f), Vector(0.f, 0.f, 1.f));
+    Sphere Shape(1);
+    auto I = Intersection<Sphere>(1.f, Shape);
+    auto Comps = I.PrepareComputations(R);
+
+    CHECK(Comps.Position == Point(0.f, 0.f, 1.f));
+    CHECK(Comps.EyeV == Vector(0.f, 0.f, -1.f));
+    CHECK(Comps.NormalV == Vector(0.f, 0.f, -1.f));
+    CHECK(Comps.IsInside == true);
+}
+
+TEST_CASE("Shading an intersection")
+{
+    auto W = World::DefaultWorld();
+    Ray R(Point(0.f, 0.f, -5.f), Vector(0.f, 0.f, 1.f));
+    auto Shape = W.GetObjectAt(0);
+    auto I = Intersection<Object>(4.f, Shape);
+    auto Comps = I.PrepareComputations(R);
+    auto C = ShadeHit(W, Comps);
+
+    CHECK(C == Color(0.38066f, 0.47583f, 0.2855f));
+}
+
+TEST_CASE("Shading an intersection from the inside")
+{
+    auto W = World::DefaultWorld();
+    W.SetLight(Light(Color(1.f, 1.f, 1.f), Point(0.f, 0.25f, 0.f)));
+
+    Ray R(Point(0.f, 0.f, 0.f), Vector(0.f, 0.f, 1.f));
+    auto Shape = W.GetObjectAt(1);
+    auto I = Intersection<Object>(0.5f, Shape);
+    auto Comps = I.PrepareComputations(R);
+    auto C = ShadeHit(W, Comps);
+
+    CHECK(C == Color(0.90498f, 0.90498f, 0.90498f));
+    CHECK(Comps.IsInside == true);
+}
+
+TEST_CASE("Smart pointer and polymorphism")
+{
+    std::vector<std::unique_ptr<Object>> X;
+    Sphere S;
+    S.SetTransform(Matrix::Scaling(0.5f, 0.5f, 0.5f));
+    auto V = S.NormalAt(Point(0.5f, 0.f, 0.f));
+
+    // need to use make_unique, otherwise it will complain when free the memory
+    X.push_back(std::make_unique<Sphere>(S));
+
+    // std::cout << "Pointer location: " << &S << '\n';
+    // std::cout << "Pointer location: " << X[0] << '\n';
+    // std::cout << "Vector location: " << &X << '\n';
+    // std::cout << "Normal vector value: " << V << '\n';
+    // std::cout << "Normal vector value from vector X: " << X[0]->NormalAt(Point(0.5f, 0.f, 0.f)) << '\n';
 }

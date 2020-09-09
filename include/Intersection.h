@@ -6,6 +6,7 @@
 #include "Sphere.h"
 #include "World.h"
 #include "Util.h"
+#include "Color.h"
 #include <memory>
 #include <vector>
 
@@ -17,6 +18,7 @@ struct PreComputations
     Point Position;
     Vector EyeV;
     Vector NormalV;
+    bool IsInside;
 };
 
 template <class ObjectType>
@@ -64,3 +66,5 @@ std::vector<Intersection<OT>> Intersections(std::vector<Intersection<OT>> &&I);
 
 std::vector<Intersection<Sphere>> Intersect(const Ray &R, const Sphere &S);
 std::vector<Intersection<Object>> Intersect(const Ray &R, const World &W);
+
+Color ShadeHit(World &W, PreComputations<Object> &Comps);
