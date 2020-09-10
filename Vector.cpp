@@ -23,6 +23,23 @@ Vector::Vector(float X, float Y, float Z) : Matrix(4, 1)
     this->Set(3, 0, 0.f);
 }
 
+Vector::Vector(Matrix &M)
+{
+    if (M.GetNumRows() != 4 && M.GetNumCols() != 1)
+        throw std::invalid_argument("size of a Vector must be 4x1");
+    if (!Util::Equal(M.At(3,0), 1.f))
+        throw std::invalid_argument("W value must be 1.0");
+
+    this->Set(0, 0, M.At(0, 0));
+    this->Set(1, 0, M.At(1, 0));
+    this->Set(2, 0, M.At(2, 0));
+    this->Set(3, 0, M.At(3, 0));
+}
+
+Vector::Vector(Matrix &&M) : Vector(M)
+{
+}
+
 float Vector::Magnitude()
 {
     return std::sqrt(pow(X(), 2.f) + pow(Y(), 2.f) + pow(Z(), 2.f));

@@ -387,7 +387,7 @@ TEST_CASE("The color with an intersection behind the ray")
     Mat.SetAmbient(1.f);
     Inner->SetMaterial(Mat);
 
-    std::cout << "Inner ambient:" << Inner->GetMaterial().GetAmbient() << '\n';
+    // std::cout << "Inner ambient:" << Inner->GetMaterial().GetAmbient() << '\n';
 
     Ray R(Point(0.f, 0.f, 0.75f), Vector(0.f, 0.f, -1.f));
 

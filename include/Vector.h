@@ -10,6 +10,8 @@ public:
     Vector();
     Vector(float X, float Y, float Z);
     Vector(int NumRows, int NumCols);
+    Vector(Matrix &M);
+    Vector(Matrix &&M);
 
     inline float X() const { return this->At(0, 0); }
     inline float Y() const { return this->At(1, 0); }
