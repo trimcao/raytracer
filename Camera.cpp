@@ -2,6 +2,7 @@
 #include "include/Util.h"
 #include "include/Transformations.h"
 #include "include/Intersection.h"
+#include <iostream>
 #include <cmath>
 
 Camera::Camera(int H, int V, float FOV)
@@ -24,8 +25,8 @@ void Camera::ComputePixelSize()
         HalfHeight = HalfView / Aspect;
     } else
     {
-        HalfHeight = HalfView;
         HalfWidth = HalfView * Aspect;
+        HalfHeight = HalfView;
     }
 
     SetPixelSize(HalfWidth * 2 / HSize);
@@ -57,15 +58,35 @@ Ray Camera::RayForPixel(int X, int Y)
 Canvas Camera::Render(World &W)
 {
     Canvas Image(HSize, VSize);
-    for (int X = 0; X < VSize; ++X)
+
+    // variables for progress bar
+    int TotalPixels = HSize * VSize;
+    int CurPixel = 0;
+    int Step = 1;
+    int DisplayNext = 1;
+
+    for (int Y = 0; Y < VSize; ++Y)
     {
-        for (int Y = 0; Y < HSize; ++Y)
+        for (int X = 0; X < HSize; ++X)
         {
             auto R = RayForPixel(X, Y);
             auto Col = ColorAt(W, R);
             Image.WritePixel(X, Y, Col);
+
+            // Formatted progress indicator
+            ++CurPixel;
+            auto Percent = (100 * (CurPixel + 1)) / TotalPixels ;
+            if (Percent >= DisplayNext)
+            {
+                std::cout << "\r" << "Progress [" << std::string(Percent / 5, '=') << std::string(100 / 5 - Percent / 5, ' ') << "]";
+                std::cout << ' ' << Percent << "%";
+                std::cout.flush();
+                DisplayNext += Step;
+            }
         }
     }
+
+    std::cout << std::endl;
 
     return Image;
 }
