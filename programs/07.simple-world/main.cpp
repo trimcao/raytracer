@@ -168,6 +168,11 @@ int main(int argc, char **argv)
                                                     Point(0.f, 1.f, 0.f),
                                                     Vector(0.f, 1.f, 0.f)));
 
+    // Rotate the camera in Z direction
+    // Cam.SetTransform(Transformations::ViewTransform(Point(0.1f, 1.5f, -5.f),
+    //                                                 Point(0.f, 1.f, 0.f),
+    //                                                 Vector(0.f, 1.f, 0.f)).RotateZ(M_PI/6));
+
     auto CV = Cam.Render(W);
 
     std::ofstream out("output.ppm");
