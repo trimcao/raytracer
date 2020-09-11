@@ -17,15 +17,6 @@ public:
 
     int GetID();
 
-    // inline Matrix GetTransform() const { return Transform; }
-    // inline Material GetMaterial() const { return AMaterial; }
-
-    // inline void SetTransform(Matrix &M) { Transform = M; }
-    // inline void SetTransform(Matrix &&M) { Transform = M; }
-
-    // inline void SetMaterial(Material &M) { AMaterial = M; }
-    // inline void SetMaterial(Material &&M) { AMaterial = M; }
-
     virtual Vector NormalAt(Point &P) override;
     virtual Vector NormalAt(Point &&P) override;
 };

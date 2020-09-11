@@ -22,8 +22,8 @@ public:
 
     template <class Derived>
     inline void AddObject(Derived &NewObject) { Objects.push_back(std::make_shared<Derived>(NewObject)); }
-    template <class Derived>
-    inline void AddObject(Derived &&NewObject) { AddObject(NewObject); }
+    // template <class Derived>
+    // inline void AddObject(Derived &&NewObject) { AddObject(NewObject); }
 
     inline std::shared_ptr<Light> GetLight() const { return ALight; }
     inline std::shared_ptr<Object> GetObjectAt(int Idx) const { return Objects[Idx]; }
