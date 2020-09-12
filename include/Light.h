@@ -22,5 +22,5 @@ public:
     inline void SetPosition(Point &P) { Position = P; }
 };
 
-Color Lighting(Material &M, Light &L, Point &Pos, Vector &EyeV, Vector &NormalV);
-Color Lighting(Material &&M, Light &L, Point &Pos, Vector &EyeV, Vector &NormalV);
+Color Lighting(Material &M, Light &L, Point &Pos, Vector &EyeV, Vector &NormalV, bool IsInShadow);
+Color Lighting(Material &&M, Light &L, Point &Pos, Vector &EyeV, Vector &NormalV, bool IsInShadow);

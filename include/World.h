@@ -28,4 +28,6 @@ public:
     inline std::shared_ptr<Light> GetLight() const { return ALight; }
     inline std::shared_ptr<Object> GetObjectAt(int Idx) const { return Objects[Idx]; }
     inline std::vector<std::shared_ptr<Object>> GetObjects() const { return Objects; }
+
+    bool IsShadowed(Point &P);
 };

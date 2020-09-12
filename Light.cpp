@@ -19,7 +19,7 @@ Light::Light(Color &&C, Point &&P) : Light(C, P)
 {
 }
 
-Color Lighting(Material &M, Light &L, Point &Pos, Vector &EyeV, Vector &NormalV)
+Color Lighting(Material &M, Light &L, Point &Pos, Vector &EyeV, Vector &NormalV, bool IsInShadow)
 {
     // combine the surface color with the light's color/intensity
     auto EffectiveColor = M.GetColor() * L.GetIntensity();
@@ -57,9 +57,9 @@ Color Lighting(Material &M, Light &L, Point &Pos, Vector &EyeV, Vector &NormalV)
     return Ambient + Diffuse + Specular;
 }
 
-Color Lighting(Material &&M, Light &L, Point &Pos, Vector &EyeV, Vector &NormalV)
+Color Lighting(Material &&M, Light &L, Point &Pos, Vector &EyeV, Vector &NormalV, bool IsInShadow)
 {
-    return Lighting(M, L, Pos, EyeV, NormalV);
+    return Lighting(M, L, Pos, EyeV, NormalV, IsInShadow);
 }
 
 TEST_CASE("A point light has a position and intensity")
@@ -79,7 +79,7 @@ TEST_CASE("Lighting with the eye between the light and the surface")
     Vector EyeV(0.f, 0.f, -1.f);
     Vector NormalV(0.f, 0.f, -1.f);
     Light L(Color(1.f, 1.f, 1.f), Point(0.f, 0.f, -10.f));
-    auto Result = Lighting(M, L, Pos, EyeV, NormalV);
+    auto Result = Lighting(M, L, Pos, EyeV, NormalV, false);
     CHECK(Result == Color(1.9f, 1.9f, 1.9f));
 }
 
@@ -90,7 +90,7 @@ TEST_CASE("Lighting with the eye between the light and the surface, eye offset 4
     Vector EyeV(0.f, std::sqrt(2.f) / 2, -std::sqrt(2.f) / 2);
     Vector NormalV(0.f, 0.f, -1.f);
     Light L(Color(1.f, 1.f, 1.f), Point(0.f, 0.f, -10.f));
-    auto Result = Lighting(M, L, Pos, EyeV, NormalV);
+    auto Result = Lighting(M, L, Pos, EyeV, NormalV, false);
     CHECK(Result == Color(1.0, 1.0f, 1.0f));
 }
 
@@ -101,7 +101,7 @@ TEST_CASE("Lighting with the eye between the light and the surface, light offset
     Vector EyeV(0.f, 0.f, -1.f);
     Vector NormalV(0.f, 0.f, -1.f);
     Light L(Color(1.f, 1.f, 1.f), Point(0.f, 10.f, -10.f));
-    auto Result = Lighting(M, L, Pos, EyeV, NormalV);
+    auto Result = Lighting(M, L, Pos, EyeV, NormalV, false);
     CHECK(Result == Color(0.7364f, 0.7364f, 0.7364f));
 }
 
@@ -112,7 +112,7 @@ TEST_CASE("Lighting with the eye in the path of the reflection vector")
     Vector EyeV(0.f, -std::sqrt(2.f) / 2, -std::sqrt(2.f) / 2);
     Vector NormalV(0.f, 0.f, -1.f);
     Light L(Color(1.f, 1.f, 1.f), Point(0.f, 10.f, -10.f));
-    auto Result = Lighting(M, L, Pos, EyeV, NormalV);
+    auto Result = Lighting(M, L, Pos, EyeV, NormalV, false);
     CHECK(Result == Color(1.63639f, 1.63639f, 1.63639f));
 }
 
@@ -123,6 +123,6 @@ TEST_CASE("Lighting with the light behind the surface")
     Vector EyeV(0.f, 0.f, -1.f);
     Vector NormalV(0.f, 0.f, -1.f);
     Light L(Color(1.f, 1.f, 1.f), Point(0.f, 0.f, 10.f));
-    auto Result = Lighting(M, L, Pos, EyeV, NormalV);
+    auto Result = Lighting(M, L, Pos, EyeV, NormalV, false);
     CHECK(Result == Color(0.1f, 0.1f, 0.1f));
 }

@@ -1,5 +1,7 @@
 #include "include/World.h"
 #include "include/Sphere.h"
+#include "include/Intersection.h"
+#include "include/Object.h"
 
 World::World(Light &NewLight, std::vector<std::shared_ptr<Object>> &NewObjects)
 {
@@ -35,6 +37,23 @@ World World::DefaultWorld()
     return W;
 }
 
+bool World::IsShadowed(Point &P)
+{
+    auto Vec = ALight->GetPosition() - P;
+    auto Distance = Vec.Magnitude();
+    auto Direction = Vec.Normalize();
+
+    Ray R(P, Direction);
+    auto Intersections = Intersect(R, *this);
+    auto AHit = Hit(Intersections);
+    if (AHit && AHit->GetT() < Distance)
+    {
+        return true;
+    }
+
+    return false;
+}
+
 TEST_CASE("Creating a world")
 {
     World W;
@@ -48,4 +67,32 @@ TEST_CASE("The default world")
     CHECK(W.GetObjects().size() == 2);
     CHECK(W.GetLight()->GetIntensity() == Color(1.f, 1.f, 1.f) );
     CHECK(W.GetLight()->GetPosition() == Point(-10.f, 10.f, -10.f) );
+}
+
+TEST_CASE("There is no shadow when nothing is collinear with point and light")
+{
+    World W = World::DefaultWorld();
+    Point P(0.f, 10.f, 0.f);
+    CHECK(W.IsShadowed(P) == false);
+}
+
+TEST_CASE("The shadow when an object is between the point and the light")
+{
+    World W = World::DefaultWorld();
+    Point P(10.f, -10.f, 10.f);
+    CHECK(W.IsShadowed(P) == true);
+}
+
+TEST_CASE("There is no shadow when an object is behind the light")
+{
+    World W = World::DefaultWorld();
+    Point P(-20.f, 20.f, -20.f);
+    CHECK(W.IsShadowed(P) == false);
+}
+
+TEST_CASE("There is no shadow when an object is behind the point")
+{
+    World W = World::DefaultWorld();
+    Point P(-2.f, 2.f, -2.f);
+    CHECK(W.IsShadowed(P) == false);
 }

@@ -55,7 +55,7 @@ Ray Camera::RayForPixel(int X, int Y)
     return Ray(Origin, Direction);
 }
 
-Canvas Camera::Render(World &W)
+Canvas Camera::Render(World &W, bool printLog=false)
 {
     Canvas Image(HSize, VSize);
 
@@ -73,20 +73,24 @@ Canvas Camera::Render(World &W)
             auto Col = ColorAt(W, R);
             Image.WritePixel(X, Y, Col);
 
-            // Formatted progress indicator
-            ++CurPixel;
-            auto Percent = (100 * (CurPixel + 1)) / TotalPixels ;
-            if (Percent >= DisplayNext)
+            if (printLog)
             {
-                std::cout << "\r" << "Progress [" << std::string(Percent / 5, '=') << std::string(100 / 5 - Percent / 5, ' ') << "]";
-                std::cout << ' ' << Percent << "%";
-                std::cout.flush();
-                DisplayNext += Step;
+                // Formatted progress indicator
+                ++CurPixel;
+                auto Percent = (100 * (CurPixel + 1)) / TotalPixels ;
+                if (Percent >= DisplayNext)
+                {
+                    std::cout << "\r" << "Progress [" << std::string(Percent / 5, '=') << std::string(100 / 5 - Percent / 5, ' ') << "]";
+                    std::cout << ' ' << Percent << "%";
+                    std::cout.flush();
+                    DisplayNext += Step;
+                }
             }
         }
     }
 
-    std::cout << std::endl;
+    if (printLog)
+        std::cout << std::endl;
 
     return Image;
 }

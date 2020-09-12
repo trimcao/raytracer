@@ -150,7 +150,8 @@ std::vector<Intersection<Object>> Intersect(const Ray &R, const World &W)
 
 Color ShadeHit(World &W, PreComputations<Object> &Comps)
 {
-    return Lighting(Comps.AObject->GetMaterial(), *W.GetLight(), Comps.Position, Comps.EyeV, Comps.NormalV);
+    bool IsInShadow = W.IsShadowed(Comps.Position);
+    return Lighting(Comps.AObject->GetMaterial(), *W.GetLight(), Comps.Position, Comps.EyeV, Comps.NormalV, IsInShadow);
 }
 
 Color ColorAt(World &W, Ray &R)
