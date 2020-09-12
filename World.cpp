@@ -39,6 +39,9 @@ World World::DefaultWorld()
 
 bool World::IsShadowed(Point &P)
 {
+    if (!ALight)
+        return false;
+
     auto Vec = ALight->GetPosition() - P;
     auto Distance = Vec.Magnitude();
     auto Direction = Vec.Normalize();
@@ -46,6 +49,7 @@ bool World::IsShadowed(Point &P)
     Ray R(P, Direction);
     auto Intersections = Intersect(R, *this);
     auto AHit = Hit(Intersections);
+
     if (AHit && AHit->GetT() < Distance)
     {
         return true;
@@ -95,4 +99,25 @@ TEST_CASE("There is no shadow when an object is behind the point")
     World W = World::DefaultWorld();
     Point P(-2.f, 2.f, -2.f);
     CHECK(W.IsShadowed(P) == false);
+}
+
+TEST_CASE("ShadeHit() is given an intersection in shadow")
+{
+    World W;
+    Light L(Color(1.f, 1.f, 1.f), Point(0.f, 0.f, -10.f));
+    W.SetLight(L);
+
+    Sphere S1;
+    W.AddObject(S1);
+    Sphere S2;
+    S2.SetTransform(Matrix::Translation(0.f, 0.f, 10.f));
+    W.AddObject(S2);
+
+    Ray R(Point(0.f, 0.f, 5.f), Vector(0.f, 0.f, 1.f));
+    Intersection<Object> I(4.f, S2);
+    auto Comps = I.PrepareComputations(R);
+
+    auto C = ShadeHit(W, Comps);
+
+    CHECK(C == Color(0.1f, 0.1f, 0.1f));
 }

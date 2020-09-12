@@ -16,6 +16,7 @@ struct PreComputations
     std::shared_ptr<ObjectType> AObject;
     float T;
     Point Position;
+    Point OverPosition;
     Vector EyeV;
     Vector NormalV;
     bool IsInside;

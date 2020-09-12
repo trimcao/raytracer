@@ -86,6 +86,8 @@ PreComputations<OT> Intersection<OT>::PrepareComputations(Ray &R)
     Comps.EyeV = -R.GetDirection();
     Comps.NormalV = Comps.AObject->NormalAt(Comps.Position);
 
+    Comps.OverPosition = Comps.Position + Comps.NormalV * Util::EPSILON;
+
     if (Comps.NormalV.Dot(Comps.EyeV) < 0.f)
     {
         Comps.IsInside = true;
@@ -150,8 +152,11 @@ std::vector<Intersection<Object>> Intersect(const Ray &R, const World &W)
 
 Color ShadeHit(World &W, PreComputations<Object> &Comps)
 {
-    bool IsInShadow = W.IsShadowed(Comps.Position);
-    return Lighting(Comps.AObject->GetMaterial(), *W.GetLight(), Comps.Position, Comps.EyeV, Comps.NormalV, IsInShadow);
+    if (!W.GetLight())
+        return Color(0.f, 0.f, 0.f);
+
+    bool IsInShadow = W.IsShadowed(Comps.OverPosition);
+    return Lighting(Comps.AObject->GetMaterial(), *W.GetLight(), Comps.OverPosition, Comps.EyeV, Comps.NormalV, IsInShadow);
 }
 
 Color ColorAt(World &W, Ray &R)
@@ -394,4 +399,16 @@ TEST_CASE("The color with an intersection behind the ray")
 
     auto C = ColorAt(W, R);
     CHECK(C == Inner->GetMaterial().GetColor());
+}
+
+TEST_CASE("The hit should offset the point")
+{
+    Ray R(Point(0.f, 0.f, -5.f), Vector(0.f, 0.f, 1.f));
+    Sphere Shape;
+    Shape.SetTransform(Matrix::Translation(0.f, 0.f, 1.f));
+    Intersection I(5.f, Shape);
+    auto Comps = I.PrepareComputations(R);
+
+    CHECK(Comps.OverPosition.Z() < -Util::EPSILON/2);
+    CHECK(Comps.Position.Z() > Comps.OverPosition.Z());
 }
