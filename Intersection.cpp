@@ -86,13 +86,13 @@ PreComputations<OT> Intersection<OT>::PrepareComputations(Ray &R)
     Comps.EyeV = -R.GetDirection();
     Comps.NormalV = Comps.AObject->NormalAt(Comps.Position);
 
-    Comps.OverPosition = Comps.Position + Comps.NormalV * Util::EPSILON;
-
     if (Comps.NormalV.Dot(Comps.EyeV) < 0.f)
     {
         Comps.IsInside = true;
         Comps.NormalV = -Comps.NormalV;
     }
+
+    Comps.OverPosition = Comps.Position + Comps.NormalV * Util::EPSILON;
 
     return Comps;
 }
@@ -156,6 +156,7 @@ Color ShadeHit(World &W, PreComputations<Object> &Comps)
         return Color(0.f, 0.f, 0.f);
 
     bool IsInShadow = W.IsShadowed(Comps.OverPosition);
+    // std::cout << "IsInShadow: " << IsInShadow << '\n';
     return Lighting(Comps.AObject->GetMaterial(), *W.GetLight(), Comps.OverPosition, Comps.EyeV, Comps.NormalV, IsInShadow);
 }
 
@@ -339,6 +340,12 @@ TEST_CASE("Shading an intersection from the inside")
     auto Shape = W.GetObjectAt(1);
     auto I = Intersection<Object>(0.5f, Shape);
     auto Comps = I.PrepareComputations(R);
+    
+    bool IsInShadow = W.IsShadowed(Comps.OverPosition);
+    std::cout << "IsInShadow: " << IsInShadow << '\n';
+    std::cout << "Position: " << Comps.Position << '\n';
+    std::cout << "OverPosition: " << Comps.OverPosition << '\n';
+
     auto C = ShadeHit(W, Comps);
 
     CHECK(C == Color(0.90498f, 0.90498f, 0.90498f));

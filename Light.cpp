@@ -31,6 +31,9 @@ Color Lighting(Material &M, Light &L, Point &Pos, Vector &EyeV, Vector &NormalV,
     // note that a color is black by default
     Color Diffuse, Specular;
 
+    if (IsInShadow)
+        return Ambient;
+
     // LightDotNormal represents the cosine of the angle between the light vector
     // and the normal vector.
     // A negative value means the light is on the other side of the surface
@@ -124,5 +127,16 @@ TEST_CASE("Lighting with the light behind the surface")
     Vector NormalV(0.f, 0.f, -1.f);
     Light L(Color(1.f, 1.f, 1.f), Point(0.f, 0.f, 10.f));
     auto Result = Lighting(M, L, Pos, EyeV, NormalV, false);
+    CHECK(Result == Color(0.1f, 0.1f, 0.1f));
+}
+
+TEST_CASE("Lighting with the surface in shadow")
+{
+    Material M;
+    Point Pos(0.f, 0.f, 0.f);
+    Vector EyeV(0.f, 0.f, -1.f);
+    Vector NormalV(0.f, 0.f, -1.f);
+    Light L(Color(1.f, 1.f, 1.f), Point(0.f, 0.f, -10.f));
+    auto Result = Lighting(M, L, Pos, EyeV, NormalV, true);
     CHECK(Result == Color(0.1f, 0.1f, 0.1f));
 }
