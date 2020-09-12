@@ -20,7 +20,6 @@
 
 int main(int argc, char **argv)
 {
-
     Sphere Floor(0);
     Floor.SetTransform(Matrix::Scaling(10.f, 0.01f, 10.f));
     auto Mat = Material();
@@ -86,7 +85,7 @@ int main(int argc, char **argv)
     //                                                 Point(0.f, 1.f, 0.f),
     //                                                 Vector(0.f, 1.f, 0.f)).RotateZ(M_PI/6));
 
-    bool RenderShadow = false;
+    bool RenderShadow = true;
     auto CV = Cam.Render(W, RenderShadow, true);
 
     std::ofstream out("output.ppm");

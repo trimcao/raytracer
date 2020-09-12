@@ -150,24 +150,26 @@ std::vector<Intersection<Object>> Intersect(const Ray &R, const World &W)
     return Intersections;
 }
 
-Color ShadeHit(World &W, PreComputations<Object> &Comps)
+Color ShadeHit(World &W, PreComputations<Object> &Comps, bool RenderShadow)
 {
     if (!W.GetLight())
         return Color(0.f, 0.f, 0.f);
 
-    bool IsInShadow = W.IsShadowed(Comps.OverPosition);
-    // std::cout << "IsInShadow: " << IsInShadow << '\n';
+    bool IsInShadow = false;
+    if (RenderShadow)
+        IsInShadow = W.IsShadowed(Comps.OverPosition);
+
     return Lighting(Comps.AObject->GetMaterial(), *W.GetLight(), Comps.OverPosition, Comps.EyeV, Comps.NormalV, IsInShadow);
 }
 
-Color ColorAt(World &W, Ray &R)
+Color ColorAt(World &W, Ray &R, bool RenderShadow)
 {
     auto Intersects = Intersect(R, W);
     auto H = Hit(Intersects);
     if (H != nullptr)
     {
         auto Comps = H->PrepareComputations(R);
-        return ShadeHit(W, Comps);
+        return ShadeHit(W, Comps, RenderShadow);
     }
 
     return Color(0.f, 0.f, 0.f);
@@ -342,9 +344,6 @@ TEST_CASE("Shading an intersection from the inside")
     auto Comps = I.PrepareComputations(R);
     
     bool IsInShadow = W.IsShadowed(Comps.OverPosition);
-    std::cout << "IsInShadow: " << IsInShadow << '\n';
-    std::cout << "Position: " << Comps.Position << '\n';
-    std::cout << "OverPosition: " << Comps.OverPosition << '\n';
 
     auto C = ShadeHit(W, Comps);
 
@@ -374,7 +373,7 @@ TEST_CASE("The color when a ray misses")
     auto W = World::DefaultWorld();
     Ray R(Point(0.f, 0.f, -5.f), Vector(0.f, 1.f, 0.f));
 
-    auto C = ColorAt(W, R);
+    auto C = ColorAt(W, R, true);
     CHECK(C == Color(0.f, 0.f, 0.f));
 }
 
@@ -383,7 +382,7 @@ TEST_CASE("The color when a ray hits")
     auto W = World::DefaultWorld();
     Ray R(Point(0.f, 0.f, -5.f), Vector(0.f, 0.f, 1.f));
 
-    auto C = ColorAt(W, R);
+    auto C = ColorAt(W, R, true);
     CHECK(C == Color(0.38066f, 0.47583f, 0.2855f));
 }
 
@@ -404,7 +403,7 @@ TEST_CASE("The color with an intersection behind the ray")
 
     Ray R(Point(0.f, 0.f, 0.75f), Vector(0.f, 0.f, -1.f));
 
-    auto C = ColorAt(W, R);
+    auto C = ColorAt(W, R, true);
     CHECK(C == Inner->GetMaterial().GetColor());
 }
 
