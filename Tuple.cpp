@@ -13,7 +13,7 @@ Tuple::Tuple(int NumRows, int NumCols) : Matrix(4, 1)
         throw std::invalid_argument("size of a Tuple must be 4x1");
 }
 
-Tuple::Tuple(float X, float Y, float Z, float W) : Matrix(4, 1)
+Tuple::Tuple(double X, double Y, double Z, double W) : Matrix(4, 1)
 {
     this->Set(0, 0, X);
     this->Set(1, 0, Y);
@@ -41,23 +41,23 @@ TEST_CASE("test comparison tuple")
 
 TEST_CASE("negating a tuple")
 {
-    Tuple A = Tuple(1.f, -2.f, 3.f, -4.f);
+    Tuple A = Tuple(1., -2., 3., -4.f);
     Tuple B = -A;
 
-    CHECK(B == Tuple(-1.f, 2.f, -3.f, 4.f));
+    CHECK(B == Tuple(-1., 2., -3., 4.f));
 }
 
 TEST_CASE("multiplying a tuple by a scalar")
 {
-    Tuple A = Tuple(1.f, -2.f, 3.f, -4.f);
+    Tuple A = Tuple(1., -2., 3., -4.f);
 
-    CHECK(A * 3.5 == Tuple(3.5f, -7.f, 10.5f, -14.f));
-    CHECK(A * 0.5 == Tuple(0.5f, -1.f, 1.5f, -2.f));
+    CHECK(A * 3.5 == Tuple(3.5, -7., 10.5, -14.f));
+    CHECK(A * 0.5 == Tuple(0.5, -1., 1.5, -2.f));
 }
 
 TEST_CASE("dividing a tuple by a scalar")
 {
-    Tuple A = Tuple(1.f, -2.f, 3.f, -4.f);
+    Tuple A = Tuple(1., -2., 3., -4.f);
 
-    CHECK(A / 2 == Tuple(0.5f, -1.f, 1.5f, -2.f));
+    CHECK(A / 2 == Tuple(0.5, -1., 1.5, -2.f));
 }

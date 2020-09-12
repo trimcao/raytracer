@@ -14,7 +14,7 @@ template <class OT>
 Intersection<OT>::Intersection() {}
 
 template <class OT>
-float Intersection<OT>::GetT() const
+double Intersection<OT>::GetT() const
 {
     return T;
 }
@@ -26,14 +26,14 @@ std::shared_ptr<OT> Intersection<OT>::GetObject() const
 }
 
 template<class OT>
-Intersection<OT>::Intersection(float T, const OT &O)
+Intersection<OT>::Intersection(double T, const OT &O)
 {
     this->T = T;
     this->O = std::make_shared<OT>(O);
 }
 
 template<class OT>
-Intersection<OT>::Intersection(float T, std::shared_ptr<OT> &O)
+Intersection<OT>::Intersection(double T, std::shared_ptr<OT> &O)
 {
     this->T = T;
     this->O = O;
@@ -103,13 +103,13 @@ std::vector<Intersection<Sphere>> Intersect(const Ray &R, const Sphere &S)
 
     auto TransformedRay = R.Transform(S.GetTransform().Inverse());
 
-    // assume the origin of Sphere is always (0.f, 0.f, 0.f)
-    Vector SphereToRay = TransformedRay.GetOrigin() - Point(0.f, 0.f, 0.f);
-    float A = TransformedRay.GetDirection().Dot(TransformedRay.GetDirection());
-    float B = 2 * TransformedRay.GetDirection().Dot(SphereToRay);
-    float C = SphereToRay.Dot(SphereToRay) - 1.f;
+    // assume the origin of Sphere is always (0., 0., 0.f)
+    Vector SphereToRay = TransformedRay.GetOrigin() - Point(0., 0., 0.f);
+    double A = TransformedRay.GetDirection().Dot(TransformedRay.GetDirection());
+    double B = 2 * TransformedRay.GetDirection().Dot(SphereToRay);
+    double C = SphereToRay.Dot(SphereToRay) - 1.;
 
-    float Discriminant = B * B - 4 * A * C;
+    double Discriminant = B * B - 4 * A * C;
 
     if (Discriminant >= 0.f)
     {
@@ -129,13 +129,13 @@ std::vector<Intersection<Object>> Intersect(const Ray &R, const World &W)
     {
         auto TransformedRay = R.Transform(O->GetTransform().Inverse());
 
-        // assume the origin of Sphere is always (0.f, 0.f, 0.f)
-        Vector SphereToRay = TransformedRay.GetOrigin() - Point(0.f, 0.f, 0.f);
-        float A = TransformedRay.GetDirection().Dot(TransformedRay.GetDirection());
-        float B = 2 * TransformedRay.GetDirection().Dot(SphereToRay);
-        float C = SphereToRay.Dot(SphereToRay) - 1.f;
+        // assume the origin of Sphere is always (0., 0., 0.f)
+        Vector SphereToRay = TransformedRay.GetOrigin() - Point(0., 0., 0.f);
+        double A = TransformedRay.GetDirection().Dot(TransformedRay.GetDirection());
+        double B = 2 * TransformedRay.GetDirection().Dot(SphereToRay);
+        double C = SphereToRay.Dot(SphereToRay) - 1.;
 
-        float Discriminant = B * B - 4 * A * C;
+        double Discriminant = B * B - 4 * A * C;
 
         if (Discriminant >= 0.f)
         {
@@ -153,7 +153,7 @@ std::vector<Intersection<Object>> Intersect(const Ray &R, const World &W)
 Color ShadeHit(World &W, PreComputations<Object> &Comps, bool RenderShadow)
 {
     if (!W.GetLight())
-        return Color(0.f, 0.f, 0.f);
+        return Color(0., 0., 0.f);
 
     bool IsInShadow = false;
     if (RenderShadow)
@@ -172,13 +172,13 @@ Color ColorAt(World &W, Ray &R, bool RenderShadow)
         return ShadeHit(W, Comps, RenderShadow);
     }
 
-    return Color(0.f, 0.f, 0.f);
+    return Color(0., 0., 0.f);
 }
 
 TEST_CASE("An intersection encapsulates t and object")
 {
     Sphere S(3);
-    Intersection I(3.5f, S);
+    Intersection I(3.5, S);
 
     CHECK(Util::Equal(I.GetT(), 3.5f));
     CHECK(I.GetObject()->GetID() == 3);
@@ -187,8 +187,8 @@ TEST_CASE("An intersection encapsulates t and object")
 TEST_CASE("The hit, when all intersections have positive t")
 {
     Sphere S(1);
-    Intersection I1(1.f, S);
-    Intersection I2(2.f, S);
+    Intersection I1(1., S);
+    Intersection I2(2., S);
     auto XS = Intersections(std::vector<Intersection<Sphere>> {I1, I2});
 
     CHECK(*Hit(XS) == I1);
@@ -197,8 +197,8 @@ TEST_CASE("The hit, when all intersections have positive t")
 TEST_CASE("The hit, when some intersections have negative t")
 {
     Sphere S(1);
-    Intersection I1(-1.f, S);
-    Intersection I2(1.f, S);
+    Intersection I1(-1., S);
+    Intersection I2(1., S);
     auto XS = Intersections(std::vector<Intersection<Sphere>> {I1, I2});
 
     CHECK(*Hit(XS) == I2);
@@ -207,8 +207,8 @@ TEST_CASE("The hit, when some intersections have negative t")
 TEST_CASE("The hit, when all intersections have negative t")
 {
     Sphere S(1);
-    Intersection I1(-2.f, S);
-    Intersection I2(-1.f, S);
+    Intersection I1(-2., S);
+    Intersection I2(-1., S);
     auto XS = Intersections(std::vector<Intersection<Sphere>> {I1, I2});
 
     CHECK(Hit(XS) == nullptr);
@@ -217,10 +217,10 @@ TEST_CASE("The hit, when all intersections have negative t")
 TEST_CASE("The hit, when all intersections have negative t")
 {
     Sphere S(1);
-    Intersection I1(5.f, S);
-    Intersection I2(7.f, S);
-    Intersection I3(-3.f, S);
-    Intersection I4(2.f, S);
+    Intersection I1(5., S);
+    Intersection I2(7., S);
+    Intersection I3(-3., S);
+    Intersection I4(2., S);
     auto XS = Intersections(std::vector<Intersection<Sphere>> {I1, I2, I3, I4});
 
     CHECK(*Hit(XS) == I4);
@@ -228,7 +228,7 @@ TEST_CASE("The hit, when all intersections have negative t")
 
 TEST_CASE("A ray intersects a sphere at two points")
 {
-    Ray R(Point(0.f, 0.f, -5.f), Vector(0.f, 0.f, 1.f));
+    Ray R(Point(0., 0., -5.f), Vector(0., 0., 1.f));
     Sphere S;
 
     auto XS = Intersect(R, S);
@@ -239,7 +239,7 @@ TEST_CASE("A ray intersects a sphere at two points")
 
 TEST_CASE("A ray misses a sphere")
 {
-    Ray R(Point(0.f, 2.f, -5.f), Vector(0.f, 0.f, 1.f));
+    Ray R(Point(0., 2., -5.f), Vector(0., 0., 1.f));
     Sphere S;
 
     auto XS = Intersect(R, S);
@@ -248,7 +248,7 @@ TEST_CASE("A ray misses a sphere")
 
 TEST_CASE("A ray originates inside a sphere")
 {
-    Ray R(Point(0.f, 0.f, 0.f), Vector(0.f, 0.f, 1.f));
+    Ray R(Point(0., 0., 0.f), Vector(0., 0., 1.f));
     Sphere S;
 
     auto XS = Intersect(R, S);
@@ -259,7 +259,7 @@ TEST_CASE("A ray originates inside a sphere")
 
 TEST_CASE("A sphere is behind a ray")
 {
-    Ray R(Point(0.f, 0.f, 5.f), Vector(0.f, 0.f, 1.f));
+    Ray R(Point(0., 0., 5.f), Vector(0., 0., 1.f));
     Sphere S;
 
     auto XS = Intersect(R, S);
@@ -271,7 +271,7 @@ TEST_CASE("A sphere is behind a ray")
 TEST_CASE("Intersect a world with a ray")
 {
     World W = World::DefaultWorld();
-    Ray R(Point(0.f, 0.f, -5.f), Vector(0.f, 0.f, 1.f));
+    Ray R(Point(0., 0., -5.f), Vector(0., 0., 1.f));
 
     auto XS = Intersect(R, W);
     CHECK(Util::Equal(XS[0].GetT(), 4.f));
@@ -287,22 +287,22 @@ TEST_CASE("Intersect a world with a ray")
 
 TEST_CASE("Precomputing the state of an intersection")
 {
-    Ray R(Point(0.f, 0.f, -5.f), Vector(0.f, 0.f, 1.f));
+    Ray R(Point(0., 0., -5.f), Vector(0., 0., 1.f));
     Sphere Shape(1);
-    auto I = Intersection<Sphere>(4.f, Shape);
+    auto I = Intersection<Sphere>(4., Shape);
     auto Comps = I.PrepareComputations(R);
 
     CHECK(Comps.AObject->GetID() == Shape.GetID());
-    CHECK(Comps.Position == Point(0.f, 0.f, -1.f));
-    CHECK(Comps.EyeV == Vector(0.f, 0.f, -1.f));
-    CHECK(Comps.NormalV == Vector(0.f, 0.f, -1.f));
+    CHECK(Comps.Position == Point(0., 0., -1.f));
+    CHECK(Comps.EyeV == Vector(0., 0., -1.f));
+    CHECK(Comps.NormalV == Vector(0., 0., -1.f));
 }
 
 TEST_CASE("The hit, when an intersection occurs on the outside")
 {
-    Ray R(Point(0.f, 0.f, -5.f), Vector(0.f, 0.f, 1.f));
+    Ray R(Point(0., 0., -5.f), Vector(0., 0., 1.f));
     Sphere Shape(1);
-    auto I = Intersection<Object>(4.f, Shape);
+    auto I = Intersection<Object>(4., Shape);
     auto Comps = I.PrepareComputations(R);
 
     CHECK(Comps.IsInside == false);
@@ -310,44 +310,44 @@ TEST_CASE("The hit, when an intersection occurs on the outside")
 
 TEST_CASE("The hit, when an intersection occurs on the inside")
 {
-    Ray R(Point(0.f, 0.f, 0.f), Vector(0.f, 0.f, 1.f));
+    Ray R(Point(0., 0., 0.f), Vector(0., 0., 1.f));
     Sphere Shape(1);
-    auto I = Intersection<Sphere>(1.f, Shape);
+    auto I = Intersection<Sphere>(1., Shape);
     auto Comps = I.PrepareComputations(R);
 
-    CHECK(Comps.Position == Point(0.f, 0.f, 1.f));
-    CHECK(Comps.EyeV == Vector(0.f, 0.f, -1.f));
-    CHECK(Comps.NormalV == Vector(0.f, 0.f, -1.f));
+    CHECK(Comps.Position == Point(0., 0., 1.f));
+    CHECK(Comps.EyeV == Vector(0., 0., -1.f));
+    CHECK(Comps.NormalV == Vector(0., 0., -1.f));
     CHECK(Comps.IsInside == true);
 }
 
 TEST_CASE("Shading an intersection")
 {
     auto W = World::DefaultWorld();
-    Ray R(Point(0.f, 0.f, -5.f), Vector(0.f, 0.f, 1.f));
+    Ray R(Point(0., 0., -5.f), Vector(0., 0., 1.f));
     auto Shape = W.GetObjectAt(0);
-    auto I = Intersection<Object>(4.f, Shape);
+    auto I = Intersection<Object>(4., Shape);
     auto Comps = I.PrepareComputations(R);
     auto C = ShadeHit(W, Comps);
 
-    CHECK(C == Color(0.38066f, 0.47583f, 0.2855f));
+    CHECK(C == Color(0.38066, 0.47583, 0.2855f));
 }
 
 TEST_CASE("Shading an intersection from the inside")
 {
     auto W = World::DefaultWorld();
-    W.SetLight(Light(Color(1.f, 1.f, 1.f), Point(0.f, 0.25f, 0.f)));
+    W.SetLight(Light(Color(1., 1., 1.f), Point(0., 0.25, 0.f)));
 
-    Ray R(Point(0.f, 0.f, 0.f), Vector(0.f, 0.f, 1.f));
+    Ray R(Point(0., 0., 0.f), Vector(0., 0., 1.f));
     auto Shape = W.GetObjectAt(1);
-    auto I = Intersection<Object>(0.5f, Shape);
+    auto I = Intersection<Object>(0.5, Shape);
     auto Comps = I.PrepareComputations(R);
     
     bool IsInShadow = W.IsShadowed(Comps.OverPosition);
 
     auto C = ShadeHit(W, Comps);
 
-    CHECK(C == Color(0.90498f, 0.90498f, 0.90498f));
+    CHECK(C == Color(0.90498, 0.90498, 0.90498f));
     CHECK(Comps.IsInside == true);
 }
 
@@ -355,8 +355,8 @@ TEST_CASE("Smart pointer and polymorphism")
 {
     std::vector<std::unique_ptr<Object>> X;
     Sphere S;
-    S.SetTransform(Matrix::Scaling(0.5f, 0.5f, 0.5f));
-    auto V = S.NormalAt(Point(0.5f, 0.f, 0.f));
+    S.SetTransform(Matrix::Scaling(0.5, 0.5, 0.5f));
+    auto V = S.NormalAt(Point(0.5, 0., 0.f));
 
     // need to use make_unique, otherwise it will complain when free the memory
     X.push_back(std::make_unique<Sphere>(S));
@@ -365,25 +365,25 @@ TEST_CASE("Smart pointer and polymorphism")
     // std::cout << "Pointer location: " << X[0] << '\n';
     // std::cout << "Vector location: " << &X << '\n';
     // std::cout << "Normal vector value: " << V << '\n';
-    // std::cout << "Normal vector value from vector X: " << X[0]->NormalAt(Point(0.5f, 0.f, 0.f)) << '\n';
+    // std::cout << "Normal vector value from vector X: " << X[0]->NormalAt(Point(0.5, 0., 0.f)) << '\n';
 }
 
 TEST_CASE("The color when a ray misses")
 {
     auto W = World::DefaultWorld();
-    Ray R(Point(0.f, 0.f, -5.f), Vector(0.f, 1.f, 0.f));
+    Ray R(Point(0., 0., -5.f), Vector(0., 1., 0.f));
 
     auto C = ColorAt(W, R, true);
-    CHECK(C == Color(0.f, 0.f, 0.f));
+    CHECK(C == Color(0., 0., 0.f));
 }
 
 TEST_CASE("The color when a ray hits")
 {
     auto W = World::DefaultWorld();
-    Ray R(Point(0.f, 0.f, -5.f), Vector(0.f, 0.f, 1.f));
+    Ray R(Point(0., 0., -5.f), Vector(0., 0., 1.f));
 
     auto C = ColorAt(W, R, true);
-    CHECK(C == Color(0.38066f, 0.47583f, 0.2855f));
+    CHECK(C == Color(0.38066, 0.47583, 0.2855f));
 }
 
 TEST_CASE("The color with an intersection behind the ray")
@@ -401,7 +401,7 @@ TEST_CASE("The color with an intersection behind the ray")
 
     // std::cout << "Inner ambient:" << Inner->GetMaterial().GetAmbient() << '\n';
 
-    Ray R(Point(0.f, 0.f, 0.75f), Vector(0.f, 0.f, -1.f));
+    Ray R(Point(0., 0., 0.75f), Vector(0., 0., -1.f));
 
     auto C = ColorAt(W, R, true);
     CHECK(C == Inner->GetMaterial().GetColor());
@@ -409,10 +409,10 @@ TEST_CASE("The color with an intersection behind the ray")
 
 TEST_CASE("The hit should offset the point")
 {
-    Ray R(Point(0.f, 0.f, -5.f), Vector(0.f, 0.f, 1.f));
+    Ray R(Point(0., 0., -5.f), Vector(0., 0., 1.f));
     Sphere Shape;
-    Shape.SetTransform(Matrix::Translation(0.f, 0.f, 1.f));
-    Intersection I(5.f, Shape);
+    Shape.SetTransform(Matrix::Translation(0., 0., 1.f));
+    Intersection I(5., Shape);
     auto Comps = I.PrepareComputations(R);
 
     CHECK(Comps.OverPosition.Z() < -Util::EPSILON/2);

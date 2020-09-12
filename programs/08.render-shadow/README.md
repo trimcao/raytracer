@@ -1,8 +1,3 @@
-## A simple scene with multiple spheres
+## Same scene from program 07 but with shadow
 
-![alt text](output.png "Simple World")
-
-
-Rotate the camera a bit
-
-![alt text](images/rotatez.png "Simple World")
+![alt text](output.png "Simple World with Shadow")

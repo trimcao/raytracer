@@ -8,22 +8,22 @@ class Vector : public Matrix
 {
 public:
     Vector();
-    Vector(float X, float Y, float Z);
+    Vector(double X, double Y, double Z);
     Vector(int NumRows, int NumCols);
     Vector(Matrix &M);
     Vector(Matrix &&M);
 
-    inline float X() const { return this->At(0, 0); }
-    inline float Y() const { return this->At(1, 0); }
-    inline float Z() const { return this->At(2, 0); }
+    inline double X() const { return this->At(0, 0); }
+    inline double Y() const { return this->At(1, 0); }
+    inline double Z() const { return this->At(2, 0); }
 
-    inline void SetW(float Val) { this->Set(3, 0, Val); }
+    inline void SetW(double Val) { this->Set(3, 0, Val); }
 
     Vector operator-() const { return Vector(-this->X(), -this->Y(), -this->Z()); }
 
-    Vector operator*(float Scalar) const { return Vector(this->X() * Scalar, this->Y() * Scalar, this->Z() * Scalar); }
+    Vector operator*(double Scalar) const { return Vector(this->X() * Scalar, this->Y() * Scalar, this->Z() * Scalar); }
 
-    Vector operator/(float Scalar) const { return Vector(this->X() / Scalar, this->Y() / Scalar, this->Z() / Scalar); }
+    Vector operator/(double Scalar) const { return Vector(this->X() / Scalar, this->Y() / Scalar, this->Z() / Scalar); }
 
     void operator=(const Matrix &M)
     {
@@ -38,10 +38,10 @@ public:
         this->Set(3, 0, M.At(3, 0));
     }
 
-    float Magnitude();
+    double Magnitude();
     Vector Normalize();
 
-    float Dot(const Vector &V);
+    double Dot(const Vector &V);
     Vector Cross(const Vector &V);
 
     Vector Reflect(const Vector &N);
@@ -57,7 +57,7 @@ inline Vector operator+(const Vector &A, const Vector &B)
     return Vector(A.X() + B.X(), A.Y() + B.Y(), A.Z() + B.Z());
 }
 
-inline Vector operator*(float S, const Vector &B)
+inline Vector operator*(double S, const Vector &B)
 {
     return Vector(S * B.X(), S * B.Y(), S * B.Z());
 }

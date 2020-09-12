@@ -29,12 +29,12 @@ Projectile Tick(const Environment &Env, const Projectile &Proj);
 int main(int argc, char **argv)
 {
     Projectile P;
-    P.Position = Point(0.f, 1.f, 0.f);
-    P.Velocity = Vector(1.f, 1.8f, 0.f).Normalize() * 11.25f;
+    P.Position = Point(0., 1., 0.f);
+    P.Velocity = Vector(1., 1.8, 0.f).Normalize() * 11.25;
 
     Environment E;
-    E.Gravity = Vector(0.f, -0.1f, 0.f);
-    E.Wind = Vector(-0.01f, 0.f, 0.f);
+    E.Gravity = Vector(0., -0.1, 0.f);
+    E.Wind = Vector(-0.01, 0., 0.f);
 
     Canvas CV = Canvas(900, 550);
     int Height = CV.GetHeight();
@@ -45,7 +45,7 @@ int main(int argc, char **argv)
         int X = std::round(P.Position.X());
         int Y = std::round(P.Position.Y());
         std::cout << "X, Y: " << X << ' ' << Height - Y << "\n";
-        Color Green = Color(0.f, 1.f, 0.f);
+        Color Green = Color(0., 1., 0.f);
 
         // draw a square instead of a pixel so it's easier to see
         CV.WritePixel(X, Height - Y, Green);

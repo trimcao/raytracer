@@ -9,19 +9,19 @@ class Point : public Matrix
 {
 public:
     Point();
-    Point(float X, float Y, float Z);
+    Point(double X, double Y, double Z);
     Point(int NumRows, int NumCols);
     Point(Matrix &M);
 
-    inline float X() const { return this->At(0, 0); }
-    inline float Y() const { return this->At(1, 0); }
-    inline float Z() const { return this->At(2, 0); }
+    inline double X() const { return this->At(0, 0); }
+    inline double Y() const { return this->At(1, 0); }
+    inline double Z() const { return this->At(2, 0); }
 
     Point operator-() const { return Point(-this->X(), -this->Y(), -this->Z()); }
 
-    Point operator*(float Scalar) const { return Point(this->X() * Scalar, this->Y() * Scalar, this->Z() * Scalar); }
+    Point operator*(double Scalar) const { return Point(this->X() * Scalar, this->Y() * Scalar, this->Z() * Scalar); }
 
-    Point operator/(float Scalar) const { return Point(this->X() / Scalar, this->Y() / Scalar, this->Z() / Scalar); }
+    Point operator/(double Scalar) const { return Point(this->X() / Scalar, this->Y() / Scalar, this->Z() / Scalar); }
 
     void operator=(const Matrix &M)
     {
@@ -57,7 +57,7 @@ inline Point operator-(const Point &A, const Vector &B)
     return Point(A.X() - B.X(), A.Y() - B.Y(), A.Z() - B.Z());
 }
 
-inline Point operator*(float S, const Point &B)
+inline Point operator*(double S, const Point &B)
 {
     return Point(S * B.X(), S * B.Y(), S * B.Z());
 }

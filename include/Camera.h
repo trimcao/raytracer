@@ -12,25 +12,25 @@ class Camera
     int HSize;
     int VSize;
     // FOV is in radian
-    float FieldOfView;
+    double FieldOfView;
     Matrix Transform;
-    float PixelSize;
-    float HalfWidth;
-    float HalfHeight;
+    double PixelSize;
+    double HalfWidth;
+    double HalfHeight;
 
 public:
     Camera();
-    Camera(int H, int V, float FOV);
+    Camera(int H, int V, double FOV);
 
     void ComputePixelSize();
 
     inline int GetHSize() { return HSize; }
     inline int GetVSize() { return VSize; }
-    inline float GetFOV() { return FieldOfView; }
+    inline double GetFOV() { return FieldOfView; }
     inline Matrix GetTransform() { return Transform; }
-    inline float GetPixelSize() { return PixelSize; }
+    inline double GetPixelSize() { return PixelSize; }
 
-    inline void SetPixelSize(float PS) { PixelSize = PS; }
+    inline void SetPixelSize(double PS) { PixelSize = PS; }
     inline void SetTransform(Matrix &M) { Transform = M; }
     inline void SetTransform(Matrix &&M) { Transform = M; }
 

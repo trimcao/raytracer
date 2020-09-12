@@ -9,26 +9,26 @@
 class Material
 {
     Color AColor;
-    float Ambient;
-    float Diffuse;
-    float Specular;
-    float Shininess;
+    double Ambient;
+    double Diffuse;
+    double Specular;
+    double Shininess;
 
 public:
     Material();
-    Material(Color &C, float Amb, float Diff, float Spec, float Shini);
-    Material(Color &&C, float Amb, float Diff, float Spec, float Shini);
+    Material(Color &C, double Amb, double Dif, double Spec, double Shini);
+    Material(Color &&C, double Amb, double Dif, double Spec, double Shini);
 
-    inline float GetAmbient() const { return Ambient; }
-    inline float GetDiffuse() const { return Diffuse; }
-    inline float GetSpecular() const { return Specular; }
-    inline float GetShininess() const { return Shininess; }
+    inline double GetAmbient() const { return Ambient; }
+    inline double GetDiffuse() const { return Diffuse; }
+    inline double GetSpecular() const { return Specular; }
+    inline double GetShininess() const { return Shininess; }
     inline Color GetColor() const { return AColor; }
 
-    inline void SetAmbient(float Amb) { Ambient = Amb; }
-    inline void SetDiffuse(float Diff) { Diffuse = Diff; }
-    inline void SetSpecular(float Spec) { Specular = Spec; }
-    inline void SetShininess(float Shini) { Shininess = Shini; }
+    inline void SetAmbient(double Amb) { Ambient = Amb; }
+    inline void SetDiffuse(double Diff) { Diffuse = Diff; }
+    inline void SetSpecular(double Spec) { Specular = Spec; }
+    inline void SetShininess(double Shini) { Shininess = Shini; }
     inline void SetColor(Color &C) { AColor = C; }
     inline void SetColor(Color &&C) { AColor = C; }
 };

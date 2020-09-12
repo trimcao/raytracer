@@ -3,23 +3,23 @@
 
 Material::Material()
 {
-    AColor = Color(1.f, 1.f, 1.f);
-    Ambient = 0.1f;
-    Diffuse = 0.9f;
-    Specular = 0.9f;
-    Shininess = 200.f;
+    AColor = Color(1., 1., 1.f);
+    Ambient = 0.1;
+    Diffuse = 0.9;
+    Specular = 0.9;
+    Shininess = 200.;
 }
 
-Material::Material(Color &C, float Amb, float Diff, float Spec, float Shini)
+Material::Material(Color &C, double Amb, double Dif, double Spec, double Shini)
 {
     AColor = C;
     Ambient = Amb;
-    Diffuse = Diff;
+    Diffuse = Dif;
     Specular = Spec;
     Shininess = Shini;
 }
 
-Material::Material(Color &&C, float Amb, float Diff, float Spec, float Shini) : Material(C, Amb, Diff, Spec, Shini)
+Material::Material(Color &&C, double Amb, double Dif, double Spec, double Shini) : Material(C, Amb, Dif, Spec, Shini)
 {
 }
 
@@ -40,7 +40,7 @@ TEST_CASE("The default material")
 {
     Material M;
 
-    CHECK(M.GetColor() == Color(1.f, 1.f, 1.f));
+    CHECK(M.GetColor() == Color(1., 1., 1.f));
     CHECK(Util::Equal(M.GetAmbient(), 0.1f));
     CHECK(Util::Equal(M.GetDiffuse(), 0.9f));
     CHECK(Util::Equal(M.GetSpecular(), 0.9f));

@@ -4,7 +4,7 @@
 
 namespace Util
 {
-    const float EPSILON = 0.00001f;
+    const double EPSILON = 0.00001;
 
-    bool Equal(const float &A, const float &B);
+    bool Equal(const double &A, const double &B);
 }

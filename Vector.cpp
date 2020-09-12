@@ -15,7 +15,7 @@ Vector::Vector(int NumRows, int NumCols) : Matrix(4, 1)
         throw std::invalid_argument("size of a Vector must be 4x1");
 }
 
-Vector::Vector(float X, float Y, float Z) : Matrix(4, 1)
+Vector::Vector(double X, double Y, double Z) : Matrix(4, 1)
 {
     this->Set(0, 0, X);
     this->Set(1, 0, Y);
@@ -40,18 +40,18 @@ Vector::Vector(Matrix &&M) : Vector(M)
 {
 }
 
-float Vector::Magnitude()
+double Vector::Magnitude()
 {
     return std::sqrt(pow(X(), 2.f) + pow(Y(), 2.f) + pow(Z(), 2.f));
 }
 
 Vector Vector::Normalize()
 {
-    float Mag = this->Magnitude();
+    double Mag = this->Magnitude();
     return Vector(X()/ Mag, Y() / Mag, Z() / Mag);
 }
 
-float Vector::Dot(const Vector &V)
+double Vector::Dot(const Vector &V)
 {
     return (X() * V.X() + Y() * V.Y() + Z() * V.Z());
 }
@@ -76,24 +76,24 @@ std::ostream &operator<<(std::ostream &os, const Vector &V)
 
 TEST_CASE("testing the Vector")
 {
-    Vector v = Vector(4.3f, -4.2f, 3.1f);
-    CHECK(v == Matrix(4.3f, -4.2f, 3.1f, 0.f));
+    Vector v = Vector(4.3, -4.2, 3.1f);
+    CHECK(v == Matrix(4.3, -4.2, 3.1, 0.f));
 }
 
 TEST_CASE("subtracting two vectors")
 {
-    Vector A = Vector(3.f, 2.f, 1.f);
-    Vector B = Vector(5.f, 6.f, 7.f);
-    CHECK((A - B) == Vector(-2.f, -4.f, -6.f));
+    Vector A = Vector(3., 2., 1.f);
+    Vector B = Vector(5., 6., 7.f);
+    CHECK((A - B) == Vector(-2., -4., -6.f));
 }
 
 TEST_CASE("computing the magnitude of a vector")
 {
-    Vector A = Vector(1.f, 0.f, 0.f);
-    Vector B = Vector(0.f, 1.f, 0.f);
-    Vector C = Vector(0.f, 0.f, 1.f);
-    Vector D = Vector(1.f, 2.f, 3.f);
-    Vector E = Vector(-1.f, -2.f, -3.f);
+    Vector A = Vector(1., 0., 0.f);
+    Vector B = Vector(0., 1., 0.f);
+    Vector C = Vector(0., 0., 1.f);
+    Vector D = Vector(1., 2., 3.f);
+    Vector E = Vector(-1., -2., -3.f);
 
     CHECK(Util::Equal(A.Magnitude(), 1.0));
     CHECK(Util::Equal(B.Magnitude(), 1.0));
@@ -104,19 +104,19 @@ TEST_CASE("computing the magnitude of a vector")
 
 TEST_CASE("computing the normalization of a vector")
 {
-    Vector A = Vector(4.f, 0.f, 0.f);
-    Vector D = Vector(1.f, 2.f, 3.f);
-    Vector E = Vector(-1.f, -2.f, -3.f);
+    Vector A = Vector(4., 0., 0.f);
+    Vector D = Vector(1., 2., 3.f);
+    Vector E = Vector(-1., -2., -3.f);
 
-    CHECK(A.Normalize() == Vector(1.f, 0.f, 0.f));
-    CHECK(D.Normalize() == Vector(0.26726f, 0.53452f, 0.80178f));
+    CHECK(A.Normalize() == Vector(1., 0., 0.f));
+    CHECK(D.Normalize() == Vector(0.26726, 0.53452, 0.80178f));
     CHECK(Util::Equal(D.Normalize().Magnitude(), 1.f));
 }
 
 TEST_CASE("dot product of two vectors")
 {
-    Vector A = Vector(1.f, 2.f, 3.f);
-    Vector B = Vector(2.f, 3.f, 4.f);
+    Vector A = Vector(1., 2., 3.f);
+    Vector B = Vector(2., 3., 4.f);
 
     CHECK(Util::Equal(A.Dot(B), 20.f));
     CHECK(Util::Equal(B.Dot(A), 20.f));
@@ -124,25 +124,25 @@ TEST_CASE("dot product of two vectors")
 
 TEST_CASE("cross product of two vectors")
 {
-    Vector A = Vector(1.f, 2.f, 3.f);
-    Vector B = Vector(2.f, 3.f, 4.f);
+    Vector A = Vector(1., 2., 3.f);
+    Vector B = Vector(2., 3., 4.f);
 
-    CHECK(A.Cross(B) == Vector(-1.f, 2.f, -1.f));
-    CHECK(B.Cross(A) == Vector(1.f, -2.f, 1.f));
+    CHECK(A.Cross(B) == Vector(-1., 2., -1.f));
+    CHECK(B.Cross(A) == Vector(1., -2., 1.f));
 }
 
 TEST_CASE("Reflecting a vector approaching at 45 degrees")
 {
-    Vector V(1.f, -1.f, 0.f);
-    Vector N(0.f, 1.f, 0.f);
+    Vector V(1., -1., 0.f);
+    Vector N(0., 1., 0.f);
     auto R = V.Reflect(N);
-    CHECK(R == Vector(1.f, 1.f, 0.f));
+    CHECK(R == Vector(1., 1., 0.f));
 }
 
 TEST_CASE("Reflecting a vector off a slanted surface")
 {
-    Vector V(0.f, -1.f, 0.f);
+    Vector V(0., -1., 0.f);
     Vector N(std::sqrt(2.f)/2, std::sqrt(2.f)/2, 0.f);
     auto R = V.Reflect(N);
-    CHECK(R == Vector(1.f, 0.f, 0.f));
+    CHECK(R == Vector(1., 0., 0.f));
 }
