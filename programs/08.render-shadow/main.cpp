@@ -75,7 +75,7 @@ int main(int argc, char **argv)
     W.AddObject(Right);
     W.AddObject(Left);
 
-    Camera Cam(100, 50, M_PI/3);
+    Camera Cam(800, 400, M_PI/3);
     Cam.SetTransform(Transformations::ViewTransform(Point(0.1, 1.5, -5.f),
                                                     Point(0., 1., 0.f),
                                                     Vector(0., 1., 0.f)));
