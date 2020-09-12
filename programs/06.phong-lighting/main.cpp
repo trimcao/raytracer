@@ -28,20 +28,20 @@ int main(int argc, char **argv)
     double PixelSize = WallSize / CV.GetHeight();
     double Half = WallSize / 2.;
     
-    Color Red = Color(1., 0., 0.f);
-    Color Green = Color(0., 1., 0.f);
+    Color Red = Color(1., 0., 0.);
+    Color Green = Color(0., 1., 0.);
 
-    Point RayOrigin = Point(0., 0., -5.f);
+    Point RayOrigin = Point(0., 0., -5.);
     Sphere S;
     Material M;
-    M.SetColor(Color(1., 0.2, 1.f));
+    M.SetColor(Color(1., 0.2, 1.));
     S.SetMaterial(M);
 
     // add some scaling to the sphere
-    S.SetTransform(Matrix::Scaling(0.7, 1., 1.f));
+    S.SetTransform(Matrix::Scaling(0.7, 1., 1.));
 
     // add a light source
-    Light L(Color(1., 1., 1.f), Point(-10., 10., -10.f));
+    Light L(Color(1., 1., 1.), Point(-10., 10., -10.));
 
     // variables for progress bar
     int TotalPixels = CV.GetHeight() * CV.GetWidth();

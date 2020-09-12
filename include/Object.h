@@ -31,6 +31,6 @@ public:
     inline void SetMaterial(Material &&M) { AMaterial = M; }
 
     // inline virtual Vector NormalAt(Point &P) { return P - Origin; }
-    inline virtual Vector NormalAt(Point &P) { return Vector(0., 0., 0.f); }
+    inline virtual Vector NormalAt(Point &P) { return Vector(0., 0., 0.); }
     inline virtual Vector NormalAt(Point &&P) { return NormalAt(P); }
 };

@@ -27,7 +27,7 @@ public:
     {
         if (M.GetNumRows() != 4 && M.GetNumCols() != 1)
             throw std::invalid_argument("size of a Point must be 4x1");
-        if (!Util::Equal(M.At(3, 0), 1.f))
+        if (!Util::Equal(M.At(3, 0), 1.))
             throw std::invalid_argument("W value must be 1.0");
 
         this->Set(0, 0, M.At(0, 0));

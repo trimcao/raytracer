@@ -3,7 +3,7 @@
 
 Material::Material()
 {
-    AColor = Color(1., 1., 1.f);
+    AColor = Color(1., 1., 1.);
     Ambient = 0.1;
     Diffuse = 0.9;
     Specular = 0.9;
@@ -40,9 +40,9 @@ TEST_CASE("The default material")
 {
     Material M;
 
-    CHECK(M.GetColor() == Color(1., 1., 1.f));
-    CHECK(Util::Equal(M.GetAmbient(), 0.1f));
-    CHECK(Util::Equal(M.GetDiffuse(), 0.9f));
-    CHECK(Util::Equal(M.GetSpecular(), 0.9f));
-    CHECK(Util::Equal(M.GetShininess(), 200.f));
+    CHECK(M.GetColor() == Color(1., 1., 1.));
+    CHECK(Util::Equal(M.GetAmbient(), 0.1));
+    CHECK(Util::Equal(M.GetDiffuse(), 0.9));
+    CHECK(Util::Equal(M.GetSpecular(), 0.9));
+    CHECK(Util::Equal(M.GetShininess(), 200.));
 }

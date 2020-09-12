@@ -41,23 +41,23 @@ TEST_CASE("test comparison tuple")
 
 TEST_CASE("negating a tuple")
 {
-    Tuple A = Tuple(1., -2., 3., -4.f);
+    Tuple A = Tuple(1., -2., 3., -4.);
     Tuple B = -A;
 
-    CHECK(B == Tuple(-1., 2., -3., 4.f));
+    CHECK(B == Tuple(-1., 2., -3., 4.));
 }
 
 TEST_CASE("multiplying a tuple by a scalar")
 {
-    Tuple A = Tuple(1., -2., 3., -4.f);
+    Tuple A = Tuple(1., -2., 3., -4.);
 
-    CHECK(A * 3.5 == Tuple(3.5, -7., 10.5, -14.f));
-    CHECK(A * 0.5 == Tuple(0.5, -1., 1.5, -2.f));
+    CHECK(A * 3.5 == Tuple(3.5, -7., 10.5, -14.));
+    CHECK(A * 0.5 == Tuple(0.5, -1., 1.5, -2.));
 }
 
 TEST_CASE("dividing a tuple by a scalar")
 {
-    Tuple A = Tuple(1., -2., 3., -4.f);
+    Tuple A = Tuple(1., -2., 3., -4.);
 
-    CHECK(A / 2 == Tuple(0.5, -1., 1.5, -2.f));
+    CHECK(A / 2 == Tuple(0.5, -1., 1.5, -2.));
 }

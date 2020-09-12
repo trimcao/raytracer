@@ -20,11 +20,11 @@ int main(int argc, char **argv)
     int MidHeight = CV.GetHeight() / 2.;
     int MidWidth = CV.GetWidth() / 2.;
 
-    Color Green = Color(0., 1., 0.f);
+    Color Green = Color(0., 1., 0.);
 
     double Scaling = 200.;
 
-    Point P = Point(0., 1., 0.f);
+    Point P = Point(0., 1., 0.);
     double X = P.X() * Scaling;
     double Y = P.Y() * Scaling;
 

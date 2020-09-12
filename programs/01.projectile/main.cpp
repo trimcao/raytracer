@@ -24,12 +24,12 @@ Projectile Tick(const Environment &Env, const Projectile &Proj);
 int main(int argc, char **argv)
 {
     Projectile P;
-    P.Position = Point(0., 1., 0.f);
-    P.Velocity = Vector(1., 1., 0.f).Normalize();
+    P.Position = Point(0., 1., 0.);
+    P.Velocity = Vector(1., 1., 0.).Normalize();
 
     Environment E;
-    E.Gravity = Vector(0., -0.1, 0.f);
-    E.Wind = Vector(-0.01, 0., 0.f);
+    E.Gravity = Vector(0., -0.1, 0.);
+    E.Wind = Vector(-0.01, 0., 0.);
 
     while (P.Position.Y() >= 0)
     {

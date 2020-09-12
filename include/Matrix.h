@@ -36,7 +36,7 @@ public:
         return Res;
     }
 
-    Matrix operator-() const { return (*this) * (-1.f); }
+    Matrix operator-() const { return (*this) * (-1.); }
 
     Matrix operator/(double S) const { return (*this) * (1.f / S); }
 

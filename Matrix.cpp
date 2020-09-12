@@ -18,11 +18,11 @@ Matrix::Matrix(int NumRows, int NumCols, double Val)
     m = std::vector<std::vector<double>>(numRows, std::vector<double>(numCols, Val));
 }
 
-Matrix::Matrix(int NumRows, int NumCols) : Matrix(NumRows, NumCols, 0.f)
+Matrix::Matrix(int NumRows, int NumCols) : Matrix(NumRows, NumCols, 0.)
 {
 }
 
-Matrix::Matrix(double X, double Y, double Z, double W) : Matrix(4, 1, 0.f)
+Matrix::Matrix(double X, double Y, double Z, double W) : Matrix(4, 1, 0.)
 {
     m[0][0] = X;
     m[1][0] = Y;
@@ -261,7 +261,7 @@ bool Matrix::IsInvertible()
 Matrix Matrix::Inverse()
 {
     double Det = Determinant();
-    if (Util::Equal(Det, 0.f))
+    if (Util::Equal(Det, 0.))
         throw std::invalid_argument("this matrix is not invertible");
 
     Matrix Res(numRows, numCols);
@@ -392,13 +392,13 @@ TEST_CASE("constructing and inspecting a 4x4 matrix")
     M(3, 2) = 15.5;
     M(3, 3) = 16.5;
 
-    CHECK(M(0, 0) == 1.f);
-    CHECK(M(0, 3) == 4.f);
-    CHECK(M(1, 0) == 5.5f);
-    CHECK(M(1, 2) == 7.5f);
-    CHECK(M(2, 2) == 11.f);
-    CHECK(M(3, 0) == 13.5f);
-    CHECK(M(3, 2) == 15.5f);
+    CHECK(M(0, 0) == 1.);
+    CHECK(M(0, 3) == 4.);
+    CHECK(M(1, 0) == 5.5);
+    CHECK(M(1, 2) == 7.5);
+    CHECK(M(2, 2) == 11.);
+    CHECK(M(3, 0) == 13.5);
+    CHECK(M(3, 2) == 15.5);
 }
 
 TEST_CASE("compare two matrices")
@@ -441,8 +441,8 @@ TEST_CASE("compare two matrices")
 
     CHECK(M == N);
 
-    Matrix A(4, 4, 1.f);
-    Matrix B(4, 4, 1.f);
+    Matrix A(4, 4, 1.);
+    Matrix B(4, 4, 1.);
     CHECK(M != A);
     CHECK(A == B);
 }
@@ -455,10 +455,10 @@ TEST_CASE("2x2 matrix")
     A(1, 0) = 1.;
     A(1, 1) = -2.;
 
-    CHECK(A.At(0, 0) == -3.f);
-    CHECK(A.At(0, 1) == 5.f);
-    CHECK(A.At(1, 0) == 1.f);
-    CHECK(A.At(1, 1) == -2.f);
+    CHECK(A.At(0, 0) == -3.);
+    CHECK(A.At(0, 1) == 5.);
+    CHECK(A.At(1, 0) == 1.);
+    CHECK(A.At(1, 1) == -2.);
 }
 
 TEST_CASE("3x3 matrix")
@@ -474,9 +474,9 @@ TEST_CASE("3x3 matrix")
     A(2, 1) = 1.;
     A(2, 2) = 1.;
 
-    CHECK(A.At(0, 0) == -3.f);
-    CHECK(A.At(1, 1) == -2.f);
-    CHECK(A.At(2, 2) == 1.f);
+    CHECK(A.At(0, 0) == -3.);
+    CHECK(A.At(1, 1) == -2.);
+    CHECK(A.At(2, 2) == 1.);
 }
 
 TEST_CASE("matrix operators (+, -, *, /)")
@@ -487,7 +487,7 @@ TEST_CASE("matrix operators (+, -, *, /)")
     A(1, 0) = 1.;
     A(1, 1) = -2.;
 
-    Matrix B(2, 2, 1.f);
+    Matrix B(2, 2, 1.);
 
     Matrix C(2, 2);
     C(0, 0) = -2.;
@@ -585,9 +585,9 @@ TEST_CASE("a matrix multiplied by a tuple")
     M(3, 2) = 0.;
     M(3, 3) = 1.;
 
-    Point N(1., 2., 3.f);
+    Point N(1., 2., 3.);
 
-    Point A(18., 24., 33.f);
+    Point A(18., 24., 33.);
 
     CHECK(M.Mul(N) == A);
 }
@@ -627,7 +627,7 @@ TEST_CASE("multiplying a matrix by the identity matrix")
 
 TEST_CASE("multiplying the identity matrix by a tuple")
 {
-    Tuple T(1., 2., 3., 4.f);
+    Tuple T(1., 2., 3., 4.);
 
     CHECK(Matrix::Identity(4).Mul(T) == T);
 }
@@ -681,7 +681,7 @@ TEST_CASE("calculating the determinant of a 2x2 matrix")
     A(1, 0) = -3.;
     A(1, 1) = 2.;
 
-    CHECK(Util::Equal(A.Determinant(), 17.f));
+    CHECK(Util::Equal(A.Determinant(), 17.));
 }
 
 TEST_CASE("a submatrix of a 3x3 matrix is a 2x2 matrix")
@@ -753,7 +753,7 @@ TEST_CASE("calculating a minor of a 3x3 matrix")
     A(2, 1) = -1.;
     A(2, 2) = 5.;
 
-    CHECK(Util::Equal(A.Minor(1, 0), 25.f));
+    CHECK(Util::Equal(A.Minor(1, 0), 25.));
 }
 
 TEST_CASE("calculating a cofactor of a 3x3 matrix")
@@ -769,8 +769,8 @@ TEST_CASE("calculating a cofactor of a 3x3 matrix")
     A(2, 1) = -1.;
     A(2, 2) = 5.;
 
-    CHECK(Util::Equal(A.Cofactor(1, 0), -25.f));
-    CHECK(Util::Equal(A.Cofactor(0, 0), -12.f));
+    CHECK(Util::Equal(A.Cofactor(1, 0), -25.));
+    CHECK(Util::Equal(A.Cofactor(0, 0), -12.));
 }
 
 TEST_CASE("calculating the determinant of a 3x3 matrix")
@@ -786,11 +786,11 @@ TEST_CASE("calculating the determinant of a 3x3 matrix")
     A(2, 1) = 6.;
     A(2, 2) = 4.;
 
-    CHECK(Util::Equal(A.Cofactor(0, 0), 56.f));
-    CHECK(Util::Equal(A.Cofactor(0, 1), 12.f));
-    CHECK(Util::Equal(A.Cofactor(0, 2), -46.f));
+    CHECK(Util::Equal(A.Cofactor(0, 0), 56.));
+    CHECK(Util::Equal(A.Cofactor(0, 1), 12.));
+    CHECK(Util::Equal(A.Cofactor(0, 2), -46.));
  
-    CHECK(Util::Equal(A.Determinant(), -196.f));
+    CHECK(Util::Equal(A.Determinant(), -196.));
 }
 
 TEST_CASE("calculating the determinant of a 4x4 matrix")
@@ -813,11 +813,11 @@ TEST_CASE("calculating the determinant of a 4x4 matrix")
     A(3, 2) = 7.;
     A(3, 3) = -9.;
 
-    CHECK(Util::Equal(A.Cofactor(0, 0), 690.f));
-    CHECK(Util::Equal(A.Cofactor(0, 1), 447.f));
-    CHECK(Util::Equal(A.Cofactor(0, 2), 210.f));
-    CHECK(Util::Equal(A.Cofactor(0, 3), 51.f));
-    CHECK(Util::Equal(A.Determinant(), -4071.f));
+    CHECK(Util::Equal(A.Cofactor(0, 0), 690.));
+    CHECK(Util::Equal(A.Cofactor(0, 1), 447.));
+    CHECK(Util::Equal(A.Cofactor(0, 2), 210.));
+    CHECK(Util::Equal(A.Cofactor(0, 3), 51.));
+    CHECK(Util::Equal(A.Determinant(), -4071.));
 }
 
 TEST_CASE("testing the invertible matrix for invertibility")
@@ -840,7 +840,7 @@ TEST_CASE("testing the invertible matrix for invertibility")
     A(3, 2) = 7.;
     A(3, 3) = -6.;
 
-    CHECK(Util::Equal(A.Determinant(), -2120.f));
+    CHECK(Util::Equal(A.Determinant(), -2120.));
     CHECK(A.IsInvertible());
 }
 
@@ -864,7 +864,7 @@ TEST_CASE("testing the noninvertible matrix for invertibility")
     A(3, 2) = 0.;
     A(3, 3) = 0.;
 
-    CHECK(Util::Equal(A.Determinant(), 0.f));
+    CHECK(Util::Equal(A.Determinant(), 0.));
     CHECK(!A.IsInvertible());
 }
 
@@ -888,12 +888,12 @@ TEST_CASE("calculating the inverse of a matrix")
     A(3, 2) = 7.;
     A(3, 3) = 4.;
 
-    CHECK(Util::Equal(A.Determinant(), 532.f));
-    CHECK(Util::Equal(A.Cofactor(2, 3), -160.f));
-    CHECK(Util::Equal(A.Cofactor(3, 2), 105.f));
+    CHECK(Util::Equal(A.Determinant(), 532.));
+    CHECK(Util::Equal(A.Cofactor(2, 3), -160.));
+    CHECK(Util::Equal(A.Cofactor(3, 2), 105.));
 
-    CHECK(A.Cofactor(2, 3) == -160.f);
-    CHECK(A.Cofactor(3, 2) == 105.f);
+    CHECK(A.Cofactor(2, 3) == -160.);
+    CHECK(A.Cofactor(3, 2) == 105.);
 
     Matrix B(4, 4);
     B(0, 0) = 0.21805;
@@ -1075,175 +1075,175 @@ TEST_CASE("Test matrix properties")
 
     Matrix I2 = Matrix::Identity(4);
     I2(0, 1) = 2.;
-    Tuple B = Tuple(4., 5., 6., 7.f);
+    Tuple B = Tuple(4., 5., 6., 7.);
 
     CHECK(I2.Mul(B) != B);
 }
 
 TEST_CASE("Multiplying by a translation matrix")
 {
-    Matrix T = Matrix::Translation(5., -3., 2.f);
-    Point P(-3., 4., 5.f);
+    Matrix T = Matrix::Translation(5., -3., 2.);
+    Point P(-3., 4., 5.);
 
-    CHECK(T.Mul(P) == Point(2., 1., 7.f));
+    CHECK(T.Mul(P) == Point(2., 1., 7.));
 
-    CHECK(P.Translate(5., -3., 2.f) == Point(2., 1., 7.f));
+    CHECK(P.Translate(5., -3., 2.) == Point(2., 1., 7.));
 }
 
 TEST_CASE("Multiplying by the inverse of a translation matrix")
 {
-    Matrix T = Matrix::Translation(5., -3., 2.f);
+    Matrix T = Matrix::Translation(5., -3., 2.);
     auto Inv = T.Inverse();
-    Point P(-3., 4., 5.f);
+    Point P(-3., 4., 5.);
 
-    CHECK(Inv.Mul(P) == Point(-8., 7., 3.f));
+    CHECK(Inv.Mul(P) == Point(-8., 7., 3.));
 }
 
 TEST_CASE("Translation does not affect vectors")
 {
-    Matrix T = Matrix::Translation(5., -3., 2.f);
-    Vector V(-3., 4., 5.f);
+    Matrix T = Matrix::Translation(5., -3., 2.);
+    Vector V(-3., 4., 5.);
 
     CHECK(T.Mul(V) == V);
 }
 
 TEST_CASE("A scaling matrix applied to a point")
 {
-    Matrix S = Matrix::Scaling(2., 3., 4.f);
-    Point P(-4., 6., 8.f);
+    Matrix S = Matrix::Scaling(2., 3., 4.);
+    Point P(-4., 6., 8.);
 
-    CHECK(S.Mul(P) == Point(-8., 18., 32.f));
+    CHECK(S.Mul(P) == Point(-8., 18., 32.));
 }
 
 TEST_CASE("A scaling matrix applied to a vector")
 {
-    Matrix S = Matrix::Scaling(2., 3., 4.f);
-    Vector V(-4., 6., 8.f);
+    Matrix S = Matrix::Scaling(2., 3., 4.);
+    Vector V(-4., 6., 8.);
 
-    CHECK(S.Mul(V) == Vector(-8., 18., 32.f));
+    CHECK(S.Mul(V) == Vector(-8., 18., 32.));
 }
 
 TEST_CASE("Multiplying by the inverse of a scaling matrix")
 {
-    Matrix S = Matrix::Scaling(2., 3., 4.f);
-    Vector V(-4., 6., 8.f);
+    Matrix S = Matrix::Scaling(2., 3., 4.);
+    Vector V(-4., 6., 8.);
 
-    CHECK(S.Inverse().Mul(V) == Vector(-2., 2., 2.f));
+    CHECK(S.Inverse().Mul(V) == Vector(-2., 2., 2.));
 }
 
 TEST_CASE("Reflection is scaling by a negative value")
 {
-    Matrix S = Matrix::Scaling(-1., 1., 1.f);
-    Point P(2., 3., 4.f);
+    Matrix S = Matrix::Scaling(-1., 1., 1.);
+    Point P(2., 3., 4.);
 
-    CHECK(S.Mul(P) == Point(-2., 3., 4.f));
+    CHECK(S.Mul(P) == Point(-2., 3., 4.));
 }
 
 TEST_CASE("Rotating a point around the x axis")
 {
-    Point P(0., 1., 0.f);
+    Point P(0., 1., 0.);
     Matrix R4 = Matrix::RotationX(M_PI/4);
     Matrix R2 = Matrix::RotationX(M_PI/2);
 
-    CHECK(R4.Mul(P) == Point(0., std::sqrt(2.f)/2, std::sqrt(2.f)/2));
-    CHECK(R2.Mul(P) == Point(0., 0., 1.f));
+    CHECK(R4.Mul(P) == Point(0., std::sqrt(2.)/2, std::sqrt(2.)/2));
+    CHECK(R2.Mul(P) == Point(0., 0., 1.));
 }
 
 TEST_CASE("The inverse of an x-rotation rotate in the opposite direction")
 {
-    Point P(0., 1., 0.f);
+    Point P(0., 1., 0.);
     Matrix R4 = Matrix::RotationX(M_PI/4);
 
-    CHECK(R4.Inverse().Mul(P) == Point(0., std::sqrt(2.f)/2, -std::sqrt(2.f)/2));
+    CHECK(R4.Inverse().Mul(P) == Point(0., std::sqrt(2.)/2, -std::sqrt(2.)/2));
 }
 
 TEST_CASE("Rotating a point around the x axis")
 {
-    Point P(0., 1., 0.f);
+    Point P(0., 1., 0.);
     Matrix R4 = Matrix::RotationX(M_PI/4);
     Matrix R2 = Matrix::RotationX(M_PI/2);
 
-    CHECK(R4.Mul(P) == Point(0., std::sqrt(2.f)/2, std::sqrt(2.f)/2));
-    CHECK(R2.Mul(P) == Point(0., 0., 1.f));
+    CHECK(R4.Mul(P) == Point(0., std::sqrt(2.)/2, std::sqrt(2.)/2));
+    CHECK(R2.Mul(P) == Point(0., 0., 1.));
 }
 
 TEST_CASE("Rotating a point around the y axis")
 {
-    Point P(0., 0., 1.f);
+    Point P(0., 0., 1.);
     Matrix R4 = Matrix::RotationY(M_PI/4);
     Matrix R2 = Matrix::RotationY(M_PI/2);
 
-    CHECK(R4.Mul(P) == Point(std::sqrt(2.f)/2, 0., std::sqrt(2.f)/2));
-    CHECK(R2.Mul(P) == Point(1., 0., 0.f));
+    CHECK(R4.Mul(P) == Point(std::sqrt(2.)/2, 0., std::sqrt(2.)/2));
+    CHECK(R2.Mul(P) == Point(1., 0., 0.));
 }
 
 TEST_CASE("Rotating a point around the z axis")
 {
-    Point P(0., 1., 0.f);
+    Point P(0., 1., 0.);
     Matrix R4 = Matrix::RotationZ(M_PI/4);
     Matrix R2 = Matrix::RotationZ(M_PI/2);
 
-    CHECK(R4.Mul(P) == Point(-std::sqrt(2.f)/2, std::sqrt(2.f)/2, 0.f));
-    CHECK(R2.Mul(P) == Point(-1., 0., 0.f));
+    CHECK(R4.Mul(P) == Point(-std::sqrt(2.)/2, std::sqrt(2.)/2, 0.));
+    CHECK(R2.Mul(P) == Point(-1., 0., 0.));
 }
 
 TEST_CASE("A shearing transformation moves x in proportion to y")
 {
-    Point P(2., 3., 4.f);
-    Matrix S = Matrix::Shearing(1., 0., 0., 0., 0., 0.f);
+    Point P(2., 3., 4.);
+    Matrix S = Matrix::Shearing(1., 0., 0., 0., 0., 0.);
 
-    CHECK(S.Mul(P) == Point(5., 3., 4.f));
+    CHECK(S.Mul(P) == Point(5., 3., 4.));
 }
 
 TEST_CASE("A shearing transformation moves x in proportion to z")
 {
-    Point P(2., 3., 4.f);
-    Matrix S = Matrix::Shearing(0., 1., 0., 0., 0., 0.f);
+    Point P(2., 3., 4.);
+    Matrix S = Matrix::Shearing(0., 1., 0., 0., 0., 0.);
 
-    CHECK(S.Mul(P) == Point(6., 3., 4.f));
+    CHECK(S.Mul(P) == Point(6., 3., 4.));
 }
 
 TEST_CASE("A shearing transformation moves y in proportion to x")
 {
-    Point P(2., 3., 4.f);
-    Matrix S = Matrix::Shearing(0., 0., 1., 0., 0., 0.f);
+    Point P(2., 3., 4.);
+    Matrix S = Matrix::Shearing(0., 0., 1., 0., 0., 0.);
 
-    CHECK(S.Mul(P) == Point(2., 5., 4.f));
+    CHECK(S.Mul(P) == Point(2., 5., 4.));
 }
 
 TEST_CASE("A shearing transformation moves y in proportion to z")
 {
-    Point P(2., 3., 4.f);
-    Matrix S = Matrix::Shearing(0., 0., 0., 1., 0., 0.f);
+    Point P(2., 3., 4.);
+    Matrix S = Matrix::Shearing(0., 0., 0., 1., 0., 0.);
 
-    CHECK(S.Mul(P) == Point(2., 7., 4.f));
+    CHECK(S.Mul(P) == Point(2., 7., 4.));
 }
 
 TEST_CASE("A shearing transformation moves z in proportion to x")
 {
-    Point P(2., 3., 4.f);
-    Matrix S = Matrix::Shearing(0., 0., 0., 0., 1., 0.f);
+    Point P(2., 3., 4.);
+    Matrix S = Matrix::Shearing(0., 0., 0., 0., 1., 0.);
 
-    CHECK(S.Mul(P) == Point(2., 3., 6.f));
+    CHECK(S.Mul(P) == Point(2., 3., 6.));
 }
 
 TEST_CASE("A shearing transformation moves z in proportion to y")
 {
-    Point P(2., 3., 4.f);
-    Matrix S = Matrix::Shearing(0., 0., 0., 0., 0., 1.f);
+    Point P(2., 3., 4.);
+    Matrix S = Matrix::Shearing(0., 0., 0., 0., 0., 1.);
 
-    CHECK(S.Mul(P) == Point(2., 3., 7.f));
+    CHECK(S.Mul(P) == Point(2., 3., 7.));
 }
 
 TEST_CASE("Individual transformations are applied in sequence")
 {
-    Point P(1., 0., 1.f);
+    Point P(1., 0., 1.);
     Matrix A = Matrix::RotationX(M_PI/2);
-    Matrix B = Matrix::Scaling(5., 5., 5.f);
-    Matrix C = Matrix::Translation(10., 5., 7.f);
+    Matrix B = Matrix::Scaling(5., 5., 5.);
+    Matrix C = Matrix::Translation(10., 5., 7.);
 
-    CHECK(C.Mul(B).Mul(A).Mul(P) == Point(15., 0., 7.f));
-    CHECK(C.Mul(B.Mul(A.Mul(P))) == Point(15., 0., 7.f));
+    CHECK(C.Mul(B).Mul(A).Mul(P) == Point(15., 0., 7.));
+    CHECK(C.Mul(B.Mul(A.Mul(P))) == Point(15., 0., 7.));
 
-    CHECK(P.RotateX(M_PI/2).Scale(5., 5., 5.f).Translate(10., 5., 7.f) == Point(15., 0., 7.f));
+    CHECK(P.RotateX(M_PI/2).Scale(5., 5., 5.).Translate(10., 5., 7.) == Point(15., 0., 7.));
 }

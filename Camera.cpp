@@ -19,7 +19,7 @@ void Camera::ComputePixelSize()
     double HalfView = std::tan(FieldOfView / 2);
     double Aspect = (double)(HSize) / (double)(VSize);
 
-    if (Aspect >= 1.f)
+    if (Aspect >= 1.)
     {
         HalfWidth = HalfView;
         HalfHeight = HalfView / Aspect;
@@ -36,8 +36,8 @@ Ray Camera::RayForPixel(int X, int Y)
 {
     // the offset from the edge of the canvas to the pixel's center
     // 0.5 here means we want to find the pixel's center coordinate (half a pixel_size unit)
-    auto XOffset = (X + 0.5f) * PixelSize;
-    auto YOffset = (Y + 0.5f) * PixelSize;
+    auto XOffset = (X + 0.5) * PixelSize;
+    auto YOffset = (Y + 0.5) * PixelSize;
 
     // the untransformed coordinates of the pixel in world space
     // (remember that the camera looks toward -z, so +x is to the *left*)
@@ -48,8 +48,8 @@ Ray Camera::RayForPixel(int X, int Y)
     // and then compute the ray's direction vector
     // (remember that the canvas is at z=-1)
     auto TransformInverse = Transform.Inverse();
-    auto Pixel = TransformInverse.Mul(Point(WorldX, WorldY, -1.f));
-    auto Origin = TransformInverse.Mul(Point(0., 0., 0.f));
+    auto Pixel = TransformInverse.Mul(Point(WorldX, WorldY, -1.));
+    auto Origin = TransformInverse.Mul(Point(0., 0., 0.));
     auto Direction = (Pixel - Origin).Normalize();
 
     return Ray(Origin, Direction);
@@ -107,37 +107,37 @@ TEST_CASE("Constructing a camera")
 TEST_CASE("The pixel size of a horizontal canvas")
 {
     Camera Cam(200, 125, M_PI/2);
-    CHECK(Util::Equal(Cam.GetPixelSize(), 0.01f));
+    CHECK(Util::Equal(Cam.GetPixelSize(), 0.01));
 }
 
 TEST_CASE("The pixel size of a vertical canvas")
 {
     Camera Cam(125, 200, M_PI/2);
-    CHECK(Util::Equal(Cam.GetPixelSize(), 0.01f));
+    CHECK(Util::Equal(Cam.GetPixelSize(), 0.01));
 }
 
 TEST_CASE("Constructing a ray through the center of the canvas")
 {
     Camera Cam(201, 101, M_PI/2);
     Ray R = Cam.RayForPixel(100, 50);
-    CHECK(R.GetOrigin() == Point(0., 0., 0.f));
-    CHECK(R.GetDirection() == Vector(0., 0., -1.f));
+    CHECK(R.GetOrigin() == Point(0., 0., 0.));
+    CHECK(R.GetDirection() == Vector(0., 0., -1.));
 }
 
 TEST_CASE("Constructing a ray through a corner of the canvas")
 {
     Camera Cam(201, 101, M_PI/2);
     Ray R = Cam.RayForPixel(0, 0);
-    CHECK(R.GetOrigin() == Point(0., 0., 0.f));
-    CHECK(R.GetDirection() == Vector(0.66519, 0.33259, -0.66851f));
+    CHECK(R.GetOrigin() == Point(0., 0., 0.));
+    CHECK(R.GetDirection() == Vector(0.66519, 0.33259, -0.66851));
 }
 
 TEST_CASE("Constructing a ray when the camera is transformed")
 {
     Camera Cam(201, 101, M_PI/2);
-    Cam.SetTransform(Matrix::RotationY(M_PI/4).Mul(Matrix::Translation(0., -2., 5.f)));
+    Cam.SetTransform(Matrix::RotationY(M_PI/4).Mul(Matrix::Translation(0., -2., 5.)));
     Ray R = Cam.RayForPixel(100, 50);
-    CHECK(R.GetOrigin() == Point(0., 2., -5.f));
+    CHECK(R.GetOrigin() == Point(0., 2., -5.));
     CHECK(R.GetDirection() == Vector(std::sqrt(2)/2, 0., -std::sqrt(2)/2));
 }
 
@@ -146,11 +146,11 @@ TEST_CASE("Rendering a world with a camera")
     auto W = World::DefaultWorld();
     Camera Cam(11, 11, M_PI/2);
     
-    Point From(0., 0., -5.f);
-    Point To(0., 0., 0.f);
-    Vector Up(0., 1., 0.f);
+    Point From(0., 0., -5.);
+    Point To(0., 0., 0.);
+    Vector Up(0., 1., 0.);
     Cam.SetTransform(Transformations::ViewTransform(From, To, Up));
 
     auto Image = Cam.Render(W);
-    CHECK(*Image.GetPixel(5, 5) == Color(0.38066, 0.47583, 0.2855f));
+    CHECK(*Image.GetPixel(5, 5) == Color(0.38066, 0.47583, 0.2855));
 }

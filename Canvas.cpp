@@ -16,7 +16,7 @@ Canvas::Canvas(int Width, int Height)
     height = Height;
     // set default max color value to 255
     maxColorValue = 255;
-    canvas = std::vector<std::vector<Color>>(Height, std::vector<Color>(Width, Color(0., 0., 0.f)));
+    canvas = std::vector<std::vector<Color>>(Height, std::vector<Color>(Width, Color(0., 0., 0.)));
 }
 
 Canvas::Canvas(int Width, int Height, Color C)
@@ -111,17 +111,17 @@ TEST_CASE("creating a canvas")
 TEST_CASE("writing pixels to a canvas")
 {
     Canvas A = Canvas(10, 20);
-    Color Red = Color(1., 0., 0.f);
+    Color Red = Color(1., 0., 0.);
     A.WritePixel(2, 3, Red);
-    CHECK(*A.GetPixel(2, 3) == Color(1., 0., 0.f));
+    CHECK(*A.GetPixel(2, 3) == Color(1., 0., 0.));
 }
 
 TEST_CASE("constructing the PPM pixel data")
 {
     Canvas A = Canvas(5, 3);
-    Color C1 = Color(1.5, 0., 0.f);
-    Color C2 = Color(0., 0.5, 0.f);
-    Color C3 = Color(-0.5, 0., 1.f);
+    Color C1 = Color(1.5, 0., 0.);
+    Color C2 = Color(0., 0.5, 0.);
+    Color C3 = Color(-0.5, 0., 1.);
 
     A.WritePixel(0, 0, C1);
     A.WritePixel(2, 1, C2);
@@ -151,7 +151,7 @@ TEST_CASE("constructing the PPM pixel data")
 
 TEST_CASE("splitting long lines in PPM files")
 {
-    Canvas A = Canvas(10, 2, Color(1., 0.8, 0.6f));
+    Canvas A = Canvas(10, 2, Color(1., 0.8, 0.6));
     const char *Expected = R"(P3
 10 2
 255

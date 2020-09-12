@@ -40,37 +40,37 @@ std::ostream &operator<<(std::ostream &os, const Color &C)
 
 TEST_CASE("adding colors")
 {
-    Color A = Color(0.9, 0.6, 0.75f);
-    Color B = Color(0.7, 0.1, 0.25f);
-    CHECK((A + B) == Color(1.6, 0.7, 1.0f));
+    Color A = Color(0.9, 0.6, 0.75);
+    Color B = Color(0.7, 0.1, 0.25);
+    CHECK((A + B) == Color(1.6, 0.7, 1.0));
 }
 
 TEST_CASE("subtracting colors")
 {
-    Color A = Color(0.9, 0.6, 0.75f);
-    Color B = Color(0.7, 0.1, 0.25f);
-    CHECK((A - B) == Color(0.2, 0.5, 0.5f));
+    Color A = Color(0.9, 0.6, 0.75);
+    Color B = Color(0.7, 0.1, 0.25);
+    CHECK((A - B) == Color(0.2, 0.5, 0.5));
 }
 
 TEST_CASE("multiplying a color by a scalar")
 {
-    Color A = Color(0.2, 0.3, 0.4f);
-    CHECK((A * 2) == Color(0.4, 0.6, 0.8f));
-    CHECK((2 * A) == Color(0.4, 0.6, 0.8f));
+    Color A = Color(0.2, 0.3, 0.4);
+    CHECK((A * 2) == Color(0.4, 0.6, 0.8));
+    CHECK((2 * A) == Color(0.4, 0.6, 0.8));
 }
 
 TEST_CASE("multiplying color")
 {
-    Color A = Color(1., 0.2, 0.4f);
-    Color B = Color(0.9, 1., 0.1f);
-    CHECK((A * B) == Color(0.9, 0.2, 0.04f));
+    Color A = Color(1., 0.2, 0.4);
+    Color B = Color(0.9, 1., 0.1);
+    CHECK((A * B) == Color(0.9, 0.2, 0.04));
 }
 
 TEST_CASE("convert color to ppm string")
 {
-    Color A = Color(1.5, 0., 0.f);
-    Color B = Color(0., 0.5, 0.f);
-    Color C = Color(-0.5, 0., 1.f);
+    Color A = Color(1.5, 0., 0.);
+    Color B = Color(0., 0.5, 0.);
+    Color C = Color(-0.5, 0., 1.);
     std::vector<int> APPM = {255, 0, 0};
     std::vector<int> BPPM = {0, 128, 0};
     std::vector<int> CPPM = {0, 0, 255};

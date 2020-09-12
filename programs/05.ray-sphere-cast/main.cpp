@@ -28,14 +28,14 @@ int main(int argc, char **argv)
     double PixelSize = WallSize / CV.GetHeight();
     double Half = WallSize / 2.;
     
-    Color Red = Color(1., 0., 0.f);
-    Color Green = Color(0., 1., 0.f);
+    Color Red = Color(1., 0., 0.);
+    Color Green = Color(0., 1., 0.);
 
-    Point RayOrigin = Point(0., 0., -5.f);
+    Point RayOrigin = Point(0., 0., -5.);
     Sphere S(1);
 
     // add some scaling to the sphere
-    S.SetTransform(Matrix::Scaling(0.8, 1., 1.f));
+    S.SetTransform(Matrix::Scaling(0.8, 1., 1.));
 
     for (int CanvasY = 0; CanvasY < CV.GetHeight(); ++CanvasY)
     {
