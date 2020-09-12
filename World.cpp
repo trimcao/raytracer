@@ -22,12 +22,12 @@ World::World()
 
 World World::DefaultWorld()
 {
-    Light L(Color(1.f, 1.f, 1.f), Point(-10.f, 10.f, -10.f));
+    Light L(Color(1., 1., 1.f), Point(-10., 10., -10.f));
     Sphere S1(1);
-    S1.SetMaterial(Material(Color(0.8f, 1.f, 0.6f), 0.1f, 0.7f, 0.2f, 200.f));
+    S1.SetMaterial(Material(Color(0.8, 1., 0.6f), 0.1, 0.7, 0.2, 200.f));
     
     Sphere S2(2);
-    S2.SetTransform(Matrix::Scaling(0.5f, 0.5f, 0.5f));
+    S2.SetTransform(Matrix::Scaling(0.5, 0.5, 0.5f));
 
     World W;
     W.SetLight(L);
@@ -69,55 +69,55 @@ TEST_CASE("The default world")
 {
     World W = World::DefaultWorld();
     CHECK(W.GetObjects().size() == 2);
-    CHECK(W.GetLight()->GetIntensity() == Color(1.f, 1.f, 1.f) );
-    CHECK(W.GetLight()->GetPosition() == Point(-10.f, 10.f, -10.f) );
+    CHECK(W.GetLight()->GetIntensity() == Color(1., 1., 1.f) );
+    CHECK(W.GetLight()->GetPosition() == Point(-10., 10., -10.f) );
 }
 
 TEST_CASE("There is no shadow when nothing is collinear with point and light")
 {
     World W = World::DefaultWorld();
-    Point P(0.f, 10.f, 0.f);
+    Point P(0., 10., 0.f);
     CHECK(W.IsShadowed(P) == false);
 }
 
 TEST_CASE("The shadow when an object is between the point and the light")
 {
     World W = World::DefaultWorld();
-    Point P(10.f, -10.f, 10.f);
+    Point P(10., -10., 10.f);
     CHECK(W.IsShadowed(P) == true);
 }
 
 TEST_CASE("There is no shadow when an object is behind the light")
 {
     World W = World::DefaultWorld();
-    Point P(-20.f, 20.f, -20.f);
+    Point P(-20., 20., -20.f);
     CHECK(W.IsShadowed(P) == false);
 }
 
 TEST_CASE("There is no shadow when an object is behind the point")
 {
     World W = World::DefaultWorld();
-    Point P(-2.f, 2.f, -2.f);
+    Point P(-2., 2., -2.f);
     CHECK(W.IsShadowed(P) == false);
 }
 
 TEST_CASE("ShadeHit() is given an intersection in shadow")
 {
     World W;
-    Light L(Color(1.f, 1.f, 1.f), Point(0.f, 0.f, -10.f));
+    Light L(Color(1., 1., 1.f), Point(0., 0., -10.f));
     W.SetLight(L);
 
     Sphere S1;
     W.AddObject(S1);
     Sphere S2;
-    S2.SetTransform(Matrix::Translation(0.f, 0.f, 10.f));
+    S2.SetTransform(Matrix::Translation(0., 0., 10.f));
     W.AddObject(S2);
 
-    Ray R(Point(0.f, 0.f, 5.f), Vector(0.f, 0.f, 1.f));
-    Intersection<Object> I(4.f, S2);
+    Ray R(Point(0., 0., 5.f), Vector(0., 0., 1.f));
+    Intersection<Object> I(4., S2);
     auto Comps = I.PrepareComputations(R);
 
     auto C = ShadeHit(W, Comps);
 
-    CHECK(C == Color(0.1f, 0.1f, 0.1f));
+    CHECK(C == Color(0.1, 0.1, 0.1f));
 }

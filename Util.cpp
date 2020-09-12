@@ -2,7 +2,7 @@
 #include <cmath>
 
 
-bool Util::Equal(const float &A, const float &B)
+bool Util::Equal(const double &A, const double &B)
 {
     if ( std::abs(A - B) <= EPSILON ) return true;
     return false;

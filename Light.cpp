@@ -47,7 +47,7 @@ Color Lighting(Material &M, Light &L, Point &Pos, Vector &EyeV, Vector &NormalV,
         // reflection vector and the eye vector.
         // A negative value means the light reflects away from the eye.
         auto ReflectV = (-LightV).Reflect(NormalV);
-        float ReflectDotEye = ReflectV.Dot(EyeV);
+        double ReflectDotEye = ReflectV.Dot(EyeV);
 
         if (ReflectDotEye > 0.f)
         {
@@ -67,8 +67,8 @@ Color Lighting(Material &&M, Light &L, Point &Pos, Vector &EyeV, Vector &NormalV
 
 TEST_CASE("A point light has a position and intensity")
 {
-    Color I(1.f, 1.f, 1.f);
-    Point P(0.f, 0.f, 0.f);
+    Color I(1., 1., 1.f);
+    Point P(0., 0., 0.f);
     Light L(I, P);
     
     CHECK(L.GetIntensity() == I);
@@ -78,65 +78,65 @@ TEST_CASE("A point light has a position and intensity")
 TEST_CASE("Lighting with the eye between the light and the surface")
 {
     Material M;
-    Point Pos(0.f, 0.f, 0.f);
-    Vector EyeV(0.f, 0.f, -1.f);
-    Vector NormalV(0.f, 0.f, -1.f);
-    Light L(Color(1.f, 1.f, 1.f), Point(0.f, 0.f, -10.f));
+    Point Pos(0., 0., 0.f);
+    Vector EyeV(0., 0., -1.f);
+    Vector NormalV(0., 0., -1.f);
+    Light L(Color(1., 1., 1.f), Point(0., 0., -10.f));
     auto Result = Lighting(M, L, Pos, EyeV, NormalV, false);
-    CHECK(Result == Color(1.9f, 1.9f, 1.9f));
+    CHECK(Result == Color(1.9, 1.9, 1.9f));
 }
 
 TEST_CASE("Lighting with the eye between the light and the surface, eye offset 45 degrees")
 {
     Material M;
-    Point Pos(0.f, 0.f, 0.f);
-    Vector EyeV(0.f, std::sqrt(2.f) / 2, -std::sqrt(2.f) / 2);
-    Vector NormalV(0.f, 0.f, -1.f);
-    Light L(Color(1.f, 1.f, 1.f), Point(0.f, 0.f, -10.f));
+    Point Pos(0., 0., 0.f);
+    Vector EyeV(0., std::sqrt(2.f) / 2, -std::sqrt(2.f) / 2);
+    Vector NormalV(0., 0., -1.f);
+    Light L(Color(1., 1., 1.f), Point(0., 0., -10.f));
     auto Result = Lighting(M, L, Pos, EyeV, NormalV, false);
-    CHECK(Result == Color(1.0, 1.0f, 1.0f));
+    CHECK(Result == Color(1.0, 1.0, 1.0f));
 }
 
 TEST_CASE("Lighting with the eye between the light and the surface, light offset 45 degrees")
 {
     Material M;
-    Point Pos(0.f, 0.f, 0.f);
-    Vector EyeV(0.f, 0.f, -1.f);
-    Vector NormalV(0.f, 0.f, -1.f);
-    Light L(Color(1.f, 1.f, 1.f), Point(0.f, 10.f, -10.f));
+    Point Pos(0., 0., 0.f);
+    Vector EyeV(0., 0., -1.f);
+    Vector NormalV(0., 0., -1.f);
+    Light L(Color(1., 1., 1.f), Point(0., 10., -10.f));
     auto Result = Lighting(M, L, Pos, EyeV, NormalV, false);
-    CHECK(Result == Color(0.7364f, 0.7364f, 0.7364f));
+    CHECK(Result == Color(0.7364, 0.7364, 0.7364f));
 }
 
 TEST_CASE("Lighting with the eye in the path of the reflection vector")
 {
     Material M;
-    Point Pos(0.f, 0.f, 0.f);
-    Vector EyeV(0.f, -std::sqrt(2.f) / 2, -std::sqrt(2.f) / 2);
-    Vector NormalV(0.f, 0.f, -1.f);
-    Light L(Color(1.f, 1.f, 1.f), Point(0.f, 10.f, -10.f));
+    Point Pos(0., 0., 0.f);
+    Vector EyeV(0., -std::sqrt(2.f) / 2, -std::sqrt(2.f) / 2);
+    Vector NormalV(0., 0., -1.f);
+    Light L(Color(1., 1., 1.f), Point(0., 10., -10.f));
     auto Result = Lighting(M, L, Pos, EyeV, NormalV, false);
-    CHECK(Result == Color(1.63639f, 1.63639f, 1.63639f));
+    CHECK(Result == Color(1.63639, 1.63639, 1.63639f));
 }
 
 TEST_CASE("Lighting with the light behind the surface")
 {
     Material M;
-    Point Pos(0.f, 0.f, 0.f);
-    Vector EyeV(0.f, 0.f, -1.f);
-    Vector NormalV(0.f, 0.f, -1.f);
-    Light L(Color(1.f, 1.f, 1.f), Point(0.f, 0.f, 10.f));
+    Point Pos(0., 0., 0.f);
+    Vector EyeV(0., 0., -1.f);
+    Vector NormalV(0., 0., -1.f);
+    Light L(Color(1., 1., 1.f), Point(0., 0., 10.f));
     auto Result = Lighting(M, L, Pos, EyeV, NormalV, false);
-    CHECK(Result == Color(0.1f, 0.1f, 0.1f));
+    CHECK(Result == Color(0.1, 0.1, 0.1f));
 }
 
 TEST_CASE("Lighting with the surface in shadow")
 {
     Material M;
-    Point Pos(0.f, 0.f, 0.f);
-    Vector EyeV(0.f, 0.f, -1.f);
-    Vector NormalV(0.f, 0.f, -1.f);
-    Light L(Color(1.f, 1.f, 1.f), Point(0.f, 0.f, -10.f));
+    Point Pos(0., 0., 0.f);
+    Vector EyeV(0., 0., -1.f);
+    Vector NormalV(0., 0., -1.f);
+    Light L(Color(1., 1., 1.f), Point(0., 0., -10.f));
     auto Result = Lighting(M, L, Pos, EyeV, NormalV, true);
-    CHECK(Result == Color(0.1f, 0.1f, 0.1f));
+    CHECK(Result == Color(0.1, 0.1, 0.1f));
 }

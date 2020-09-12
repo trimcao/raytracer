@@ -8,22 +8,22 @@ class Matrix
 {
 private:
     int numRows, numCols;
-    std::vector<std::vector<float>> m;
+    std::vector<std::vector<double>> m;
 
 public:
     Matrix();
-    Matrix(int NumRows, int NumCols, float Val);
+    Matrix(int NumRows, int NumCols, double Val);
     Matrix(int NumRows, int NumCols);
 
     // create a 4x1 Tuple
-    Matrix(float X, float Y, float Z, float W);
+    Matrix(double X, double Y, double Z, double W);
 
-    float &operator()(const int R, const int C) { return m[R][C]; }
+    double &operator()(const int R, const int C) { return m[R][C]; }
 
-    inline float At(const int R, const int C) const { return m[R][C]; }
-    inline void Set(const int R, const int C, float Val) { m[R][C] = Val; }
+    inline double At(const int R, const int C) const { return m[R][C]; }
+    inline void Set(const int R, const int C, double Val) { m[R][C] = Val; }
 
-    Matrix operator*(float S) const
+    Matrix operator*(double S) const
     {
         Matrix Res = Matrix(numRows, numCols);
         for (int r = 0; r < numRows; ++r)
@@ -38,7 +38,7 @@ public:
 
     Matrix operator-() const { return (*this) * (-1.f); }
 
-    Matrix operator/(float S) const { return (*this) * (1.f / S); }
+    Matrix operator/(double S) const { return (*this) * (1.f / S); }
 
     inline bool IsValid(int Row, int Col) const
     {
@@ -51,13 +51,13 @@ public:
     // transpose
     Matrix T();
 
-    float Determinant();
+    double Determinant();
 
     Matrix Submatrix(int RowRemoved, int ColRemoved);
 
-    float Minor(int Row, int Col);
+    double Minor(int Row, int Col);
 
-    float Cofactor(int Row, int Col);
+    double Cofactor(int Row, int Col);
 
     bool IsInvertible();
 
@@ -68,21 +68,21 @@ public:
 
     static Matrix Identity(int Size);
 
-    static Matrix Translation(float X, float Y, float Z);
-    static Matrix Scaling(float X, float Y, float Z);
-    static Matrix RotationX(float Rad);
-    static Matrix RotationY(float Rad);
-    static Matrix RotationZ(float Rad);
+    static Matrix Translation(double X, double Y, double Z);
+    static Matrix Scaling(double X, double Y, double Z);
+    static Matrix RotationX(double Rad);
+    static Matrix RotationY(double Rad);
+    static Matrix RotationZ(double Rad);
     
     // param XY means: how much we move X in proportion to Y
-    static Matrix Shearing(float XY, float XZ, float YX, float YZ, float ZX, float ZY);
+    static Matrix Shearing(double XY, double XZ, double YX, double YZ, double ZX, double ZY);
 
-    Matrix Translate(float X, float Y, float Z);
-    Matrix Scale(float X, float Y, float Z);
-    Matrix RotateX(float Rad);
-    Matrix RotateY(float Rad);
-    Matrix RotateZ(float Rad);
-    Matrix Shear(float XY, float XZ, float YX, float YZ, float ZX, float ZY);
+    Matrix Translate(double X, double Y, double Z);
+    Matrix Scale(double X, double Y, double Z);
+    Matrix RotateX(double Rad);
+    Matrix RotateY(double Rad);
+    Matrix RotateZ(double Rad);
+    Matrix Shear(double XY, double XZ, double YX, double YZ, double ZX, double ZY);
 
 };
 

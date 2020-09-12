@@ -7,16 +7,16 @@
 class Color
 {
 public:
-    float R, G, B;
+    double R, G, B;
 
     Color();
-    Color(float R, float G, float B);
+    Color(double R, double G, double B);
 
     Color operator-() const { return Color(-R, -G, -B); }
 
-    Color operator*(float Scalar) const { return Color(R * Scalar, G * Scalar, B * Scalar); }
+    Color operator*(double Scalar) const { return Color(R * Scalar, G * Scalar, B * Scalar); }
 
-    Color operator/(float Scalar) const { return Color(R / Scalar, G / Scalar, B / Scalar); }
+    Color operator/(double Scalar) const { return Color(R / Scalar, G / Scalar, B / Scalar); }
 
     // convert a Color object to a PPM int values
     std::vector<int> ToPPMVal(int MaxColorValue);
@@ -37,7 +37,7 @@ inline Color operator*(const Color &A, const Color &B)
     return Color(A.R * B.R, A.G * B.G, A.B * B.B);
 }
 
-inline Color operator*(float S, const Color &B)
+inline Color operator*(double S, const Color &B)
 {
     return Color(S * B.R, S * B.G, S * B.B);
 }

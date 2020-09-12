@@ -10,19 +10,19 @@ class Tuple : public Matrix
 public:
     public:
     Tuple();
-    Tuple(float X, float Y, float Z, float W);
+    Tuple(double X, double Y, double Z, double W);
     Tuple(int NumRows, int NumCols);
 
-    inline float X() const { return this->At(0, 0); }
-    inline float Y() const { return this->At(1, 0); }
-    inline float Z() const { return this->At(2, 0); }
-    inline float W() const { return this->At(3, 0); }
+    inline double X() const { return this->At(0, 0); }
+    inline double Y() const { return this->At(1, 0); }
+    inline double Z() const { return this->At(2, 0); }
+    inline double W() const { return this->At(3, 0); }
 
     Tuple operator-() const { return Tuple(-this->X(), -this->Y(), -this->Z(), -this->W()); }
 
-    Tuple operator*(float S) const { return Tuple(this->X() * S, this->Y() * S, this->Z() * S, this->W() * S); }
+    Tuple operator*(double S) const { return Tuple(this->X() * S, this->Y() * S, this->Z() * S, this->W() * S); }
 
-    Tuple operator/(float S) const { return Tuple(this->X() / S, this->Y() / S, this->Z() / S, this->W() / S); }
+    Tuple operator/(double S) const { return Tuple(this->X() / S, this->Y() / S, this->Z() / S, this->W() / S); }
 
     void operator=(const Matrix &M)
     {

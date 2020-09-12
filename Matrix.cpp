@@ -11,18 +11,18 @@
 
 Matrix::Matrix() {}
 
-Matrix::Matrix(int NumRows, int NumCols, float Val)
+Matrix::Matrix(int NumRows, int NumCols, double Val)
 {
     numRows = NumRows;
     numCols = NumCols;
-    m = std::vector<std::vector<float>>(numRows, std::vector<float>(numCols, Val));
+    m = std::vector<std::vector<double>>(numRows, std::vector<double>(numCols, Val));
 }
 
 Matrix::Matrix(int NumRows, int NumCols) : Matrix(NumRows, NumCols, 0.f)
 {
 }
 
-Matrix::Matrix(float X, float Y, float Z, float W) : Matrix(4, 1, 0.f)
+Matrix::Matrix(double X, double Y, double Z, double W) : Matrix(4, 1, 0.f)
 {
     m[0][0] = X;
     m[1][0] = Y;
@@ -174,7 +174,7 @@ Matrix Matrix::Identity(int Size)
     Matrix I(Size, Size);
     for (int i = 0; i < Size; ++i)
     {
-        I(i, i) = 1.f;
+        I(i, i) = 1.;
     }
     return I;
 }
@@ -193,7 +193,7 @@ Matrix Matrix::T()
     return Res;
 }
 
-float Matrix::Determinant()
+double Matrix::Determinant()
 {
     if (numRows != numCols)
         throw std::invalid_argument("only square matrix has determinant");
@@ -206,7 +206,7 @@ float Matrix::Determinant()
     }
     else
     {
-        float Det = 0.f;
+        double Det = 0.;
         for (int c = 0; c < numCols; ++c)
         {
             Det += this->At(0, c) * Cofactor(0, c);
@@ -241,14 +241,14 @@ Matrix Matrix::Submatrix(int RowRemoved, int ColRemoved)
     return Res;
 }
 
-float Matrix::Minor(int Row, int Col)
+double Matrix::Minor(int Row, int Col)
 {
     return Submatrix(Row, Col).Determinant();
 }
 
-float Matrix::Cofactor(int Row, int Col)
+double Matrix::Cofactor(int Row, int Col)
 {
-    float Minor = Submatrix(Row, Col).Determinant();
+    double Minor = Submatrix(Row, Col).Determinant();
     if ((Row + Col) % 2 == 1) return -Minor;
     return Minor;
 }
@@ -260,7 +260,7 @@ bool Matrix::IsInvertible()
 
 Matrix Matrix::Inverse()
 {
-    float Det = Determinant();
+    double Det = Determinant();
     if (Util::Equal(Det, 0.f))
         throw std::invalid_argument("this matrix is not invertible");
 
@@ -277,7 +277,7 @@ Matrix Matrix::Inverse()
     return Res;
 }
 
-Matrix Matrix::Translation(float X, float Y, float Z)
+Matrix Matrix::Translation(double X, double Y, double Z)
 {
     Matrix Res = Identity(4);
     Res(0, 3) = X;
@@ -286,7 +286,7 @@ Matrix Matrix::Translation(float X, float Y, float Z)
     return Res;
 }
 
-Matrix Matrix::Scaling(float X, float Y, float Z)
+Matrix Matrix::Scaling(double X, double Y, double Z)
 {
     Matrix Res = Identity(4);
     Res(0, 0) = X;
@@ -295,11 +295,11 @@ Matrix Matrix::Scaling(float X, float Y, float Z)
     return Res;
 }
 
-Matrix Matrix::RotationX(float Rad)
+Matrix Matrix::RotationX(double Rad)
 {
     Matrix Res = Identity(4);
-    float Sin = std::sin(Rad);
-    float Cos = std::cos(Rad);
+    double Sin = std::sin(Rad);
+    double Cos = std::cos(Rad);
     Res(1, 1) = Cos;
     Res(1, 2) = -Sin;
     Res(2, 1) = Sin;
@@ -307,11 +307,11 @@ Matrix Matrix::RotationX(float Rad)
     return Res;
 }
 
-Matrix Matrix::RotationY(float Rad)
+Matrix Matrix::RotationY(double Rad)
 {
     Matrix Res = Identity(4);
-    float Sin = std::sin(Rad);
-    float Cos = std::cos(Rad);
+    double Sin = std::sin(Rad);
+    double Cos = std::cos(Rad);
     Res(0, 0) = Cos;
     Res(0, 2) = Sin;
     Res(2, 0) = -Sin;
@@ -319,11 +319,11 @@ Matrix Matrix::RotationY(float Rad)
     return Res;
 }
 
-Matrix Matrix::RotationZ(float Rad)
+Matrix Matrix::RotationZ(double Rad)
 {
     Matrix Res = Identity(4);
-    float Sin = std::sin(Rad);
-    float Cos = std::cos(Rad);
+    double Sin = std::sin(Rad);
+    double Cos = std::cos(Rad);
     Res(0, 0) = Cos;
     Res(0, 1) = -Sin;
     Res(1, 0) = Sin;
@@ -331,7 +331,7 @@ Matrix Matrix::RotationZ(float Rad)
     return Res;
 }
 
-Matrix Matrix::Shearing(float XY, float XZ, float YX, float YZ, float ZX, float ZY)
+Matrix Matrix::Shearing(double XY, double XZ, double YX, double YZ, double ZX, double ZY)
 {
     Matrix Res = Identity(4);
     Res(0, 1) = XY;
@@ -343,31 +343,31 @@ Matrix Matrix::Shearing(float XY, float XZ, float YX, float YZ, float ZX, float 
     return Res;
 }
 
-Matrix Matrix::Translate(float X, float Y, float Z)
+Matrix Matrix::Translate(double X, double Y, double Z)
 {
     return Translation(X, Y, Z).Mul(*this);
 }
 
-Matrix Matrix::Scale(float X, float Y, float Z)
+Matrix Matrix::Scale(double X, double Y, double Z)
 {
     return Scaling(X, Y, Z).Mul(*this);
 }
 
-Matrix Matrix::RotateX(float Rad)
+Matrix Matrix::RotateX(double Rad)
 {
     return RotationX(Rad).Mul(*this);
 }
 
-Matrix Matrix::RotateY(float Rad)
+Matrix Matrix::RotateY(double Rad)
 {
     return RotationY(Rad).Mul(*this);
 }
-Matrix Matrix::RotateZ(float Rad)
+Matrix Matrix::RotateZ(double Rad)
 {
     return RotationZ(Rad).Mul(*this);
 }
 
-Matrix Matrix::Shear(float XY, float XZ, float YX, float YZ, float ZX, float ZY)
+Matrix Matrix::Shear(double XY, double XZ, double YX, double YZ, double ZX, double ZY)
 {
     return Shearing(XY, XZ, YX, YZ, ZX, ZY).Mul(*this);
 }
@@ -375,22 +375,22 @@ Matrix Matrix::Shear(float XY, float XZ, float YX, float YZ, float ZX, float ZY)
 TEST_CASE("constructing and inspecting a 4x4 matrix")
 {
     Matrix M(4, 4);
-    M(0, 0) = 1.f;
-    M(0, 1) = 2.f;
-    M(0, 2) = 3.f;
-    M(0, 3) = 4.f;
-    M(1, 0) = 5.5f;
-    M(1, 1) = 6.5f;
-    M(1, 2) = 7.5f;
-    M(1, 3) = 8.5f;
-    M(2, 0) = 9.f;
-    M(2, 1) = 10.f;
-    M(2, 2) = 11.f;
-    M(2, 3) = 12.f;
-    M(3, 0) = 13.5f;
-    M(3, 1) = 14.5f;
-    M(3, 2) = 15.5f;
-    M(3, 3) = 16.5f;
+    M(0, 0) = 1.;
+    M(0, 1) = 2.;
+    M(0, 2) = 3.;
+    M(0, 3) = 4.;
+    M(1, 0) = 5.5;
+    M(1, 1) = 6.5;
+    M(1, 2) = 7.5;
+    M(1, 3) = 8.5;
+    M(2, 0) = 9.;
+    M(2, 1) = 10.;
+    M(2, 2) = 11.;
+    M(2, 3) = 12.;
+    M(3, 0) = 13.5;
+    M(3, 1) = 14.5;
+    M(3, 2) = 15.5;
+    M(3, 3) = 16.5;
 
     CHECK(M(0, 0) == 1.f);
     CHECK(M(0, 3) == 4.f);
@@ -404,40 +404,40 @@ TEST_CASE("constructing and inspecting a 4x4 matrix")
 TEST_CASE("compare two matrices")
 {
     Matrix M(4, 4);
-    M(0, 0) = 1.f;
-    M(0, 1) = 2.f;
-    M(0, 2) = 3.f;
-    M(0, 3) = 4.f;
-    M(1, 0) = 5.5f;
-    M(1, 1) = 6.5f;
-    M(1, 2) = 7.5f;
-    M(1, 3) = 8.5f;
-    M(2, 0) = 9.f;
-    M(2, 1) = 10.f;
-    M(2, 2) = 11.f;
-    M(2, 3) = 12.f;
-    M(3, 0) = 13.5f;
-    M(3, 1) = 14.5f;
-    M(3, 2) = 15.5f;
-    M(3, 3) = 16.5f;
+    M(0, 0) = 1.;
+    M(0, 1) = 2.;
+    M(0, 2) = 3.;
+    M(0, 3) = 4.;
+    M(1, 0) = 5.5;
+    M(1, 1) = 6.5;
+    M(1, 2) = 7.5;
+    M(1, 3) = 8.5;
+    M(2, 0) = 9.;
+    M(2, 1) = 10.;
+    M(2, 2) = 11.;
+    M(2, 3) = 12.;
+    M(3, 0) = 13.5;
+    M(3, 1) = 14.5;
+    M(3, 2) = 15.5;
+    M(3, 3) = 16.5;
 
     Matrix N(4, 4);
-    N(0, 0) = 1.f;
-    N(0, 1) = 2.f;
-    N(0, 2) = 3.f;
-    N(0, 3) = 4.f;
-    N(1, 0) = 5.5f;
-    N(1, 1) = 6.5f;
-    N(1, 2) = 7.5f;
-    N(1, 3) = 8.5f;
-    N(2, 0) = 9.f;
-    N(2, 1) = 10.f;
-    N(2, 2) = 11.f;
-    N(2, 3) = 12.f;
-    N(3, 0) = 13.5f;
-    N(3, 1) = 14.5f;
-    N(3, 2) = 15.5f;
-    N(3, 3) = 16.5f;
+    N(0, 0) = 1.;
+    N(0, 1) = 2.;
+    N(0, 2) = 3.;
+    N(0, 3) = 4.;
+    N(1, 0) = 5.5;
+    N(1, 1) = 6.5;
+    N(1, 2) = 7.5;
+    N(1, 3) = 8.5;
+    N(2, 0) = 9.;
+    N(2, 1) = 10.;
+    N(2, 2) = 11.;
+    N(2, 3) = 12.;
+    N(3, 0) = 13.5;
+    N(3, 1) = 14.5;
+    N(3, 2) = 15.5;
+    N(3, 3) = 16.5;
 
     CHECK(M == N);
 
@@ -450,10 +450,10 @@ TEST_CASE("compare two matrices")
 TEST_CASE("2x2 matrix")
 {
     Matrix A(2, 2);
-    A(0, 0) = -3.f;
-    A(0, 1) = 5.f;
-    A(1, 0) = 1.f;
-    A(1, 1) = -2.f;
+    A(0, 0) = -3.;
+    A(0, 1) = 5.;
+    A(1, 0) = 1.;
+    A(1, 1) = -2.;
 
     CHECK(A.At(0, 0) == -3.f);
     CHECK(A.At(0, 1) == 5.f);
@@ -464,15 +464,15 @@ TEST_CASE("2x2 matrix")
 TEST_CASE("3x3 matrix")
 {
     Matrix A(3, 3);
-    A(0, 0) = -3.f;
-    A(0, 1) = 5.f;
-    A(0, 2) = 0.f;
-    A(1, 0) = 1.f;
-    A(1, 1) = -2.f;
-    A(1, 2) = -7.f;
-    A(2, 0) = 0.f;
-    A(2, 1) = 1.f;
-    A(2, 2) = 1.f;
+    A(0, 0) = -3.;
+    A(0, 1) = 5.;
+    A(0, 2) = 0.;
+    A(1, 0) = 1.;
+    A(1, 1) = -2.;
+    A(1, 2) = -7.;
+    A(2, 0) = 0.;
+    A(2, 1) = 1.;
+    A(2, 2) = 1.;
 
     CHECK(A.At(0, 0) == -3.f);
     CHECK(A.At(1, 1) == -2.f);
@@ -482,24 +482,24 @@ TEST_CASE("3x3 matrix")
 TEST_CASE("matrix operators (+, -, *, /)")
 {
     Matrix A(2, 2);
-    A(0, 0) = -3.f;
-    A(0, 1) = 5.f;
-    A(1, 0) = 1.f;
-    A(1, 1) = -2.f;
+    A(0, 0) = -3.;
+    A(0, 1) = 5.;
+    A(1, 0) = 1.;
+    A(1, 1) = -2.;
 
     Matrix B(2, 2, 1.f);
 
     Matrix C(2, 2);
-    C(0, 0) = -2.f;
-    C(0, 1) = 6.f;
-    C(1, 0) = 2.f;
-    C(1, 1) = -1.f;
+    C(0, 0) = -2.;
+    C(0, 1) = 6.;
+    C(1, 0) = 2.;
+    C(1, 1) = -1.;
 
     Matrix D(2, 2);
-    D(0, 0) = -4.f;
-    D(0, 1) = 4.f;
-    D(1, 0) = 0.f;
-    D(1, 1) = -3.f;
+    D(0, 0) = -4.;
+    D(0, 1) = 4.;
+    D(1, 0) = 0.;
+    D(1, 1) = -3.;
 
     CHECK(A + B == C);
     CHECK(A * B == A);
@@ -509,58 +509,58 @@ TEST_CASE("matrix operators (+, -, *, /)")
 TEST_CASE("multiplying two matrices")
 {
     Matrix M(4, 4);
-    M(0, 0) = 1.f;
-    M(0, 1) = 2.f;
-    M(0, 2) = 3.f;
-    M(0, 3) = 4.f;
-    M(1, 0) = 5.f;
-    M(1, 1) = 6.f;
-    M(1, 2) = 7.f;
-    M(1, 3) = 8.f;
-    M(2, 0) = 9.f;
-    M(2, 1) = 8.f;
-    M(2, 2) = 7.f;
-    M(2, 3) = 6.f;
-    M(3, 0) = 5.f;
-    M(3, 1) = 4.f;
-    M(3, 2) = 3.f;
-    M(3, 3) = 2.f;
+    M(0, 0) = 1.;
+    M(0, 1) = 2.;
+    M(0, 2) = 3.;
+    M(0, 3) = 4.;
+    M(1, 0) = 5.;
+    M(1, 1) = 6.;
+    M(1, 2) = 7.;
+    M(1, 3) = 8.;
+    M(2, 0) = 9.;
+    M(2, 1) = 8.;
+    M(2, 2) = 7.;
+    M(2, 3) = 6.;
+    M(3, 0) = 5.;
+    M(3, 1) = 4.;
+    M(3, 2) = 3.;
+    M(3, 3) = 2.;
 
     Matrix N(4, 4);
-    N(0, 0) = -2.f;
-    N(0, 1) = 1.f;
-    N(0, 2) = 2.f;
-    N(0, 3) = 3.f;
-    N(1, 0) = 3.f;
-    N(1, 1) = 2.f;
-    N(1, 2) = 1.f;
-    N(1, 3) = -1.f;
-    N(2, 0) = 4.f;
-    N(2, 1) = 3.f;
-    N(2, 2) = 6.f;
-    N(2, 3) = 5.f;
-    N(3, 0) = 1.f;
-    N(3, 1) = 2.f;
-    N(3, 2) = 7.f;
-    N(3, 3) = 8.f;
+    N(0, 0) = -2.;
+    N(0, 1) = 1.;
+    N(0, 2) = 2.;
+    N(0, 3) = 3.;
+    N(1, 0) = 3.;
+    N(1, 1) = 2.;
+    N(1, 2) = 1.;
+    N(1, 3) = -1.;
+    N(2, 0) = 4.;
+    N(2, 1) = 3.;
+    N(2, 2) = 6.;
+    N(2, 3) = 5.;
+    N(3, 0) = 1.;
+    N(3, 1) = 2.;
+    N(3, 2) = 7.;
+    N(3, 3) = 8.;
 
     Matrix A(4, 4);
-    A(0, 0) = 20.f;
-    A(0, 1) = 22.f;
-    A(0, 2) = 50.f;
-    A(0, 3) = 48.f;
-    A(1, 0) = 44.f;
-    A(1, 1) = 54.f;
-    A(1, 2) = 114.f;
-    A(1, 3) = 108.f;
-    A(2, 0) = 40.f;
-    A(2, 1) = 58.f;
-    A(2, 2) = 110.f;
-    A(2, 3) = 102.f;
-    A(3, 0) = 16.f;
-    A(3, 1) = 26.f;
-    A(3, 2) = 46.f;
-    A(3, 3) = 42.f;
+    A(0, 0) = 20.;
+    A(0, 1) = 22.;
+    A(0, 2) = 50.;
+    A(0, 3) = 48.;
+    A(1, 0) = 44.;
+    A(1, 1) = 54.;
+    A(1, 2) = 114.;
+    A(1, 3) = 108.;
+    A(2, 0) = 40.;
+    A(2, 1) = 58.;
+    A(2, 2) = 110.;
+    A(2, 3) = 102.;
+    A(3, 0) = 16.;
+    A(3, 1) = 26.;
+    A(3, 2) = 46.;
+    A(3, 3) = 42.;
 
     CHECK(M.Mul(N) == A);
 }
@@ -568,26 +568,26 @@ TEST_CASE("multiplying two matrices")
 TEST_CASE("a matrix multiplied by a tuple")
 {
     Matrix M(4, 4);
-    M(0, 0) = 1.f;
-    M(0, 1) = 2.f;
-    M(0, 2) = 3.f;
-    M(0, 3) = 4.f;
-    M(1, 0) = 2.f;
-    M(1, 1) = 4.f;
-    M(1, 2) = 4.f;
-    M(1, 3) = 2.f;
-    M(2, 0) = 8.f;
-    M(2, 1) = 6.f;
-    M(2, 2) = 4.f;
-    M(2, 3) = 1.f;
-    M(3, 0) = 0.f;
-    M(3, 1) = 0.f;
-    M(3, 2) = 0.f;
-    M(3, 3) = 1.f;
+    M(0, 0) = 1.;
+    M(0, 1) = 2.;
+    M(0, 2) = 3.;
+    M(0, 3) = 4.;
+    M(1, 0) = 2.;
+    M(1, 1) = 4.;
+    M(1, 2) = 4.;
+    M(1, 3) = 2.;
+    M(2, 0) = 8.;
+    M(2, 1) = 6.;
+    M(2, 2) = 4.;
+    M(2, 3) = 1.;
+    M(3, 0) = 0.;
+    M(3, 1) = 0.;
+    M(3, 2) = 0.;
+    M(3, 3) = 1.;
 
-    Point N(1.f, 2.f, 3.f);
+    Point N(1., 2., 3.f);
 
-    Point A(18.f, 24.f, 33.f);
+    Point A(18., 24., 33.f);
 
     CHECK(M.Mul(N) == A);
 }
@@ -595,9 +595,9 @@ TEST_CASE("a matrix multiplied by a tuple")
 TEST_CASE("test identity matrix")
 {
     Matrix M(3, 3);
-    M(0, 0) = 1.f;
-    M(1, 1) = 1.f;
-    M(2, 2) = 1.f;
+    M(0, 0) = 1.;
+    M(1, 1) = 1.;
+    M(2, 2) = 1.;
 
     CHECK(M == Matrix::Identity(3));
 }
@@ -605,29 +605,29 @@ TEST_CASE("test identity matrix")
 TEST_CASE("multiplying a matrix by the identity matrix")
 {
     Matrix M(4, 4);
-    M(0, 0) = 0.f;
-    M(0, 1) = 1.f;
-    M(0, 2) = 2.f;
-    M(0, 3) = 4.f;
-    M(1, 0) = 1.f;
-    M(1, 1) = 2.f;
-    M(1, 2) = 4.f;
-    M(1, 3) = 8.f;
-    M(2, 0) = 2.f;
-    M(2, 1) = 4.f;
-    M(2, 2) = 8.f;
-    M(2, 3) = 16.f;
-    M(3, 0) = 4.f;
-    M(3, 1) = 8.f;
-    M(3, 2) = 16.f;
-    M(3, 3) = 32.f;
+    M(0, 0) = 0.;
+    M(0, 1) = 1.;
+    M(0, 2) = 2.;
+    M(0, 3) = 4.;
+    M(1, 0) = 1.;
+    M(1, 1) = 2.;
+    M(1, 2) = 4.;
+    M(1, 3) = 8.;
+    M(2, 0) = 2.;
+    M(2, 1) = 4.;
+    M(2, 2) = 8.;
+    M(2, 3) = 16.;
+    M(3, 0) = 4.;
+    M(3, 1) = 8.;
+    M(3, 2) = 16.;
+    M(3, 3) = 32.;
 
     CHECK(M.Mul(Matrix::Identity(4)) == M);
 }
 
 TEST_CASE("multiplying the identity matrix by a tuple")
 {
-    Tuple T(1.f, 2.f, 3.f, 4.f);
+    Tuple T(1., 2., 3., 4.f);
 
     CHECK(Matrix::Identity(4).Mul(T) == T);
 }
@@ -635,40 +635,40 @@ TEST_CASE("multiplying the identity matrix by a tuple")
 TEST_CASE("transposing a matrix")
 {
     Matrix M(4, 4);
-    M(0, 0) = 0.f;
-    M(0, 1) = 9.f;
-    M(0, 2) = 3.f;
-    M(0, 3) = 0.f;
-    M(1, 0) = 9.f;
-    M(1, 1) = 8.f;
-    M(1, 2) = 0.f;
-    M(1, 3) = 8.f;
-    M(2, 0) = 1.f;
-    M(2, 1) = 8.f;
-    M(2, 2) = 5.f;
-    M(2, 3) = 3.f;
-    M(3, 0) = 0.f;
-    M(3, 1) = 0.f;
-    M(3, 2) = 5.f;
-    M(3, 3) = 8.f;
+    M(0, 0) = 0.;
+    M(0, 1) = 9.;
+    M(0, 2) = 3.;
+    M(0, 3) = 0.;
+    M(1, 0) = 9.;
+    M(1, 1) = 8.;
+    M(1, 2) = 0.;
+    M(1, 3) = 8.;
+    M(2, 0) = 1.;
+    M(2, 1) = 8.;
+    M(2, 2) = 5.;
+    M(2, 3) = 3.;
+    M(3, 0) = 0.;
+    M(3, 1) = 0.;
+    M(3, 2) = 5.;
+    M(3, 3) = 8.;
 
     Matrix T(4, 4);
-    T(0, 0) = 0.f;
-    T(0, 1) = 9.f;
-    T(0, 2) = 1.f;
-    T(0, 3) = 0.f;
-    T(1, 0) = 9.f;
-    T(1, 1) = 8.f;
-    T(1, 2) = 8.f;
-    T(1, 3) = 0.f;
-    T(2, 0) = 3.f;
-    T(2, 1) = 0.f;
-    T(2, 2) = 5.f;
-    T(2, 3) = 5.f;
-    T(3, 0) = 0.f;
-    T(3, 1) = 8.f;
-    T(3, 2) = 3.f;
-    T(3, 3) = 8.f;
+    T(0, 0) = 0.;
+    T(0, 1) = 9.;
+    T(0, 2) = 1.;
+    T(0, 3) = 0.;
+    T(1, 0) = 9.;
+    T(1, 1) = 8.;
+    T(1, 2) = 8.;
+    T(1, 3) = 0.;
+    T(2, 0) = 3.;
+    T(2, 1) = 0.;
+    T(2, 2) = 5.;
+    T(2, 3) = 5.;
+    T(3, 0) = 0.;
+    T(3, 1) = 8.;
+    T(3, 2) = 3.;
+    T(3, 3) = 8.;
 
     CHECK(M.T() == T);
 }
@@ -676,10 +676,10 @@ TEST_CASE("transposing a matrix")
 TEST_CASE("calculating the determinant of a 2x2 matrix")
 {
     Matrix A(2, 2);
-    A(0, 0) = 1.f;
-    A(0, 1) = 5.f;
-    A(1, 0) = -3.f;
-    A(1, 1) = 2.f;
+    A(0, 0) = 1.;
+    A(0, 1) = 5.;
+    A(1, 0) = -3.;
+    A(1, 1) = 2.;
 
     CHECK(Util::Equal(A.Determinant(), 17.f));
 }
@@ -687,21 +687,21 @@ TEST_CASE("calculating the determinant of a 2x2 matrix")
 TEST_CASE("a submatrix of a 3x3 matrix is a 2x2 matrix")
 {
     Matrix A(3, 3);
-    A(0, 0) = 1.f;
-    A(0, 1) = 5.f;
-    A(0, 2) = 0.f;
-    A(1, 0) = -3.f;
-    A(1, 1) = 2.f;
-    A(1, 2) = 7.f;
-    A(2, 0) = 0.f;
-    A(2, 1) = 6.f;
-    A(2, 2) = -3.f;
+    A(0, 0) = 1.;
+    A(0, 1) = 5.;
+    A(0, 2) = 0.;
+    A(1, 0) = -3.;
+    A(1, 1) = 2.;
+    A(1, 2) = 7.;
+    A(2, 0) = 0.;
+    A(2, 1) = 6.;
+    A(2, 2) = -3.;
 
     Matrix B(2, 2);
-    B(0, 0) = -3.f;
-    B(0, 1) = 2.f;
-    B(1, 0) = 0.f;
-    B(1, 1) = 6.f;
+    B(0, 0) = -3.;
+    B(0, 1) = 2.;
+    B(1, 0) = 0.;
+    B(1, 1) = 6.;
 
     CHECK(A.Submatrix(0, 2) == B);
 }
@@ -709,33 +709,33 @@ TEST_CASE("a submatrix of a 3x3 matrix is a 2x2 matrix")
 TEST_CASE("a submatrix of a 4x4 matrix is a 3x3 matrix")
 {
     Matrix A(4, 4);
-    A(0, 0) = -6.f;
-    A(0, 1) = 1.f;
-    A(0, 2) = 1.f;
-    A(0, 3) = 6.f;
-    A(1, 0) = -8.f;
-    A(1, 1) = 5.f;
-    A(1, 2) = 8.f;
-    A(1, 3) = 6.f;
-    A(2, 0) = -1.f;
-    A(2, 1) = 0.f;
-    A(2, 2) = 8.f;
-    A(2, 3) = 2.f;
-    A(3, 0) = -7.f;
-    A(3, 1) = 1.f;
-    A(3, 2) = -1.f;
-    A(3, 3) = 1.f;
+    A(0, 0) = -6.;
+    A(0, 1) = 1.;
+    A(0, 2) = 1.;
+    A(0, 3) = 6.;
+    A(1, 0) = -8.;
+    A(1, 1) = 5.;
+    A(1, 2) = 8.;
+    A(1, 3) = 6.;
+    A(2, 0) = -1.;
+    A(2, 1) = 0.;
+    A(2, 2) = 8.;
+    A(2, 3) = 2.;
+    A(3, 0) = -7.;
+    A(3, 1) = 1.;
+    A(3, 2) = -1.;
+    A(3, 3) = 1.;
 
     Matrix B(3, 3);
-    B(0, 0) = -6.f;
-    B(0, 1) = 1.f;
-    B(0, 2) = 6.f;
-    B(1, 0) = -8.f;
-    B(1, 1) = 8.f;
-    B(1, 2) = 6.f;
-    B(2, 0) = -7.f;
-    B(2, 1) = -1.f;
-    B(2, 2) = 1.f;
+    B(0, 0) = -6.;
+    B(0, 1) = 1.;
+    B(0, 2) = 6.;
+    B(1, 0) = -8.;
+    B(1, 1) = 8.;
+    B(1, 2) = 6.;
+    B(2, 0) = -7.;
+    B(2, 1) = -1.;
+    B(2, 2) = 1.;
 
     CHECK(A.Submatrix(2, 1) == B);
 }
@@ -743,15 +743,15 @@ TEST_CASE("a submatrix of a 4x4 matrix is a 3x3 matrix")
 TEST_CASE("calculating a minor of a 3x3 matrix")
 {
     Matrix A(3, 3);
-    A(0, 0) = 3.f;
-    A(0, 1) = 5.f;
-    A(0, 2) = 0.f;
-    A(1, 0) = 2.f;
-    A(1, 1) = -1.f;
-    A(1, 2) = -7.f;
-    A(2, 0) = 6.f;
-    A(2, 1) = -1.f;
-    A(2, 2) = 5.f;
+    A(0, 0) = 3.;
+    A(0, 1) = 5.;
+    A(0, 2) = 0.;
+    A(1, 0) = 2.;
+    A(1, 1) = -1.;
+    A(1, 2) = -7.;
+    A(2, 0) = 6.;
+    A(2, 1) = -1.;
+    A(2, 2) = 5.;
 
     CHECK(Util::Equal(A.Minor(1, 0), 25.f));
 }
@@ -759,15 +759,15 @@ TEST_CASE("calculating a minor of a 3x3 matrix")
 TEST_CASE("calculating a cofactor of a 3x3 matrix")
 {
     Matrix A(3, 3);
-    A(0, 0) = 3.f;
-    A(0, 1) = 5.f;
-    A(0, 2) = 0.f;
-    A(1, 0) = 2.f;
-    A(1, 1) = -1.f;
-    A(1, 2) = -7.f;
-    A(2, 0) = 6.f;
-    A(2, 1) = -1.f;
-    A(2, 2) = 5.f;
+    A(0, 0) = 3.;
+    A(0, 1) = 5.;
+    A(0, 2) = 0.;
+    A(1, 0) = 2.;
+    A(1, 1) = -1.;
+    A(1, 2) = -7.;
+    A(2, 0) = 6.;
+    A(2, 1) = -1.;
+    A(2, 2) = 5.;
 
     CHECK(Util::Equal(A.Cofactor(1, 0), -25.f));
     CHECK(Util::Equal(A.Cofactor(0, 0), -12.f));
@@ -776,15 +776,15 @@ TEST_CASE("calculating a cofactor of a 3x3 matrix")
 TEST_CASE("calculating the determinant of a 3x3 matrix")
 {
     Matrix A(3, 3);
-    A(0, 0) = 1.f;
-    A(0, 1) = 2.f;
-    A(0, 2) = 6.f;
-    A(1, 0) = -5.f;
-    A(1, 1) = 8.f;
-    A(1, 2) = -4.f;
-    A(2, 0) = 2.f;
-    A(2, 1) = 6.f;
-    A(2, 2) = 4.f;
+    A(0, 0) = 1.;
+    A(0, 1) = 2.;
+    A(0, 2) = 6.;
+    A(1, 0) = -5.;
+    A(1, 1) = 8.;
+    A(1, 2) = -4.;
+    A(2, 0) = 2.;
+    A(2, 1) = 6.;
+    A(2, 2) = 4.;
 
     CHECK(Util::Equal(A.Cofactor(0, 0), 56.f));
     CHECK(Util::Equal(A.Cofactor(0, 1), 12.f));
@@ -796,22 +796,22 @@ TEST_CASE("calculating the determinant of a 3x3 matrix")
 TEST_CASE("calculating the determinant of a 4x4 matrix")
 {
     Matrix A(4, 4);
-    A(0, 0) = -2.f;
-    A(0, 1) = -8.f;
-    A(0, 2) = 3.f;
-    A(0, 3) = 5.f;
-    A(1, 0) = -3.f;
-    A(1, 1) = 1.f;
-    A(1, 2) = 7.f;
-    A(1, 3) = 3.f;
-    A(2, 0) = 1.f;
-    A(2, 1) = 2.f;
-    A(2, 2) = -9.f;
-    A(2, 3) = 6.f;
-    A(3, 0) = -6.f;
-    A(3, 1) = 7.f;
-    A(3, 2) = 7.f;
-    A(3, 3) = -9.f;
+    A(0, 0) = -2.;
+    A(0, 1) = -8.;
+    A(0, 2) = 3.;
+    A(0, 3) = 5.;
+    A(1, 0) = -3.;
+    A(1, 1) = 1.;
+    A(1, 2) = 7.;
+    A(1, 3) = 3.;
+    A(2, 0) = 1.;
+    A(2, 1) = 2.;
+    A(2, 2) = -9.;
+    A(2, 3) = 6.;
+    A(3, 0) = -6.;
+    A(3, 1) = 7.;
+    A(3, 2) = 7.;
+    A(3, 3) = -9.;
 
     CHECK(Util::Equal(A.Cofactor(0, 0), 690.f));
     CHECK(Util::Equal(A.Cofactor(0, 1), 447.f));
@@ -823,22 +823,22 @@ TEST_CASE("calculating the determinant of a 4x4 matrix")
 TEST_CASE("testing the invertible matrix for invertibility")
 {
     Matrix A(4, 4);
-    A(0, 0) = 6.f;
-    A(0, 1) = 4.f;
-    A(0, 2) = 4.f;
-    A(0, 3) = 4.f;
-    A(1, 0) = 5.f;
-    A(1, 1) = 5.f;
-    A(1, 2) = 7.f;
-    A(1, 3) = 6.f;
-    A(2, 0) = 4.f;
-    A(2, 1) = -9.f;
-    A(2, 2) = 3.f;
-    A(2, 3) = -7.f;
-    A(3, 0) = 9.f;
-    A(3, 1) = 1.f;
-    A(3, 2) = 7.f;
-    A(3, 3) = -6.f;
+    A(0, 0) = 6.;
+    A(0, 1) = 4.;
+    A(0, 2) = 4.;
+    A(0, 3) = 4.;
+    A(1, 0) = 5.;
+    A(1, 1) = 5.;
+    A(1, 2) = 7.;
+    A(1, 3) = 6.;
+    A(2, 0) = 4.;
+    A(2, 1) = -9.;
+    A(2, 2) = 3.;
+    A(2, 3) = -7.;
+    A(3, 0) = 9.;
+    A(3, 1) = 1.;
+    A(3, 2) = 7.;
+    A(3, 3) = -6.;
 
     CHECK(Util::Equal(A.Determinant(), -2120.f));
     CHECK(A.IsInvertible());
@@ -847,22 +847,22 @@ TEST_CASE("testing the invertible matrix for invertibility")
 TEST_CASE("testing the noninvertible matrix for invertibility")
 {
     Matrix A(4, 4);
-    A(0, 0) = -4.f;
-    A(0, 1) = 2.f;
-    A(0, 2) = -2.f;
-    A(0, 3) = -3.f;
-    A(1, 0) = 9.f;
-    A(1, 1) = 6.f;
-    A(1, 2) = 2.f;
-    A(1, 3) = 6.f;
-    A(2, 0) = 0.f;
-    A(2, 1) = -5.f;
-    A(2, 2) = 1.f;
-    A(2, 3) = -5.f;
-    A(3, 0) = 0.f;
-    A(3, 1) = 0.f;
-    A(3, 2) = 0.f;
-    A(3, 3) = 0.f;
+    A(0, 0) = -4.;
+    A(0, 1) = 2.;
+    A(0, 2) = -2.;
+    A(0, 3) = -3.;
+    A(1, 0) = 9.;
+    A(1, 1) = 6.;
+    A(1, 2) = 2.;
+    A(1, 3) = 6.;
+    A(2, 0) = 0.;
+    A(2, 1) = -5.;
+    A(2, 2) = 1.;
+    A(2, 3) = -5.;
+    A(3, 0) = 0.;
+    A(3, 1) = 0.;
+    A(3, 2) = 0.;
+    A(3, 3) = 0.;
 
     CHECK(Util::Equal(A.Determinant(), 0.f));
     CHECK(!A.IsInvertible());
@@ -871,22 +871,22 @@ TEST_CASE("testing the noninvertible matrix for invertibility")
 TEST_CASE("calculating the inverse of a matrix")
 {
     Matrix A(4, 4);
-    A(0, 0) = -5.f;
-    A(0, 1) = 2.f;
-    A(0, 2) = 6.f;
-    A(0, 3) = -8.f;
-    A(1, 0) = 1.f;
-    A(1, 1) = -5.f;
-    A(1, 2) = 1.f;
-    A(1, 3) = 8.f;
-    A(2, 0) = 7.f;
-    A(2, 1) = 7.f;
-    A(2, 2) = -6.f;
-    A(2, 3) = -7.f;
-    A(3, 0) = 1.f;
-    A(3, 1) = -3.f;
-    A(3, 2) = 7.f;
-    A(3, 3) = 4.f;
+    A(0, 0) = -5.;
+    A(0, 1) = 2.;
+    A(0, 2) = 6.;
+    A(0, 3) = -8.;
+    A(1, 0) = 1.;
+    A(1, 1) = -5.;
+    A(1, 2) = 1.;
+    A(1, 3) = 8.;
+    A(2, 0) = 7.;
+    A(2, 1) = 7.;
+    A(2, 2) = -6.;
+    A(2, 3) = -7.;
+    A(3, 0) = 1.;
+    A(3, 1) = -3.;
+    A(3, 2) = 7.;
+    A(3, 3) = 4.;
 
     CHECK(Util::Equal(A.Determinant(), 532.f));
     CHECK(Util::Equal(A.Cofactor(2, 3), -160.f));
@@ -896,22 +896,22 @@ TEST_CASE("calculating the inverse of a matrix")
     CHECK(A.Cofactor(3, 2) == 105.f);
 
     Matrix B(4, 4);
-    B(0, 0) = 0.21805f;
-    B(0, 1) = 0.45113f;
-    B(0, 2) = 0.24060f;
-    B(0, 3) = -0.04511f;
-    B(1, 0) = -0.80827f;
-    B(1, 1) = -1.45677f;
-    B(1, 2) = -0.44361f;
-    B(1, 3) = 0.52068f;
-    B(2, 0) = -0.07895f;
-    B(2, 1) = -0.22368f;
-    B(2, 2) = -0.05263f;
-    B(2, 3) = 0.19737f;
-    B(3, 0) = -0.52256f;
-    B(3, 1) = -0.81391f;
-    B(3, 2) = -0.30075f;
-    B(3, 3) = 0.30639f;
+    B(0, 0) = 0.21805;
+    B(0, 1) = 0.45113;
+    B(0, 2) = 0.24060;
+    B(0, 3) = -0.04511;
+    B(1, 0) = -0.80827;
+    B(1, 1) = -1.45677;
+    B(1, 2) = -0.44361;
+    B(1, 3) = 0.52068;
+    B(2, 0) = -0.07895;
+    B(2, 1) = -0.22368;
+    B(2, 2) = -0.05263;
+    B(2, 3) = 0.19737;
+    B(3, 0) = -0.52256;
+    B(3, 1) = -0.81391;
+    B(3, 2) = -0.30075;
+    B(3, 3) = 0.30639;
 
     CHECK(A.Inverse() == B);
 }
@@ -919,43 +919,43 @@ TEST_CASE("calculating the inverse of a matrix")
 TEST_CASE("calculating the inverse of another matrix")
 {
     Matrix A(4, 4);
-    A(0, 0) = 8.f;
-    A(0, 1) = -5.f;
-    A(0, 2) = 9.f;
-    A(0, 3) = 2.f;
-    A(1, 0) = 7.f;
-    A(1, 1) = 5.f;
-    A(1, 2) = 6.f;
-    A(1, 3) = 1.f;
-    A(2, 0) = -6.f;
-    A(2, 1) = 0.f;
-    A(2, 2) = 9.f;
-    A(2, 3) = 6.f;
-    A(3, 0) = -3.f;
-    A(3, 1) = 0.f;
-    A(3, 2) = -9.f;
-    A(3, 3) = -4.f;
+    A(0, 0) = 8.;
+    A(0, 1) = -5.;
+    A(0, 2) = 9.;
+    A(0, 3) = 2.;
+    A(1, 0) = 7.;
+    A(1, 1) = 5.;
+    A(1, 2) = 6.;
+    A(1, 3) = 1.;
+    A(2, 0) = -6.;
+    A(2, 1) = 0.;
+    A(2, 2) = 9.;
+    A(2, 3) = 6.;
+    A(3, 0) = -3.;
+    A(3, 1) = 0.;
+    A(3, 2) = -9.;
+    A(3, 3) = -4.;
 
     Matrix B(4, 4);
-    B(0, 0) = -0.15385f;
-    B(0, 1) = -0.15385f;
-    B(0, 2) = -0.28205f;
-    B(0, 3) = -0.53846f;
+    B(0, 0) = -0.15385;
+    B(0, 1) = -0.15385;
+    B(0, 2) = -0.28205;
+    B(0, 3) = -0.53846;
 
-    B(1, 0) = -0.07692f;
-    B(1, 1) = 0.12308f;
-    B(1, 2) = 0.02564f;
-    B(1, 3) = 0.03077f;
+    B(1, 0) = -0.07692;
+    B(1, 1) = 0.12308;
+    B(1, 2) = 0.02564;
+    B(1, 3) = 0.03077;
 
-    B(2, 0) = 0.35897f;
-    B(2, 1) = 0.35897f;
-    B(2, 2) = 0.43590f;
-    B(2, 3) = 0.92308f;
+    B(2, 0) = 0.35897;
+    B(2, 1) = 0.35897;
+    B(2, 2) = 0.43590;
+    B(2, 3) = 0.92308;
 
-    B(3, 0) = -0.69231f;
-    B(3, 1) = -0.69231f;
-    B(3, 2) = -0.76923f;
-    B(3, 3) = -1.92308f;
+    B(3, 0) = -0.69231;
+    B(3, 1) = -0.69231;
+    B(3, 2) = -0.76923;
+    B(3, 3) = -1.92308;
 
     CHECK(A.Inverse() == B);
 }
@@ -963,43 +963,43 @@ TEST_CASE("calculating the inverse of another matrix")
 TEST_CASE("calculating the inverse of a third matrix")
 {
     Matrix A(4, 4);
-    A(0, 0) = 9.f;
-    A(0, 1) = 3.f;
-    A(0, 2) = 0.f;
-    A(0, 3) = 9.f;
-    A(1, 0) = -5.f;
-    A(1, 1) = -2.f;
-    A(1, 2) = -6.f;
-    A(1, 3) = -3.f;
-    A(2, 0) = -4.f;
-    A(2, 1) = 9.f;
-    A(2, 2) = 6.f;
-    A(2, 3) = 4.f;
-    A(3, 0) = -7.f;
-    A(3, 1) = 6.f;
-    A(3, 2) = 6.f;
-    A(3, 3) = 2.f;
+    A(0, 0) = 9.;
+    A(0, 1) = 3.;
+    A(0, 2) = 0.;
+    A(0, 3) = 9.;
+    A(1, 0) = -5.;
+    A(1, 1) = -2.;
+    A(1, 2) = -6.;
+    A(1, 3) = -3.;
+    A(2, 0) = -4.;
+    A(2, 1) = 9.;
+    A(2, 2) = 6.;
+    A(2, 3) = 4.;
+    A(3, 0) = -7.;
+    A(3, 1) = 6.;
+    A(3, 2) = 6.;
+    A(3, 3) = 2.;
 
     Matrix B(4, 4);
-    B(0, 0) = -0.04074f;
-    B(0, 1) = -0.07778f;
-    B(0, 2) = 0.14444f;
-    B(0, 3) = -0.22222f;
+    B(0, 0) = -0.04074;
+    B(0, 1) = -0.07778;
+    B(0, 2) = 0.14444;
+    B(0, 3) = -0.22222;
 
-    B(1, 0) = -0.07778f;
-    B(1, 1) = 0.03333f;
-    B(1, 2) = 0.36667f;
-    B(1, 3) = -0.33333f;
+    B(1, 0) = -0.07778;
+    B(1, 1) = 0.03333;
+    B(1, 2) = 0.36667;
+    B(1, 3) = -0.33333;
 
-    B(2, 0) = -0.02901f;
-    B(2, 1) = -0.14630f;
-    B(2, 2) = -0.10926f;
-    B(2, 3) = 0.12963f;
+    B(2, 0) = -0.02901;
+    B(2, 1) = -0.14630;
+    B(2, 2) = -0.10926;
+    B(2, 3) = 0.12963;
 
-    B(3, 0) = 0.17778f;
-    B(3, 1) = 0.06667f;
-    B(3, 2) = -0.26667f;
-    B(3, 3) = 0.33333f;
+    B(3, 0) = 0.17778;
+    B(3, 1) = 0.06667;
+    B(3, 2) = -0.26667;
+    B(3, 3) = 0.33333;
 
     CHECK(A.Inverse() == B);
 }
@@ -1007,40 +1007,40 @@ TEST_CASE("calculating the inverse of a third matrix")
 TEST_CASE("multiplying a product by its inverse")
 {
     Matrix A(4, 4);
-    A(0, 0) = 3.f;
-    A(0, 1) = -9.f;
-    A(0, 2) = 7.f;
-    A(0, 3) = 3.f;
-    A(1, 0) = 3.f;
-    A(1, 1) = -8.f;
-    A(1, 2) = 2.f;
-    A(1, 3) = -9.f;
-    A(2, 0) = -4.f;
-    A(2, 1) = 4.f;
-    A(2, 2) = 4.f;
-    A(2, 3) = 1.f;
-    A(3, 0) = -6.f;
-    A(3, 1) = 5.f;
-    A(3, 2) = -1.f;
-    A(3, 3) = 1.f;
+    A(0, 0) = 3.;
+    A(0, 1) = -9.;
+    A(0, 2) = 7.;
+    A(0, 3) = 3.;
+    A(1, 0) = 3.;
+    A(1, 1) = -8.;
+    A(1, 2) = 2.;
+    A(1, 3) = -9.;
+    A(2, 0) = -4.;
+    A(2, 1) = 4.;
+    A(2, 2) = 4.;
+    A(2, 3) = 1.;
+    A(3, 0) = -6.;
+    A(3, 1) = 5.;
+    A(3, 2) = -1.;
+    A(3, 3) = 1.;
 
     Matrix B(4, 4);
-    B(0, 0) = 8.f;
-    B(0, 1) = 2.f;
-    B(0, 2) = 2.f;
-    B(0, 3) = 2.f;
-    B(1, 0) = 3.f;
-    B(1, 1) = -1.f;
-    B(1, 2) = 7.f;
-    B(1, 3) = 0.f;
-    B(2, 0) = 7.f;
-    B(2, 1) = 0.f;
-    B(2, 2) = 5.f;
-    B(2, 3) = 4.f;
-    B(3, 0) = 6.f;
-    B(3, 1) = -2.f;
-    B(3, 2) = 0.f;
-    B(3, 3) = 5.f;
+    B(0, 0) = 8.;
+    B(0, 1) = 2.;
+    B(0, 2) = 2.;
+    B(0, 3) = 2.;
+    B(1, 0) = 3.;
+    B(1, 1) = -1.;
+    B(1, 2) = 7.;
+    B(1, 3) = 0.;
+    B(2, 0) = 7.;
+    B(2, 1) = 0.;
+    B(2, 2) = 5.;
+    B(2, 3) = 4.;
+    B(3, 0) = 6.;
+    B(3, 1) = -2.;
+    B(3, 2) = 0.;
+    B(3, 3) = 5.;
 
     Matrix C = A.Mul(B);
     CHECK(A == C.Mul(B.Inverse()));
@@ -1052,198 +1052,198 @@ TEST_CASE("Test matrix properties")
     CHECK(I.Inverse() == I);
 
     Matrix A(4, 4);
-    A(0, 0) = 3.f;
-    A(0, 1) = -9.f;
-    A(0, 2) = 7.f;
-    A(0, 3) = 3.f;
-    A(1, 0) = 3.f;
-    A(1, 1) = -8.f;
-    A(1, 2) = 2.f;
-    A(1, 3) = -9.f;
-    A(2, 0) = -4.f;
-    A(2, 1) = 4.f;
-    A(2, 2) = 4.f;
-    A(2, 3) = 1.f;
-    A(3, 0) = -6.f;
-    A(3, 1) = 5.f;
-    A(3, 2) = -1.f;
-    A(3, 3) = 1.f;
+    A(0, 0) = 3.;
+    A(0, 1) = -9.;
+    A(0, 2) = 7.;
+    A(0, 3) = 3.;
+    A(1, 0) = 3.;
+    A(1, 1) = -8.;
+    A(1, 2) = 2.;
+    A(1, 3) = -9.;
+    A(2, 0) = -4.;
+    A(2, 1) = 4.;
+    A(2, 2) = 4.;
+    A(2, 3) = 1.;
+    A(3, 0) = -6.;
+    A(3, 1) = 5.;
+    A(3, 2) = -1.;
+    A(3, 3) = 1.;
 
     CHECK(A.Mul(A.Inverse()) == I);
 
     CHECK(A.Inverse().T() == A.T().Inverse());
 
     Matrix I2 = Matrix::Identity(4);
-    I2(0, 1) = 2.f;
-    Tuple B = Tuple(4.f, 5.f, 6.f, 7.f);
+    I2(0, 1) = 2.;
+    Tuple B = Tuple(4., 5., 6., 7.f);
 
     CHECK(I2.Mul(B) != B);
 }
 
 TEST_CASE("Multiplying by a translation matrix")
 {
-    Matrix T = Matrix::Translation(5.f, -3.f, 2.f);
-    Point P(-3.f, 4.f, 5.f);
+    Matrix T = Matrix::Translation(5., -3., 2.f);
+    Point P(-3., 4., 5.f);
 
-    CHECK(T.Mul(P) == Point(2.f, 1.f, 7.f));
+    CHECK(T.Mul(P) == Point(2., 1., 7.f));
 
-    CHECK(P.Translate(5.f, -3.f, 2.f) == Point(2.f, 1.f, 7.f));
+    CHECK(P.Translate(5., -3., 2.f) == Point(2., 1., 7.f));
 }
 
 TEST_CASE("Multiplying by the inverse of a translation matrix")
 {
-    Matrix T = Matrix::Translation(5.f, -3.f, 2.f);
+    Matrix T = Matrix::Translation(5., -3., 2.f);
     auto Inv = T.Inverse();
-    Point P(-3.f, 4.f, 5.f);
+    Point P(-3., 4., 5.f);
 
-    CHECK(Inv.Mul(P) == Point(-8.f, 7.f, 3.f));
+    CHECK(Inv.Mul(P) == Point(-8., 7., 3.f));
 }
 
 TEST_CASE("Translation does not affect vectors")
 {
-    Matrix T = Matrix::Translation(5.f, -3.f, 2.f);
-    Vector V(-3.f, 4.f, 5.f);
+    Matrix T = Matrix::Translation(5., -3., 2.f);
+    Vector V(-3., 4., 5.f);
 
     CHECK(T.Mul(V) == V);
 }
 
 TEST_CASE("A scaling matrix applied to a point")
 {
-    Matrix S = Matrix::Scaling(2.f, 3.f, 4.f);
-    Point P(-4.f, 6.f, 8.f);
+    Matrix S = Matrix::Scaling(2., 3., 4.f);
+    Point P(-4., 6., 8.f);
 
-    CHECK(S.Mul(P) == Point(-8.f, 18.f, 32.f));
+    CHECK(S.Mul(P) == Point(-8., 18., 32.f));
 }
 
 TEST_CASE("A scaling matrix applied to a vector")
 {
-    Matrix S = Matrix::Scaling(2.f, 3.f, 4.f);
-    Vector V(-4.f, 6.f, 8.f);
+    Matrix S = Matrix::Scaling(2., 3., 4.f);
+    Vector V(-4., 6., 8.f);
 
-    CHECK(S.Mul(V) == Vector(-8.f, 18.f, 32.f));
+    CHECK(S.Mul(V) == Vector(-8., 18., 32.f));
 }
 
 TEST_CASE("Multiplying by the inverse of a scaling matrix")
 {
-    Matrix S = Matrix::Scaling(2.f, 3.f, 4.f);
-    Vector V(-4.f, 6.f, 8.f);
+    Matrix S = Matrix::Scaling(2., 3., 4.f);
+    Vector V(-4., 6., 8.f);
 
-    CHECK(S.Inverse().Mul(V) == Vector(-2.f, 2.f, 2.f));
+    CHECK(S.Inverse().Mul(V) == Vector(-2., 2., 2.f));
 }
 
 TEST_CASE("Reflection is scaling by a negative value")
 {
-    Matrix S = Matrix::Scaling(-1.f, 1.f, 1.f);
-    Point P(2.f, 3.f, 4.f);
+    Matrix S = Matrix::Scaling(-1., 1., 1.f);
+    Point P(2., 3., 4.f);
 
-    CHECK(S.Mul(P) == Point(-2.f, 3.f, 4.f));
+    CHECK(S.Mul(P) == Point(-2., 3., 4.f));
 }
 
 TEST_CASE("Rotating a point around the x axis")
 {
-    Point P(0.f, 1.f, 0.f);
+    Point P(0., 1., 0.f);
     Matrix R4 = Matrix::RotationX(M_PI/4);
     Matrix R2 = Matrix::RotationX(M_PI/2);
 
-    CHECK(R4.Mul(P) == Point(0.f, std::sqrt(2.f)/2, std::sqrt(2.f)/2));
-    CHECK(R2.Mul(P) == Point(0.f, 0.f, 1.f));
+    CHECK(R4.Mul(P) == Point(0., std::sqrt(2.f)/2, std::sqrt(2.f)/2));
+    CHECK(R2.Mul(P) == Point(0., 0., 1.f));
 }
 
 TEST_CASE("The inverse of an x-rotation rotate in the opposite direction")
 {
-    Point P(0.f, 1.f, 0.f);
+    Point P(0., 1., 0.f);
     Matrix R4 = Matrix::RotationX(M_PI/4);
 
-    CHECK(R4.Inverse().Mul(P) == Point(0.f, std::sqrt(2.f)/2, -std::sqrt(2.f)/2));
+    CHECK(R4.Inverse().Mul(P) == Point(0., std::sqrt(2.f)/2, -std::sqrt(2.f)/2));
 }
 
 TEST_CASE("Rotating a point around the x axis")
 {
-    Point P(0.f, 1.f, 0.f);
+    Point P(0., 1., 0.f);
     Matrix R4 = Matrix::RotationX(M_PI/4);
     Matrix R2 = Matrix::RotationX(M_PI/2);
 
-    CHECK(R4.Mul(P) == Point(0.f, std::sqrt(2.f)/2, std::sqrt(2.f)/2));
-    CHECK(R2.Mul(P) == Point(0.f, 0.f, 1.f));
+    CHECK(R4.Mul(P) == Point(0., std::sqrt(2.f)/2, std::sqrt(2.f)/2));
+    CHECK(R2.Mul(P) == Point(0., 0., 1.f));
 }
 
 TEST_CASE("Rotating a point around the y axis")
 {
-    Point P(0.f, 0.f, 1.f);
+    Point P(0., 0., 1.f);
     Matrix R4 = Matrix::RotationY(M_PI/4);
     Matrix R2 = Matrix::RotationY(M_PI/2);
 
-    CHECK(R4.Mul(P) == Point(std::sqrt(2.f)/2, 0.f, std::sqrt(2.f)/2));
-    CHECK(R2.Mul(P) == Point(1.f, 0.f, 0.f));
+    CHECK(R4.Mul(P) == Point(std::sqrt(2.f)/2, 0., std::sqrt(2.f)/2));
+    CHECK(R2.Mul(P) == Point(1., 0., 0.f));
 }
 
 TEST_CASE("Rotating a point around the z axis")
 {
-    Point P(0.f, 1.f, 0.f);
+    Point P(0., 1., 0.f);
     Matrix R4 = Matrix::RotationZ(M_PI/4);
     Matrix R2 = Matrix::RotationZ(M_PI/2);
 
     CHECK(R4.Mul(P) == Point(-std::sqrt(2.f)/2, std::sqrt(2.f)/2, 0.f));
-    CHECK(R2.Mul(P) == Point(-1.f, 0.f, 0.f));
+    CHECK(R2.Mul(P) == Point(-1., 0., 0.f));
 }
 
 TEST_CASE("A shearing transformation moves x in proportion to y")
 {
-    Point P(2.f, 3.f, 4.f);
-    Matrix S = Matrix::Shearing(1.f, 0.f, 0.f, 0.f, 0.f, 0.f);
+    Point P(2., 3., 4.f);
+    Matrix S = Matrix::Shearing(1., 0., 0., 0., 0., 0.f);
 
-    CHECK(S.Mul(P) == Point(5.f, 3.f, 4.f));
+    CHECK(S.Mul(P) == Point(5., 3., 4.f));
 }
 
 TEST_CASE("A shearing transformation moves x in proportion to z")
 {
-    Point P(2.f, 3.f, 4.f);
-    Matrix S = Matrix::Shearing(0.f, 1.f, 0.f, 0.f, 0.f, 0.f);
+    Point P(2., 3., 4.f);
+    Matrix S = Matrix::Shearing(0., 1., 0., 0., 0., 0.f);
 
-    CHECK(S.Mul(P) == Point(6.f, 3.f, 4.f));
+    CHECK(S.Mul(P) == Point(6., 3., 4.f));
 }
 
 TEST_CASE("A shearing transformation moves y in proportion to x")
 {
-    Point P(2.f, 3.f, 4.f);
-    Matrix S = Matrix::Shearing(0.f, 0.f, 1.f, 0.f, 0.f, 0.f);
+    Point P(2., 3., 4.f);
+    Matrix S = Matrix::Shearing(0., 0., 1., 0., 0., 0.f);
 
-    CHECK(S.Mul(P) == Point(2.f, 5.f, 4.f));
+    CHECK(S.Mul(P) == Point(2., 5., 4.f));
 }
 
 TEST_CASE("A shearing transformation moves y in proportion to z")
 {
-    Point P(2.f, 3.f, 4.f);
-    Matrix S = Matrix::Shearing(0.f, 0.f, 0.f, 1.f, 0.f, 0.f);
+    Point P(2., 3., 4.f);
+    Matrix S = Matrix::Shearing(0., 0., 0., 1., 0., 0.f);
 
-    CHECK(S.Mul(P) == Point(2.f, 7.f, 4.f));
+    CHECK(S.Mul(P) == Point(2., 7., 4.f));
 }
 
 TEST_CASE("A shearing transformation moves z in proportion to x")
 {
-    Point P(2.f, 3.f, 4.f);
-    Matrix S = Matrix::Shearing(0.f, 0.f, 0.f, 0.f, 1.f, 0.f);
+    Point P(2., 3., 4.f);
+    Matrix S = Matrix::Shearing(0., 0., 0., 0., 1., 0.f);
 
-    CHECK(S.Mul(P) == Point(2.f, 3.f, 6.f));
+    CHECK(S.Mul(P) == Point(2., 3., 6.f));
 }
 
 TEST_CASE("A shearing transformation moves z in proportion to y")
 {
-    Point P(2.f, 3.f, 4.f);
-    Matrix S = Matrix::Shearing(0.f, 0.f, 0.f, 0.f, 0.f, 1.f);
+    Point P(2., 3., 4.f);
+    Matrix S = Matrix::Shearing(0., 0., 0., 0., 0., 1.f);
 
-    CHECK(S.Mul(P) == Point(2.f, 3.f, 7.f));
+    CHECK(S.Mul(P) == Point(2., 3., 7.f));
 }
 
 TEST_CASE("Individual transformations are applied in sequence")
 {
-    Point P(1.f, 0.f, 1.f);
+    Point P(1., 0., 1.f);
     Matrix A = Matrix::RotationX(M_PI/2);
-    Matrix B = Matrix::Scaling(5.f, 5.f, 5.f);
-    Matrix C = Matrix::Translation(10.f, 5.f, 7.f);
+    Matrix B = Matrix::Scaling(5., 5., 5.f);
+    Matrix C = Matrix::Translation(10., 5., 7.f);
 
-    CHECK(C.Mul(B).Mul(A).Mul(P) == Point(15.f, 0.f, 7.f));
-    CHECK(C.Mul(B.Mul(A.Mul(P))) == Point(15.f, 0.f, 7.f));
+    CHECK(C.Mul(B).Mul(A).Mul(P) == Point(15., 0., 7.f));
+    CHECK(C.Mul(B.Mul(A.Mul(P))) == Point(15., 0., 7.f));
 
-    CHECK(P.RotateX(M_PI/2).Scale(5.f, 5.f, 5.f).Translate(10.f, 5.f, 7.f) == Point(15.f, 0.f, 7.f));
+    CHECK(P.RotateX(M_PI/2).Scale(5., 5., 5.f).Translate(10., 5., 7.f) == Point(15., 0., 7.f));
 }

@@ -20,22 +20,22 @@ int main(int argc, char **argv)
     Canvas CV = Canvas(200, 200);
 
     // WallZ = Z coordinate of the wall
-    float WallZ = 5.f;
+    double WallZ = 5.;
 
     // Wall size = the size of the wall relatively to the size of the sphere
     // (the sphere is a unit sphere)
-    float WallSize = 5.f;
-    float PixelSize = WallSize / CV.GetHeight();
-    float Half = WallSize / 2.f;
+    double WallSize = 5.;
+    double PixelSize = WallSize / CV.GetHeight();
+    double Half = WallSize / 2.;
     
-    Color Red = Color(1.f, 0.f, 0.f);
-    Color Green = Color(0.f, 1.f, 0.f);
+    Color Red = Color(1., 0., 0.f);
+    Color Green = Color(0., 1., 0.f);
 
-    Point RayOrigin = Point(0.f, 0.f, -5.f);
+    Point RayOrigin = Point(0., 0., -5.f);
     Sphere S(1);
 
     // add some scaling to the sphere
-    S.SetTransform(Matrix::Scaling(0.8f, 1.f, 1.f));
+    S.SetTransform(Matrix::Scaling(0.8, 1., 1.f));
 
     for (int CanvasY = 0; CanvasY < CV.GetHeight(); ++CanvasY)
     {
@@ -43,8 +43,8 @@ int main(int argc, char **argv)
         {
             // we need to flip the Y coordinate because of the convention of
             // Y-coordinate of the canvas
-            float WorldY = Half - CanvasY * PixelSize;
-            float WorldX = CanvasX * PixelSize - Half;
+            double WorldY = Half - CanvasY * PixelSize;
+            double WorldX = CanvasX * PixelSize - Hal;
 
             // create a ray
             Point PositionOnWall = Point(WorldX, WorldY, WallZ);

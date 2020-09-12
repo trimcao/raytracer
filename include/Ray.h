@@ -22,7 +22,7 @@ public:
     Point GetOrigin() const;
     Vector GetDirection() const;
 
-    Point Position(float T);
+    Point Position(double T);
 
     Ray Transform(Matrix &M) const;
     Ray Transform(Matrix &&M) const;

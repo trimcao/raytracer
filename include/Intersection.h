@@ -14,7 +14,7 @@ template <class ObjectType>
 struct PreComputations
 {
     std::shared_ptr<ObjectType> AObject;
-    float T;
+    double T;
     Point Position;
     Point OverPosition;
     Vector EyeV;
@@ -25,15 +25,15 @@ struct PreComputations
 template <class ObjectType>
 class Intersection
 {
-    float T;
+    double T;
     std::shared_ptr<ObjectType> O;
 
 public:
     Intersection();
-    Intersection(float T, const ObjectType &O);
-    Intersection(float T, std::shared_ptr<ObjectType> &O);
+    Intersection(double T, const ObjectType &O);
+    Intersection(double T, std::shared_ptr<ObjectType> &O);
 
-    float GetT() const;
+    double GetT() const;
     std::shared_ptr<ObjectType> GetObject() const;
 
     bool operator<(const Intersection &RHS) const { return T < RHS.GetT(); }

@@ -9,7 +9,7 @@
 Sphere::Sphere(int ID)
 {
     Transform = Matrix::Identity(4);
-    Origin = Point(0.f, 0.f, 0.f);
+    Origin = Point(0., 0., 0.f);
     AMaterial = Material();
     this->ID = ID;
 }
@@ -46,17 +46,17 @@ TEST_CASE("A sphere's default transformation")
 TEST_CASE("Changing a sphere's transformation")
 {
     Sphere S(2);
-    auto M = Matrix::Translation(2.f, 3.f, 4.f);
+    auto M = Matrix::Translation(2., 3., 4.f);
     S.SetTransform(M);
 
-    CHECK(S.GetTransform() == Matrix::Translation(2.f, 3.f, 4.f));
+    CHECK(S.GetTransform() == Matrix::Translation(2., 3., 4.f));
 }
 
 TEST_CASE("Intersecting a scaled sphere with a ray")
 {
-    Ray R(Point(0.f, 0.f, -5.f), Vector(0.f, 0.f, 1.f));
+    Ray R(Point(0., 0., -5.f), Vector(0., 0., 1.f));
     Sphere S(2);
-    S.SetTransform(Matrix::Scaling(2.f, 2.f, 2.f));
+    S.SetTransform(Matrix::Scaling(2., 2., 2.f));
 
     auto XS = Intersect(R, S);
 
@@ -67,9 +67,9 @@ TEST_CASE("Intersecting a scaled sphere with a ray")
 
 TEST_CASE("Intersecting a translated sphere with a ray")
 {
-    Ray R(Point(0.f, 0.f, -5.f), Vector(0.f, 0.f, 1.f));
+    Ray R(Point(0., 0., -5.f), Vector(0., 0., 1.f));
     Sphere S(2);
-    S.SetTransform(Matrix::Translation(5.f, 0.f, 0.f));
+    S.SetTransform(Matrix::Translation(5., 0., 0.f));
 
     auto XS = Intersect(R, S);
 
@@ -79,22 +79,22 @@ TEST_CASE("Intersecting a translated sphere with a ray")
 TEST_CASE("The normal on a sphere at a point on the x axis")
 {
     Sphere S(1);
-    auto N = S.NormalAt(Point(1.f, 0.f, 0.f));
-    CHECK(N == Vector(1.f, 0.f, 0.f));
+    auto N = S.NormalAt(Point(1., 0., 0.f));
+    CHECK(N == Vector(1., 0., 0.f));
 }
 
 TEST_CASE("The normal on a sphere at a point on the y axis")
 {
     Sphere S(1);
-    auto N = S.NormalAt(Point(0.f, 1.f, 0.f));
-    CHECK(N == Vector(0.f, 1.f, 0.f));
+    auto N = S.NormalAt(Point(0., 1., 0.f));
+    CHECK(N == Vector(0., 1., 0.f));
 }
 
 TEST_CASE("The normal on a sphere at a point on the z axis")
 {
     Sphere S(1);
-    auto N = S.NormalAt(Point(0.f, 0.f, 1.f));
-    CHECK(N == Vector(0.f, 0.f, 1.f));
+    auto N = S.NormalAt(Point(0., 0., 1.f));
+    CHECK(N == Vector(0., 0., 1.f));
 }
 
 TEST_CASE("The normal on a sphere at a nonaxial point")
@@ -107,18 +107,18 @@ TEST_CASE("The normal on a sphere at a nonaxial point")
 TEST_CASE("Computing the normal on a translated sphere")
 {
     Sphere S(1);
-    S.SetTransform(Matrix::Translation(0.f, 1.f, 0.f));
-    auto N = S.NormalAt(Point(0.f, 1.70711f, -0.70711f));
-    CHECK(N == Vector(0.f, 0.70711f, -0.70711f));
+    S.SetTransform(Matrix::Translation(0., 1., 0.f));
+    auto N = S.NormalAt(Point(0., 1.70711, -0.70711f));
+    CHECK(N == Vector(0., 0.70711, -0.70711f));
 }
 
 TEST_CASE("Computing the normal on a transformed sphere")
 {
     Sphere S(1);
-    Matrix M = Matrix::Scaling(1.f, 0.5f, 1.0f).Mul(Matrix::RotationZ(M_PI / 5));
+    Matrix M = Matrix::Scaling(1., 0.5, 1.0f).Mul(Matrix::RotationZ(M_PI / 5));
     S.SetTransform(M);
-    auto N = S.NormalAt(Point(0.f, std::sqrt(2.f) / 2, -std::sqrt(2.f) / 2));
-    CHECK(N == Vector(0.f, 0.97014f, -0.24254f));
+    auto N = S.NormalAt(Point(0., std::sqrt(2.f) / 2, -std::sqrt(2.f) / 2));
+    CHECK(N == Vector(0., 0.97014, -0.24254f));
 }
 
 TEST_CASE("A sphere has a default material")

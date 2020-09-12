@@ -12,21 +12,21 @@
 #include "../../include/Util.h"
 #include "../../include/Canvas.h"
 
-void Draw(Canvas &CV, float X, float Y, Color &C);
+void Draw(Canvas &CV, double X, double Y, Color &C);
 
 int main(int argc, char **argv)
 {
     Canvas CV = Canvas(900, 550);
-    int MidHeight = CV.GetHeight() / 2.f;
-    int MidWidth = CV.GetWidth() / 2.f;
+    int MidHeight = CV.GetHeight() / 2.;
+    int MidWidth = CV.GetWidth() / 2.;
 
-    Color Green = Color(0.f, 1.f, 0.f);
+    Color Green = Color(0., 1., 0.f);
 
-    float Scaling = 200.f;
+    double Scaling = 200.;
 
-    Point P = Point(0.f, 1.f, 0.f);
-    float X = P.X() * Scaling;
-    float Y = P.Y() * Scaling;
+    Point P = Point(0., 1., 0.f);
+    double X = P.X() * Scaling;
+    double Y = P.Y() * Scaling;
 
     // draw a square instead of a pixel so it's easier to see
     Draw(CV, MidWidth + X, CV.GetHeight() - (MidHeight + Y), Green);
@@ -48,7 +48,7 @@ int main(int argc, char **argv)
     return 0;
 }
 
-void Draw(Canvas &CV, float X, float Y, Color &C)
+void Draw(Canvas &CV, double X, double Y, Color &C)
 {
     CV.WritePixel(X, Y, C);
     CV.WritePixel(X + 1, Y + 1, C);
