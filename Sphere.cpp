@@ -2,6 +2,7 @@
 #include <exception>
 #include <stdexcept>
 #include <cmath>
+#include <memory>
 #include "include/Sphere.h"
 #include "include/Ray.h"
 #include "include/Intersection.h"
@@ -204,4 +205,67 @@ TEST_CASE("A sphere is behind a ray")
     CHECK(XS.size() == 2);
     CHECK(Util::Equal(XS[0].GetT(), -6.0));
     CHECK(Util::Equal(XS[1].GetT(), -4.0));
+}
+
+TEST_CASE("An intersection encapsulates t and object")
+{
+    Sphere S(3);
+    Intersection I(3.5, S);
+
+    CHECK(Util::Equal(I.GetT(), 3.5));
+    CHECK(I.GetObject()->GetID() == 3);
+}
+
+TEST_CASE("The hit, when all intersections have positive t")
+{
+    Sphere S(1);
+    Intersection I1(1., S);
+    Intersection I2(2., S);
+    auto XS = Intersections(std::vector<Intersection<Sphere>> {I1, I2});
+
+    CHECK(*Hit(XS) == I1);
+}
+
+TEST_CASE("The hit, when some intersections have negative t")
+{
+    Sphere S(1);
+    Intersection I1(-1., S);
+    Intersection I2(1., S);
+    auto XS = Intersections(std::vector<Intersection<Sphere>> {I1, I2});
+
+    CHECK(*Hit(XS) == I2);
+}
+
+TEST_CASE("The hit, when all intersections have negative t")
+{
+    Sphere S(1);
+    Intersection I1(-2., S);
+    Intersection I2(-1., S);
+    auto XS = Intersections(std::vector<Intersection<Sphere>> {I1, I2});
+
+    CHECK(Hit(XS) == nullptr);
+}
+
+TEST_CASE("The hit, when all intersections have negative t")
+{
+    Sphere S(1);
+    Intersection I1(5., S);
+    Intersection I2(7., S);
+    Intersection I3(-3., S);
+    Intersection I4(2., S);
+    auto XS = Intersections(std::vector<Intersection<Sphere>> {I1, I2, I3, I4});
+
+    CHECK(*Hit(XS) == I4);
+}
+
+TEST_CASE("The hit should offset the point")
+{
+    Ray R(Point(0., 0., -5.), Vector(0., 0., 1.));
+    Sphere Shape;
+    Shape.SetTransform(Matrix::Translation(0., 0., 1.));
+    Intersection I(5., Shape);
+    auto Comps = I.PrepareComputations(R);
+
+    CHECK(Comps.OverPosition.Z() < -Util::EPSILON/2);
+    CHECK(Comps.Position.Z() > Comps.OverPosition.Z());
 }

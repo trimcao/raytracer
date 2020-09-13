@@ -4,7 +4,6 @@
 #include <cmath>
 #include <memory>
 #include "include/Ray.h"
-#include "include/Sphere.h"
 
 Ray::Ray() {}
 

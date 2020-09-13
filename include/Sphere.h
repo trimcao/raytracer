@@ -10,7 +10,6 @@
 #include "Intersection.h"
 #include <vector>
 
-class Object;
 class Sphere : public Object
 {
 

@@ -29,6 +29,8 @@ public:
     Intersection(double T, const ObjectType &O);
     Intersection(double T, std::shared_ptr<ObjectType> &O);
 
+    Intersection(double T, ObjectType &O);
+
     double GetT() const;
     std::shared_ptr<ObjectType> GetObject() const;
 
@@ -67,3 +69,5 @@ std::vector<Intersection<OT>> Intersections(std::vector<Intersection<OT>> &&I);
 // Color ShadeHit(World &W, PreComputations<Object> &Comps, bool RenderShadow=true);
 
 // Color ColorAt(World &W, Ray &R, bool RenderShadow=true);
+
+#include "../Intersection.cpp"

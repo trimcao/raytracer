@@ -1,7 +1,7 @@
 #include "include/World.h"
+#include "include/Object.h"
 #include "include/Sphere.h"
 #include "include/Intersection.h"
-#include "include/Object.h"
 
 World::World(Light &NewLight, std::vector<std::shared_ptr<Object>> &NewObjects)
 {
@@ -56,7 +56,7 @@ std::vector<Intersection<Object>> World::Intersect(const Ray &R)
 
 Color World::ShadeHit(PreComputations<Object> &Comps, bool RenderShadow)
 {
-    if (ALight)
+    if (!ALight)
         return Color(0., 0., 0.);
 
     bool IsInShadow = false;
