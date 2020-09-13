@@ -44,8 +44,12 @@ std::vector<Intersection<Object>> World::Intersect(const Ray &R)
     // now all objects are sphere
     for (auto O : Objects)
     {
-        auto XS = O->Intersect(R);
-        Intersections.insert(Intersections.end(), XS.begin(), XS.end());
+        auto XS = O->LocalIntersect(R);
+
+        for (auto HitT : XS)
+        {
+            Intersections.push_back(Intersection(HitT, O));
+        }
     }
 
     // sort the intersections
@@ -121,6 +125,7 @@ TEST_CASE("Intersect a world with a ray")
     Ray R(Point(0., 0., -5.), Vector(0., 0., 1.));
 
     auto XS = W.Intersect(R);
+
     CHECK(Util::Equal(XS[0].GetT(), 4.));
     CHECK(Util::Equal(XS[1].GetT(), 4.5));
     CHECK(Util::Equal(XS[2].GetT(), 5.5));

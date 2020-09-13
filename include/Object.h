@@ -7,7 +7,6 @@
 #include "Util.h"
 #include "Material.h"
 #include "Ray.h"
-// #include "Intersection2.h"
 #include "Intersection.h"
 
 class Object
@@ -39,5 +38,10 @@ public:
     inline virtual std::vector<Intersection<Object>> Intersect(const Ray &R)
     {
         return std::vector<Intersection<Object>>();
+    }
+
+    inline virtual std::vector<float> LocalIntersect(const Ray &R)
+    {
+        return std::vector<float>();
     }
 };

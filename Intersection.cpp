@@ -34,13 +34,6 @@ Intersection<OT>::Intersection(double T, const OT &O)
 }
 
 template<class OT>
-Intersection<OT>::Intersection(double T, OT &O)
-{
-    this->T = T;
-    this->O = std::make_shared<OT>(O);
-}
-
-template<class OT>
 Intersection<OT>::Intersection(double T, std::shared_ptr<OT> &O)
 {
     this->T = T;

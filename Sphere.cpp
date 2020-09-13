@@ -52,10 +52,35 @@ std::vector<Intersection<Object>> Sphere::Intersect(const Ray &R)
 
     double Discriminant = B * B - 4 * A * C;
 
+    // auto SpherePtr = std::make_shared<Sphere>(this);
     if (Discriminant >= 0.)
     {
         Intersections.push_back(Intersection<Object>((-B - std::sqrt(Discriminant)) / (2 * A), *this));
         Intersections.push_back(Intersection<Object>((-B + std::sqrt(Discriminant)) / (2 * A), *this));
+    }
+
+    return Intersections;
+}
+
+std::vector<float> Sphere::LocalIntersect(const Ray &R)
+{
+    std::vector<float> Intersections;
+
+    auto TransformedRay = R.Transform(Transform.Inverse());
+
+    // assume the origin of Sphere is always (0., 0., 0.)
+    Vector SphereToRay = TransformedRay.GetOrigin() - Point(0., 0., 0.);
+    double A = TransformedRay.GetDirection().Dot(TransformedRay.GetDirection());
+    double B = 2 * TransformedRay.GetDirection().Dot(SphereToRay);
+    double C = SphereToRay.Dot(SphereToRay) - 1.;
+
+    double Discriminant = B * B - 4 * A * C;
+
+    // auto SpherePtr = std::make_shared<Sphere>(this);
+    if (Discriminant >= 0.)
+    {
+        Intersections.push_back((-B - std::sqrt(Discriminant)) / (2 * A));
+        Intersections.push_back((-B + std::sqrt(Discriminant)) / (2 * A));
     }
 
     return Intersections;
