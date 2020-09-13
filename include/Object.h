@@ -6,6 +6,9 @@
 #include "Point.h"
 #include "Util.h"
 #include "Material.h"
+#include "Ray.h"
+// #include "Intersection2.h"
+#include "Intersection.h"
 
 class Object
 {
@@ -30,7 +33,11 @@ public:
     inline void SetMaterial(Material &M) { AMaterial = M; }
     inline void SetMaterial(Material &&M) { AMaterial = M; }
 
-    // inline virtual Vector NormalAt(Point &P) { return P - Origin; }
     inline virtual Vector NormalAt(Point &P) { return Vector(0., 0., 0.); }
     inline virtual Vector NormalAt(Point &&P) { return NormalAt(P); }
+
+    inline virtual std::vector<Intersection<Object>> Intersect(const Ray &R)
+    {
+        return std::vector<Intersection<Object>>();
+    }
 };

@@ -37,6 +37,29 @@ Vector Sphere::NormalAt(Point &&P)
     return NormalAt(P);
 }
 
+std::vector<Intersection<Object>> Sphere::Intersect(const Ray &R)
+{
+    std::vector<Intersection<Object>> Intersections;
+
+    auto TransformedRay = R.Transform(Transform.Inverse());
+
+    // assume the origin of Sphere is always (0., 0., 0.)
+    Vector SphereToRay = TransformedRay.GetOrigin() - Point(0., 0., 0.);
+    double A = TransformedRay.GetDirection().Dot(TransformedRay.GetDirection());
+    double B = 2 * TransformedRay.GetDirection().Dot(SphereToRay);
+    double C = SphereToRay.Dot(SphereToRay) - 1.;
+
+    double Discriminant = B * B - 4 * A * C;
+
+    if (Discriminant >= 0.)
+    {
+        Intersections.push_back(Intersection<Object>((-B - std::sqrt(Discriminant)) / (2 * A), *this));
+        Intersections.push_back(Intersection<Object>((-B + std::sqrt(Discriminant)) / (2 * A), *this));
+    }
+
+    return Intersections;
+}
+
 TEST_CASE("A sphere's default transformation")
 {
     Sphere S(2);
@@ -58,7 +81,7 @@ TEST_CASE("Intersecting a scaled sphere with a ray")
     Sphere S(2);
     S.SetTransform(Matrix::Scaling(2., 2., 2.));
 
-    auto XS = Intersect(R, S);
+    auto XS = S.Intersect(R);
 
     CHECK(XS.size() == 2);
     CHECK(XS[0].GetT() == 3.);
@@ -71,7 +94,7 @@ TEST_CASE("Intersecting a translated sphere with a ray")
     Sphere S(2);
     S.SetTransform(Matrix::Translation(5., 0., 0.));
 
-    auto XS = Intersect(R, S);
+    auto XS = S.Intersect(R);
 
     CHECK(XS.size() == 0);
 }
@@ -139,4 +162,46 @@ TEST_CASE("A sphere may be assigned a material")
     N.SetAmbient(1.);
 
     CHECK(S.GetMaterial() == N);
+}
+
+TEST_CASE("A ray intersects a sphere at two points")
+{
+    Ray R(Point(0., 0., -5.), Vector(0., 0., 1.));
+    Sphere S;
+
+    auto XS = S.Intersect(R);
+    CHECK(XS.size() == 2);
+    CHECK(Util::Equal(XS[0].GetT(), 4.0));
+    CHECK(Util::Equal(XS[1].GetT(), 6.0));
+}
+
+TEST_CASE("A ray misses a sphere")
+{
+    Ray R(Point(0., 2., -5.), Vector(0., 0., 1.));
+    Sphere S;
+
+    auto XS = S.Intersect(R);
+    CHECK(XS.size() == 0);
+}
+
+TEST_CASE("A ray originates inside a sphere")
+{
+    Ray R(Point(0., 0., 0.), Vector(0., 0., 1.));
+    Sphere S;
+
+    auto XS = S.Intersect(R);
+    CHECK(XS.size() == 2);
+    CHECK(Util::Equal(XS[0].GetT(), -1.0));
+    CHECK(Util::Equal(XS[1].GetT(), 1.0));
+}
+
+TEST_CASE("A sphere is behind a ray")
+{
+    Ray R(Point(0., 0., 5.), Vector(0., 0., 1.));
+    Sphere S;
+
+    auto XS = S.Intersect(R);
+    CHECK(XS.size() == 2);
+    CHECK(Util::Equal(XS[0].GetT(), -6.0));
+    CHECK(Util::Equal(XS[1].GetT(), -4.0));
 }

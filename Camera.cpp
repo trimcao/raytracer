@@ -1,7 +1,7 @@
 #include "include/Camera.h"
 #include "include/Util.h"
 #include "include/Transformations.h"
-#include "include/Intersection.h"
+// #include "include/Intersection.h"
 #include <iostream>
 #include <cmath>
 
@@ -70,7 +70,7 @@ Canvas Camera::Render(World &W, bool RenderShadow, bool printLog)
         for (int X = 0; X < HSize; ++X)
         {
             auto R = RayForPixel(X, Y);
-            auto Col = ColorAt(W, R, RenderShadow);
+            auto Col = W.ColorAt(R, RenderShadow);
             Image.WritePixel(X, Y, Col);
 
             if (printLog)

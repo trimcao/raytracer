@@ -2,11 +2,7 @@
 
 #include "doctest.h"
 #include "Ray.h"
-#include "Object.h"
-#include "Sphere.h"
-#include "World.h"
 #include "Util.h"
-#include "Color.h"
 #include <memory>
 #include <vector>
 
@@ -65,9 +61,9 @@ void Intersections(std::vector<Intersection<OT>> &I);
 template <class OT>
 std::vector<Intersection<OT>> Intersections(std::vector<Intersection<OT>> &&I);
 
-std::vector<Intersection<Sphere>> Intersect(const Ray &R, const Sphere &S);
-std::vector<Intersection<Object>> Intersect(const Ray &R, const World &W);
+// std::vector<Intersection<Sphere>> Intersect(const Ray &R, const Sphere &S);
+// std::vector<Intersection<Object>> Intersect(const Ray &R, const World &W);
 
-Color ShadeHit(World &W, PreComputations<Object> &Comps, bool RenderShadow=true);
+// Color ShadeHit(World &W, PreComputations<Object> &Comps, bool RenderShadow=true);
 
-Color ColorAt(World &W, Ray &R, bool RenderShadow=true);
+// Color ColorAt(World &W, Ray &R, bool RenderShadow=true);

@@ -5,6 +5,8 @@
 #include <memory>
 #include "Light.h"
 #include "Object.h"
+#include "Intersection.h"
+#include "Color.h"
 
 class World
 {
@@ -28,6 +30,12 @@ public:
     inline std::shared_ptr<Light> GetLight() const { return ALight; }
     inline std::shared_ptr<Object> GetObjectAt(int Idx) const { return Objects[Idx]; }
     inline std::vector<std::shared_ptr<Object>> GetObjects() const { return Objects; }
+
+    std::vector<Intersection<Object>> Intersect(const Ray &R);
+
+    Color ShadeHit(PreComputations<Object> &Comps, bool RenderShadow=true);
+
+    Color ColorAt(Ray &R, bool RenderShadow=true);
 
     bool IsShadowed(Point &P);
 };

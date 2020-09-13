@@ -5,7 +5,7 @@
 #include "Vector.h"
 #include "Point.h"
 #include "Util.h"
-#include "Sphere.h"
+// #include "Sphere.h"
 #include <vector>
 
 class Ray
