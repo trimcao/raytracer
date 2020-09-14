@@ -23,5 +23,6 @@ public:
     virtual Vector NormalAt(Point &&P) override;
 
     virtual std::vector<Intersection<Object>> Intersect(const Ray &R) override;
+    virtual std::vector<Intersection<Object>> Intersect(const Ray &R, std::shared_ptr<Object> &ObjectPtr) override;
     virtual std::vector<float> LocalIntersect(const Ray &R) override;
 };

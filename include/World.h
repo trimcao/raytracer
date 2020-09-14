@@ -32,6 +32,7 @@ public:
     inline std::vector<std::shared_ptr<Object>> GetObjects() const { return Objects; }
 
     std::vector<Intersection<Object>> Intersect(const Ray &R);
+    std::vector<Intersection<Object>> Intersect(const Ray &R, std::shared_ptr<Object> &ObjectPtr);
 
     Color ShadeHit(PreComputations<Object> &Comps, bool RenderShadow=true);
 

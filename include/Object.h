@@ -40,6 +40,11 @@ public:
         return std::vector<Intersection<Object>>();
     }
 
+    inline virtual std::vector<Intersection<Object>> Intersect(const Ray &R, std::shared_ptr<Object> &ObjectPtr)
+    {
+        return std::vector<Intersection<Object>>();
+    }
+
     inline virtual std::vector<float> LocalIntersect(const Ray &R)
     {
         return std::vector<float>();
