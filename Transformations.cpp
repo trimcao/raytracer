@@ -1,4 +1,5 @@
 #include "include/Transformations.h"
+#include <cmath>
 
 Matrix Transformations::ViewTransform(Point &From, Point &To, Vector &Up)
 {
@@ -17,12 +18,78 @@ Matrix Transformations::ViewTransform(Point &From, Point &To, Vector &Up)
     Orient(2, 1) = -Forward.Y();
     Orient(2, 2) = -Forward.Z();
 
-    return Orient.Mul(Matrix::Translation(-From.X(), -From.Y(), -From.Z()));
+    return Orient.Mul(Transformations::Translation(-From.X(), -From.Y(), -From.Z()));
 }
 
 Matrix Transformations::ViewTransform(Point &&From, Point &&To, Vector &&Up)
 {
     return ViewTransform(From, To, Up);
+}
+
+Matrix Transformations::Translation(double X, double Y, double Z)
+{
+    Matrix Res = Matrix::Identity(4);
+    Res(0, 3) = X;
+    Res(1, 3) = Y;
+    Res(2, 3) = Z;
+    return Res;
+}
+
+Matrix Transformations::Scaling(double X, double Y, double Z)
+{
+    Matrix Res = Matrix::Identity(4);
+    Res(0, 0) = X;
+    Res(1, 1) = Y;
+    Res(2, 2) = Z;
+    return Res;
+}
+
+Matrix Transformations::RotationX(double Rad)
+{
+    Matrix Res = Matrix::Identity(4);
+    double Sin = std::sin(Rad);
+    double Cos = std::cos(Rad);
+    Res(1, 1) = Cos;
+    Res(1, 2) = -Sin;
+    Res(2, 1) = Sin;
+    Res(2, 2) = Cos;
+    return Res;
+}
+
+Matrix Transformations::RotationY(double Rad)
+{
+    Matrix Res = Matrix::Identity(4);
+    double Sin = std::sin(Rad);
+    double Cos = std::cos(Rad);
+    Res(0, 0) = Cos;
+    Res(0, 2) = Sin;
+    Res(2, 0) = -Sin;
+    Res(2, 2) = Cos;
+    return Res;
+}
+
+Matrix Transformations::RotationZ(double Rad)
+{
+    Matrix Res = Matrix::Identity(4);
+    double Sin = std::sin(Rad);
+    double Cos = std::cos(Rad);
+    Res(0, 0) = Cos;
+    Res(0, 1) = -Sin;
+    Res(1, 0) = Sin;
+    Res(1, 1) = Cos;
+    return Res;
+}
+
+Matrix Transformations::Shearing(double XY, double XZ, double YX, double YZ, double ZX, double ZY)
+{
+    Matrix Res = Matrix::Identity(4);
+    Res(0, 1) = XY;
+    Res(0, 2) = XZ;
+    Res(1, 0) = YX;
+    Res(1, 2) = YZ;
+    Res(2, 0) = ZX;
+    Res(2, 1) = ZY;
+    return Res;
 }
 
 TEST_CASE("The transformation matrix for the default orientation")
@@ -40,7 +107,7 @@ TEST_CASE("The transformation matrix looking in positive z direction")
     Point To(0., 0., 1.);
     Vector Up(0., 1., 0.);
 
-    CHECK(Transformations::ViewTransform(From, To, Up) == Matrix::Scaling(-1., 1., -1.));
+    CHECK(Transformations::ViewTransform(From, To, Up) == Transformations::Scaling(-1., 1., -1.));
 }
 
 TEST_CASE("The transformation matrix moves the world")
@@ -49,7 +116,7 @@ TEST_CASE("The transformation matrix moves the world")
     Point To(0., 0., 0.);
     Vector Up(0., 1., 0.);
 
-    CHECK(Transformations::ViewTransform(From, To, Up) == Matrix::Translation(0., 0., -8.));
+    CHECK(Transformations::ViewTransform(From, To, Up) == Transformations::Translation(0., 0., -8.));
 }
 
 TEST_CASE("An arbitrary view transformation")

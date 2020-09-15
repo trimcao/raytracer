@@ -50,3 +50,20 @@ public:
         return std::vector<float>();
     }
 };
+
+class TestShape : public Object
+{
+
+public:
+    TestShape(int ID);
+    TestShape();
+
+    Ray SavedRay;
+
+    virtual Vector NormalAt(Point &P) override;
+    virtual Vector NormalAt(Point &&P) override;
+
+    virtual std::vector<Intersection<Object>> Intersect(const Ray &R) override;
+    virtual std::vector<Intersection<Object>> Intersect(const Ray &R, std::shared_ptr<Object> &ObjectPtr) override;
+
+};

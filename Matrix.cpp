@@ -179,6 +179,11 @@ Matrix Matrix::Identity(int Size)
     return I;
 }
 
+Matrix Matrix::Identity()
+{
+    return Identity(4);
+}
+
 Matrix Matrix::T()
 {
     Matrix Res(numCols, numRows);

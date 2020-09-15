@@ -67,6 +67,7 @@ public:
     int GetNumCols() const;
 
     static Matrix Identity(int Size);
+    static Matrix Identity();
 
     static Matrix Translation(double X, double Y, double Z);
     static Matrix Scaling(double X, double Y, double Z);
