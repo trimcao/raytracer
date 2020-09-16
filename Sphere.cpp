@@ -24,18 +24,9 @@ int Sphere::GetID()
     return ID;
 }
 
-Vector Sphere::NormalAt(Point &P)
+Vector Sphere::LocalNormalAt(Point &LocalPoint)
 {
-    auto ObjectPoint = Transform.Inverse().Mul(P);
-    auto ObjectNormal = ObjectPoint - Origin;
-    auto WorldNormal = Transform.Inverse().T().Mul(ObjectNormal);
-    WorldNormal.SetW(0.);
-    return WorldNormal.Normalize();
-}
-
-Vector Sphere::NormalAt(Point &&P)
-{
-    return NormalAt(P);
+    return LocalPoint - Origin;
 }
 
 std::vector<Intersection<Object>> Sphere::Intersect(const Ray &R)
@@ -61,16 +52,14 @@ std::vector<Intersection<Object>> Sphere::Intersect(const Ray &R)
     return Intersections;
 }
 
-std::vector<Intersection<Object>> Sphere::Intersect(const Ray &R, std::shared_ptr<Object> &ObjectPtr)
+std::vector<Intersection<Object>> Sphere::LocalIntersect(const Ray &LocalRay, std::shared_ptr<Object> &ObjectPtr)
 {
     std::vector<Intersection<Object>> Intersections;
 
-    auto TransformedRay = R.Transform(Transform.Inverse());
-
     // assume the origin of Sphere is always (0., 0., 0.)
-    Vector SphereToRay = TransformedRay.GetOrigin() - Point(0., 0., 0.);
-    double A = TransformedRay.GetDirection().Dot(TransformedRay.GetDirection());
-    double B = 2 * TransformedRay.GetDirection().Dot(SphereToRay);
+    Vector SphereToRay = LocalRay.GetOrigin() - Point(0., 0., 0.);
+    double A = LocalRay.GetDirection().Dot(LocalRay.GetDirection());
+    double B = 2 * LocalRay.GetDirection().Dot(SphereToRay);
     double C = SphereToRay.Dot(SphereToRay) - 1.;
 
     double Discriminant = B * B - 4 * A * C;
@@ -79,30 +68,6 @@ std::vector<Intersection<Object>> Sphere::Intersect(const Ray &R, std::shared_pt
     {
         Intersections.push_back(Intersection<Object>((-B - std::sqrt(Discriminant)) / (2 * A), ObjectPtr));
         Intersections.push_back(Intersection<Object>((-B + std::sqrt(Discriminant)) / (2 * A), ObjectPtr));
-    }
-
-    return Intersections;
-}
-
-std::vector<float> Sphere::LocalIntersect(const Ray &R)
-{
-    std::vector<float> Intersections;
-
-    auto TransformedRay = R.Transform(Transform.Inverse());
-
-    // assume the origin of Sphere is always (0., 0., 0.)
-    Vector SphereToRay = TransformedRay.GetOrigin() - Point(0., 0., 0.);
-    double A = TransformedRay.GetDirection().Dot(TransformedRay.GetDirection());
-    double B = 2 * TransformedRay.GetDirection().Dot(SphereToRay);
-    double C = SphereToRay.Dot(SphereToRay) - 1.;
-
-    double Discriminant = B * B - 4 * A * C;
-
-    // auto SpherePtr = std::make_shared<Sphere>(this);
-    if (Discriminant >= 0.)
-    {
-        Intersections.push_back((-B - std::sqrt(Discriminant)) / (2 * A));
-        Intersections.push_back((-B + std::sqrt(Discriminant)) / (2 * A));
     }
 
     return Intersections;

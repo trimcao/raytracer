@@ -32,22 +32,20 @@ public:
     inline void SetMaterial(Material &M) { AMaterial = M; }
     inline void SetMaterial(Material &&M) { AMaterial = M; }
 
-    inline virtual Vector NormalAt(Point &P) { return Vector(0., 0., 0.); }
+    virtual Vector NormalAt(Point &P);
     inline virtual Vector NormalAt(Point &&P) { return NormalAt(P); }
+    inline virtual Vector LocalNormalAt(Point &P) { return Vector(0.f, 0.f, 0.f); }
 
     inline virtual std::vector<Intersection<Object>> Intersect(const Ray &R)
     {
         return std::vector<Intersection<Object>>();
     }
 
-    inline virtual std::vector<Intersection<Object>> Intersect(const Ray &R, std::shared_ptr<Object> &ObjectPtr)
+    virtual std::vector<Intersection<Object>> Intersect(const Ray &R, std::shared_ptr<Object> &ObjectPtr);
+
+    inline virtual std::vector<Intersection<Object>> LocalIntersect(const Ray &R, std::shared_ptr<Object> &ObjectPtr)
     {
         return std::vector<Intersection<Object>>();
-    }
-
-    inline virtual std::vector<float> LocalIntersect(const Ray &R)
-    {
-        return std::vector<float>();
     }
 };
 
@@ -60,10 +58,6 @@ public:
 
     Ray SavedRay;
 
-    virtual Vector NormalAt(Point &P) override;
-    virtual Vector NormalAt(Point &&P) override;
-
-    virtual std::vector<Intersection<Object>> Intersect(const Ray &R) override;
-    virtual std::vector<Intersection<Object>> Intersect(const Ray &R, std::shared_ptr<Object> &ObjectPtr) override;
-
+    virtual std::vector<Intersection<Object>> LocalIntersect(const Ray &R, std::shared_ptr<Object> &ObjectPtr) override;
+    virtual Vector LocalNormalAt(Point &LocalPoint) override;
 };

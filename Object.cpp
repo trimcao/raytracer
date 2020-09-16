@@ -1,6 +1,7 @@
 #include <iostream>
 #include <exception>
 #include <stdexcept>
+#include <memory>
 #include "include/Object.h"
 #include "include/Transformations.h"
 
@@ -12,6 +13,22 @@ Object::Object()
 int Object::GetID()
 {
     return ID;
+}
+
+std::vector<Intersection<Object>> Object::Intersect(const Ray &R, std::shared_ptr<Object> &ObjectPtr)
+{
+    auto LocalRay = R.Transform(Transform.Inverse());
+
+    return LocalIntersect(LocalRay, ObjectPtr);
+}
+
+Vector Object::NormalAt(Point &P)
+{
+    auto LocalPoint = Transform.Inverse().Mul(P);
+    auto LocalNormal = LocalNormalAt(LocalPoint);
+    auto WorldNormal = Transform.Inverse().T().Mul(LocalNormal);
+    WorldNormal.SetW(0.);
+    return WorldNormal.Normalize();
 }
 
 TestShape::TestShape(int ID)
@@ -26,30 +43,14 @@ TestShape::TestShape() : TestShape(0)
 {
 }
 
-Vector TestShape::NormalAt(Point &P)
+Vector TestShape::LocalNormalAt(Point &LocalPoint)
 {
-    auto ObjectPoint = Transform.Inverse().Mul(P);
-    auto ObjectNormal = Vector(ObjectPoint.X(), ObjectPoint.Y(), ObjectPoint.Z());
-    auto WorldNormal = Transform.Inverse().T().Mul(ObjectNormal);
-    WorldNormal.SetW(0.);
-    return WorldNormal.Normalize();
+    return Vector(LocalPoint.X(), LocalPoint.Y(), LocalPoint.Z());
 }
 
-Vector TestShape::NormalAt(Point &&P)
+std::vector<Intersection<Object>> TestShape::LocalIntersect(const Ray &R, std::shared_ptr<Object> &ObjectPtr)
 {
-    return NormalAt(P);
-}
-
-std::vector<Intersection<Object>> TestShape::Intersect(const Ray &R)
-{
-    SavedRay = R.Transform(Transform.Inverse());
-
-    return std::vector<Intersection<Object>>();
-}
-
-std::vector<Intersection<Object>> TestShape::Intersect(const Ray &R, std::shared_ptr<Object> &ObjectPtr)
-{
-    SavedRay = R.Transform(Transform.Inverse());
+    SavedRay = R;
 
     return std::vector<Intersection<Object>>();
 }
@@ -87,7 +88,8 @@ TEST_CASE("Intersecting a scaled shape with a ray")
     Ray R(Point(0., 0., -5.), Vector(0., 0., 1.));
     TestShape S;
     S.SetTransform(Transformations::Scaling(2., 2., 2.));
-    auto XS = S.Intersect(R);
+    auto SPtr = std::make_shared<Object>(S);
+    auto XS = S.Intersect(R, SPtr);
 
     CHECK(S.SavedRay.GetOrigin() == Point(0., 0., -2.5));
     CHECK(S.SavedRay.GetDirection() == Vector(0., 0., 0.5));
@@ -98,7 +100,8 @@ TEST_CASE("Intersecting a translated shape with a ray")
     Ray R(Point(0., 0., -5.), Vector(0., 0., 1.));
     TestShape S;
     S.SetTransform(Transformations::Translation(5., 0., 0.));
-    auto XS = S.Intersect(R);
+    auto SPtr = std::make_shared<Object>(S);
+    auto XS = S.Intersect(R, SPtr);
 
     CHECK(S.SavedRay.GetOrigin() == Point(-5., 0., -5.));
     CHECK(S.SavedRay.GetDirection() == Vector(0., 0., 1.));
