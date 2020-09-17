@@ -86,6 +86,7 @@ PreComputations<OT> Intersection<OT>::PrepareComputations(Ray &R)
     Comps.Position = R.Position(T);
     Comps.EyeV = -R.GetDirection();
     Comps.NormalV = Comps.AObject->NormalAt(Comps.Position);
+    Comps.IsInside = false;
 
     if (Comps.NormalV.Dot(Comps.EyeV) < 0.)
     {
