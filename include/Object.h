@@ -35,6 +35,7 @@ public:
     virtual Vector NormalAt(Point &P);
     inline virtual Vector NormalAt(Point &&P) { return NormalAt(P); }
     inline virtual Vector LocalNormalAt(Point &P) { return Vector(0.f, 0.f, 0.f); }
+    inline virtual Vector LocalNormalAt(Point &&P) { return Vector(0.f, 0.f, 0.f); }
 
     inline virtual std::vector<Intersection<Object>> Intersect(const Ray &R)
     {
