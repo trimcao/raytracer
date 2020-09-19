@@ -1,10 +1,9 @@
 #pragma once
 
 #include "doctest.h"
-// #include <iostream>
-// #include "Util.h"
 #include "Color.h"
-// #include "Point.h"
+#include "Pattern.h"
+#include <memory>
 
 class Material
 {
@@ -13,6 +12,7 @@ class Material
     double Diffuse;
     double Specular;
     double Shininess;
+    std::shared_ptr<Pattern> APattern;
 
 public:
     Material();
@@ -24,6 +24,7 @@ public:
     inline double GetSpecular() const { return Specular; }
     inline double GetShininess() const { return Shininess; }
     inline Color GetColor() const { return AColor; }
+    inline std::shared_ptr<Pattern> GetPattern() const { return APattern; }
 
     inline void SetAmbient(double Amb) { Ambient = Amb; }
     inline void SetDiffuse(double Diff) { Diffuse = Diff; }
@@ -31,6 +32,8 @@ public:
     inline void SetShininess(double Shini) { Shininess = Shini; }
     inline void SetColor(Color &C) { AColor = C; }
     inline void SetColor(Color &&C) { AColor = C; }
+
+    inline void SetPattern(std::shared_ptr<Pattern> &P) { APattern = P; }
 };
 
 bool operator==(const Material &LHS, const Material &RHS);

@@ -1,6 +1,9 @@
 #include "include/Pattern.h"
 #include <cmath>
 
+const Color Pattern::Black = Color(0., 0., 0.);
+const Color Pattern::White = Color(1., 1., 1.);
+
 Pattern::Pattern()
 {
 }
@@ -9,6 +12,7 @@ StripePattern::StripePattern(const Color &C1, const Color &C2)
 {
     A = C1;
     B = C2;
+    Transform = Matrix::Identity();
 }
 
 Color StripePattern::StripeAt(Point &P)
@@ -21,6 +25,13 @@ Color StripePattern::StripeAt(Point &P)
 
     return B;
 }
+
+// Color StripePattern::StripeAtObject(std::shared_ptr<Object> &Obj, Point &P)
+// {
+//     auto LocalPos = Obj->GetTransform().Inverse().Mul(P);
+//     auto TransformedPos = Transform.Inverse().Mul(LocalPos);
+//     return StripeAt(TransformedPos);
+// }
 
 TEST_CASE("Creating a stripe pattern")
 {

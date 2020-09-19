@@ -8,6 +8,7 @@ Material::Material()
     Diffuse = 0.9;
     Specular = 0.9;
     Shininess = 200.;
+    APattern = nullptr;
 }
 
 Material::Material(Color &C, double Amb, double Dif, double Spec, double Shini)
@@ -17,6 +18,7 @@ Material::Material(Color &C, double Amb, double Dif, double Spec, double Shini)
     Diffuse = Dif;
     Specular = Spec;
     Shininess = Shini;
+    APattern = nullptr;
 }
 
 Material::Material(Color &&C, double Amb, double Dif, double Spec, double Shini) : Material(C, Amb, Dif, Spec, Shini)

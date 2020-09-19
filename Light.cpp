@@ -2,7 +2,7 @@
 #include <cmath>
 // #include <iostream>
 // #include <exception>
-// #include <stdexcept>
+#include <memory>
 #include "include/Light.h"
 
 Light::Light()
@@ -21,8 +21,15 @@ Light::Light(Color &&C, Point &&P) : Light(C, P)
 
 Color Lighting(Material &M, Light &L, Point &Pos, Vector &EyeV, Vector &NormalV, bool IsInShadow)
 {
+    // use color from pattern if applicable
+    Color ColorUsed;
+    if (M.GetPattern())
+        ColorUsed = M.GetPattern()->StripeAt(Pos);
+    else
+        ColorUsed = M.GetColor();
+
     // combine the surface color with the light's color/intensity
-    auto EffectiveColor = M.GetColor() * L.GetIntensity();
+    auto EffectiveColor = ColorUsed * L.GetIntensity();
 
     // find the direction of the light source
     auto LightV = (L.GetPosition() - Pos).Normalize();
@@ -139,4 +146,27 @@ TEST_CASE("Lighting with the surface in shadow")
     Light L(Color(1., 1., 1.), Point(0., 0., -10.));
     auto Result = Lighting(M, L, Pos, EyeV, NormalV, true);
     CHECK(Result == Color(0.1, 0.1, 0.1));
+}
+
+TEST_CASE("Lighting with a pattern applied")
+{
+    Material M;
+    std::shared_ptr<Pattern> SP = std::make_shared<StripePattern>(Pattern::White, Pattern::Black);
+    M.SetPattern(SP);
+    M.SetAmbient(1.);
+    M.SetDiffuse(0.);
+    M.SetSpecular(0.);
+
+    Point Pos1(0.9, 0., 0.);
+    Point Pos2(1.1, 0., 0.);
+
+    Vector EyeV(0., 0., -1.);
+    Vector NormalV(0., 0., -1.);
+    Light L(Color(1., 1., 1.), Point(0., 0., -10.));
+
+    auto C1 = Lighting(M, L, Pos1, EyeV, NormalV, true);
+    auto C2 = Lighting(M, L, Pos2, EyeV, NormalV, true);
+
+    CHECK(C1 == Color(1., 1., 1.));
+    CHECK(C2 == Color(0., 0., 0.));
 }
