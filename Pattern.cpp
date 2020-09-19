@@ -26,13 +26,6 @@ Color StripePattern::StripeAt(Point &P)
     return B;
 }
 
-// Color StripePattern::StripeAtObject(std::shared_ptr<Object> &Obj, Point &P)
-// {
-//     auto LocalPos = Obj->GetTransform().Inverse().Mul(P);
-//     auto TransformedPos = Transform.Inverse().Mul(LocalPos);
-//     return StripeAt(TransformedPos);
-// }
-
 TEST_CASE("Creating a stripe pattern")
 {
     StripePattern SP(Pattern::White, Pattern::Black);

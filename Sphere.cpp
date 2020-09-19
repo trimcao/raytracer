@@ -284,39 +284,3 @@ TEST_CASE("The hit should offset the point")
     CHECK(Comps.OverPosition.Z() < -Util::EPSILON/2);
     CHECK(Comps.Position.Z() > Comps.OverPosition.Z());
 }
-
-TEST_CASE("Stripes with an object transformation")
-{
-    std::shared_ptr<Object> Obj = std::make_shared<Sphere>();
-    Obj->SetTransform(Transformations::Scaling(2., 2., 2.));
-    std::shared_ptr<Pattern> Pat = std::make_shared<StripePattern>(Pattern::White, Pattern::Black);
-    auto C = StripeAtObject(Pat, Obj, Point(1.5, 0., 0.));
-
-    CHECK(C == Pattern::White);
-}
-
-TEST_CASE("Stripes with a pattern transformation")
-{
-    std::shared_ptr<Object> Obj = std::make_shared<Sphere>();
-    Obj->SetTransform(Transformations::Scaling(2., 2., 2.));
-
-    std::shared_ptr<Pattern> Pat = std::make_shared<StripePattern>(Pattern::White, Pattern::Black);
-    Pat->SetTransform(Transformations::Scaling(2., 2., 2.));
-
-    auto C = StripeAtObject(Pat, Obj, Point(1.5, 0., 0.));
-
-    CHECK(C == Pattern::White);
-}
-
-TEST_CASE("Stripes with both an object and a pattern transformation")
-{
-    std::shared_ptr<Object> Obj = std::make_shared<Sphere>();
-    Obj->SetTransform(Transformations::Scaling(2., 2., 2.));
-
-    std::shared_ptr<Pattern> Pat = std::make_shared<StripePattern>(Pattern::White, Pattern::Black);
-    Pat->SetTransform(Transformations::Translation(0.5, 0., 0.));
-
-    auto C = StripeAtObject(Pat, Obj, Point(2.5, 0., 0.));
-
-    CHECK(C == Pattern::White);
-}

@@ -4,6 +4,7 @@
 // #include <exception>
 #include <memory>
 #include "include/Light.h"
+#include "include/Functions.h"
 
 Light::Light()
 {
@@ -19,12 +20,12 @@ Light::Light(Color &&C, Point &&P) : Light(C, P)
 {
 }
 
-Color Lighting(Material &M, Light &L, Point &Pos, Vector &EyeV, Vector &NormalV, bool IsInShadow)
+Color Lighting(Material &M, std::shared_ptr<Object> &Obj, Light &L, Point &Pos, Vector &EyeV, Vector &NormalV, bool IsInShadow)
 {
     // use color from pattern if applicable
     Color ColorUsed;
-    if (M.GetPattern())
-        ColorUsed = M.GetPattern()->StripeAt(Pos);
+    if (Obj != nullptr && M.GetPattern())
+        ColorUsed = Fns::StripeAtObject(M.GetPattern(), Obj, Pos);
     else
         ColorUsed = M.GetColor();
 
@@ -67,10 +68,24 @@ Color Lighting(Material &M, Light &L, Point &Pos, Vector &EyeV, Vector &NormalV,
     return Ambient + Diffuse + Specular;
 }
 
+Color Lighting(Material &&M, std::shared_ptr<Object> &Obj, Light &L, Point &Pos, Vector &EyeV, Vector &NormalV, bool IsInShadow)
+{
+    return Lighting(M, Obj, L, Pos, EyeV, NormalV, IsInShadow);
+}
+
+Color Lighting(Material &M, Light &L, Point &Pos, Vector &EyeV, Vector &NormalV, bool IsInShadow)
+{
+    auto Obj = std::shared_ptr<Object>(nullptr);
+    return Lighting(M, Obj, L, Pos, EyeV, NormalV, IsInShadow);
+}
+
 Color Lighting(Material &&M, Light &L, Point &Pos, Vector &EyeV, Vector &NormalV, bool IsInShadow)
 {
-    return Lighting(M, L, Pos, EyeV, NormalV, IsInShadow);
+    auto Obj = std::shared_ptr<Object>(nullptr);
+    return Lighting(M, Obj, L, Pos, EyeV, NormalV, IsInShadow);
 }
+
+
 
 TEST_CASE("A point light has a position and intensity")
 {
@@ -164,8 +179,10 @@ TEST_CASE("Lighting with a pattern applied")
     Vector NormalV(0., 0., -1.);
     Light L(Color(1., 1., 1.), Point(0., 0., -10.));
 
-    auto C1 = Lighting(M, L, Pos1, EyeV, NormalV, true);
-    auto C2 = Lighting(M, L, Pos2, EyeV, NormalV, true);
+    std::shared_ptr<Object> Obj = std::make_shared<TestShape>();
+
+    auto C1 = Lighting(M, Obj, L, Pos1, EyeV, NormalV, true);
+    auto C2 = Lighting(M, Obj, L, Pos2, EyeV, NormalV, true);
 
     CHECK(C1 == Color(1., 1., 1.));
     CHECK(C2 == Color(0., 0., 0.));

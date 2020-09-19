@@ -24,3 +24,5 @@ public:
 
 Color Lighting(Material &M, Light &L, Point &Pos, Vector &EyeV, Vector &NormalV, bool IsInShadow);
 Color Lighting(Material &&M, Light &L, Point &Pos, Vector &EyeV, Vector &NormalV, bool IsInShadow);
+Color Lighting(Material &M, std::shared_ptr<Object> &Obj, Light &L, Point &Pos, Vector &EyeV, Vector &NormalV, bool IsInShadow);
+Color Lighting(Material &&M, std::shared_ptr<Object> &Obj, Light &L, Point &Pos, Vector &EyeV, Vector &NormalV, bool IsInShadow);

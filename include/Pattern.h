@@ -26,8 +26,6 @@ public:
     virtual inline Color StripeAt(Point &P) { return Black; }
     virtual inline Color StripeAt(Point &&P) { return StripeAt(P); }
 
-    // virtual inline Color StripeAtObject(std::shared_ptr<Object> &Obj, Point &P) { return Black; }
-    // virtual inline Color StripeAtObject(std::shared_ptr<Object> &Obj, Point &&P) { return Black; }
 };
 
 class StripePattern : public Pattern
@@ -44,6 +42,4 @@ public:
     Color StripeAt(Point &P) override;
     inline Color StripeAt(Point &&P) override { return StripeAt(P); }
 
-    // virtual Color StripeAtObject(std::shared_ptr<Object> &Obj, Point &P) override;
-    // virtual inline Color StripeAtObject(std::shared_ptr<Object> &Obj, Point &&P) override { return StripeAtObject(Obj, P); }
 };
