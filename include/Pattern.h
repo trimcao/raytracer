@@ -23,8 +23,19 @@ public:
     inline void SetTransform(Matrix &T) { Transform = T; }
     inline void SetTransform(Matrix &&T) { Transform = T; }
 
-    virtual inline Color StripeAt(Point &P) { return Black; }
-    virtual inline Color StripeAt(Point &&P) { return StripeAt(P); }
+    virtual inline Color PatternAt(Point &P) { return Black; }
+    virtual inline Color PatternAt(Point &&P) { return PatternAt(P); }
+
+};
+
+class TestPattern : public Pattern
+{
+
+public:
+    TestPattern();
+
+    Color PatternAt(Point &P) override;
+    inline Color PatternAt(Point &&P) override { return PatternAt(P); }
 
 };
 
@@ -39,7 +50,7 @@ public:
     inline Color GetA() { return A; }
     inline Color GetB() { return B; }
 
-    Color StripeAt(Point &P) override;
-    inline Color StripeAt(Point &&P) override { return StripeAt(P); }
+    Color PatternAt(Point &P) override;
+    inline Color PatternAt(Point &&P) override { return PatternAt(P); }
 
 };

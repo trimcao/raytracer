@@ -7,7 +7,7 @@
 
 namespace Fns
 {
-    Color StripeAtObject(std::shared_ptr<Pattern> &Pat, std::shared_ptr<Object> &Obj, Point &P);
-    inline Color StripeAtObject(std::shared_ptr<Pattern> &Pat, std::shared_ptr<Object> &Obj, Point &&P) { return StripeAtObject(Pat, Obj, P); }
-    inline Color StripeAtObject(std::shared_ptr<Pattern> &&Pat, std::shared_ptr<Object> &Obj, Point &P) { return StripeAtObject(Pat, Obj, P); }
+    Color PatternAtShape(std::shared_ptr<Pattern> &Pat, std::shared_ptr<Object> &Obj, Point &P);
+    inline Color PatternAtShape(std::shared_ptr<Pattern> &Pat, std::shared_ptr<Object> &Obj, Point &&P) { return PatternAtShape(Pat, Obj, P); }
+    inline Color PatternAtShape(std::shared_ptr<Pattern> &&Pat, std::shared_ptr<Object> &Obj, Point &P) { return PatternAtShape(Pat, Obj, P); }
 }
