@@ -5,7 +5,7 @@
 #include "Pattern.h"
 #include "Point.h"
 
-namespace Fns
+namespace TRay
 {
     Color PatternAtShape(std::shared_ptr<Pattern> &Pat, std::shared_ptr<Object> &Obj, Point &P);
     inline Color PatternAtShape(std::shared_ptr<Pattern> &Pat, std::shared_ptr<Object> &Obj, Point &&P) { return PatternAtShape(Pat, Obj, P); }

@@ -54,3 +54,51 @@ public:
     inline Color PatternAt(Point &&P) override { return PatternAt(P); }
 
 };
+
+class GradientPattern : public Pattern
+{
+    Color A;
+    Color B;
+
+public:
+    GradientPattern(const Color &C1, const Color &C2);
+
+    inline Color GetA() { return A; }
+    inline Color GetB() { return B; }
+
+    Color PatternAt(Point &P) override;
+    inline Color PatternAt(Point &&P) override { return PatternAt(P); }
+
+};
+
+class RingPattern : public Pattern
+{
+    Color A;
+    Color B;
+
+public:
+    RingPattern(const Color &C1, const Color &C2);
+
+    inline Color GetA() { return A; }
+    inline Color GetB() { return B; }
+
+    Color PatternAt(Point &P) override;
+    inline Color PatternAt(Point &&P) override { return PatternAt(P); }
+
+};
+
+class CheckersPattern : public Pattern
+{
+    Color A;
+    Color B;
+
+public:
+    CheckersPattern(const Color &C1, const Color &C2);
+
+    inline Color GetA() { return A; }
+    inline Color GetB() { return B; }
+
+    Color PatternAt(Point &P) override;
+    inline Color PatternAt(Point &&P) override { return PatternAt(P); }
+
+};

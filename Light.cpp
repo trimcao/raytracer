@@ -25,7 +25,7 @@ Color Lighting(Material &M, std::shared_ptr<Object> &Obj, Light &L, Point &Pos, 
     // use color from pattern if applicable
     Color ColorUsed;
     if (Obj != nullptr && M.GetPattern())
-        ColorUsed = Fns::PatternAtShape(M.GetPattern(), Obj, Pos);
+        ColorUsed = TRay::PatternAtShape(M.GetPattern(), Obj, Pos);
     else
         ColorUsed = M.GetColor();
 
