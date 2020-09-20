@@ -4,6 +4,7 @@
 // #include "include/Intersection.h"
 #include <iostream>
 #include <cmath>
+#include <chrono>
 
 Camera::Camera(int H, int V, double FOV)
 {
@@ -65,6 +66,8 @@ Canvas Camera::Render(World &W, bool RenderShadow, bool printLog)
     int Step = 1;
     int DisplayNext = 1;
 
+    auto StartTime = std::chrono::system_clock::now();
+
     for (int Y = 0; Y < VSize; ++Y)
     {
         for (int X = 0; X < HSize; ++X)
@@ -82,6 +85,11 @@ Canvas Camera::Render(World &W, bool RenderShadow, bool printLog)
                 {
                     std::cout << "\r" << "Progress [" << std::string(Percent / 5, '=') << std::string(100 / 5 - Percent / 5, ' ') << "]";
                     std::cout << ' ' << Percent << "%";
+
+                    auto CurrentTime = std::chrono::system_clock::now();
+                    std::chrono::duration<double> ElapsedSeconds = CurrentTime - StartTime;
+
+                    std::cout << "    " << "Elapsed time: " << (int)ElapsedSeconds.count() << "s";
                     std::cout.flush();
                     DisplayNext += Step;
                 }

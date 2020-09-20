@@ -10,7 +10,7 @@ enable_testing()
 
 get_filename_component(PARENT_DIR ../../ ABSOLUTE)
 
-add_executable(plane main.cpp ${PARENT_DIR}/Vector.cpp ${PARENT_DIR}/Matrix.cpp ${PARENT_DIR}/Point.cpp ${PARENT_DIR}/Util.cpp ${PARENT_DIR}/Color.cpp ${PARENT_DIR}/Canvas.cpp ${PARENT_DIR}/Tuple.cpp ${PARENT_DIR}/Sphere.cpp ${PARENT_DIR}/Object.cpp ${PARENT_DIR}/Ray.cpp ${PARENT_DIR}/Light.cpp ${PARENT_DIR}/Material.cpp ${PARENT_DIR}/World.cpp ${PARENT_DIR}/Transformations.cpp ${PARENT_DIR}/Camera.cpp ${PARENT_DIR}/Plane.cpp)
+add_executable(plane main.cpp ${PARENT_DIR}/Vector.cpp ${PARENT_DIR}/Matrix.cpp ${PARENT_DIR}/Point.cpp ${PARENT_DIR}/Util.cpp ${PARENT_DIR}/Color.cpp ${PARENT_DIR}/Canvas.cpp ${PARENT_DIR}/Tuple.cpp ${PARENT_DIR}/Sphere.cpp ${PARENT_DIR}/Object.cpp ${PARENT_DIR}/Ray.cpp ${PARENT_DIR}/Light.cpp ${PARENT_DIR}/Material.cpp ${PARENT_DIR}/World.cpp ${PARENT_DIR}/Transformations.cpp ${PARENT_DIR}/Camera.cpp ${PARENT_DIR}/Plane.cpp ${PARENT_DIR}/Pattern.cpp ${PARENT_DIR}/Functions.cpp)
 
 set(CPACK_PROJECT_NAME ${PROJECT_NAME})
 set(CPACK_PROJECT_VERSION ${PROJECT_VERSION})

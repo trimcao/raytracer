@@ -1,3 +1,5 @@
-## Same scene from program 07 but with shadow
+## Spheres on a plane
 
-![alt text](output.png "Simple World with Shadow")
+Looks like three colorful spheres on a faraway planet.
+
+![alt text](output.png "Plane example")
