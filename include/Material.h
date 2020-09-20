@@ -34,6 +34,7 @@ public:
     inline void SetColor(Color &&C) { AColor = C; }
 
     inline void SetPattern(std::shared_ptr<Pattern> &P) { APattern = P; }
+    inline void SetPattern(std::shared_ptr<Pattern> &&P) { APattern = P; }
 };
 
 bool operator==(const Material &LHS, const Material &RHS);

@@ -64,7 +64,7 @@ Color World::ShadeHit(PreComputations<Object> &Comps, bool RenderShadow)
     if (RenderShadow)
         IsInShadow = IsShadowed(Comps.OverPosition);
 
-    return Lighting(Comps.AObject->GetMaterial(), *ALight, Comps.OverPosition, Comps.EyeV, Comps.NormalV, IsInShadow);
+    return Lighting(Comps.AObject->GetMaterial(), Comps.AObject, *ALight, Comps.OverPosition, Comps.EyeV, Comps.NormalV, IsInShadow);
 }
 
 Color World::ColorAt(Ray &R, bool RenderShadow)
