@@ -68,13 +68,13 @@ std::string Canvas::ToPPM()
     s += std::to_string(height) + '\n';
     s += "255\n";
 
-    for (auto Row : canvas)
+    for (auto &Row : canvas)
     {   
         int LineLength = 0;
-        for (auto C : Row)
+        for (auto &C : Row)
         {
             auto PPMVals = C.ToPPMVal(MAX_COLOR_VALUE);
-            for (auto Val : PPMVals)
+            for (auto &Val : PPMVals)
             {
                 std::string ValStr = std::to_string(Val);
                 if (LineLength == 0) {}

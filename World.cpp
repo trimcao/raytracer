@@ -42,7 +42,7 @@ std::vector<Intersection<Object>> World::Intersect(const Ray &R)
     std::vector<Intersection<Object>> Intersections;
 
     // now all objects are sphere
-    for (auto O : Objects)
+    for (auto &O : Objects)
     {
         auto XS = O->Intersect(R, O);
 

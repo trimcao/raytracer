@@ -69,7 +69,7 @@ void Intersections(std::vector<Intersection<OT>> &I)
 template<class OT>
 std::shared_ptr<Intersection<OT>> Hit(std::vector<Intersection<OT>> &Intersections)
 {
-    for (auto I : Intersections)
+    for (auto &I : Intersections)
     {
         if (I.GetT() > 0.)
             return std::make_shared<Intersection<OT>>(I);
