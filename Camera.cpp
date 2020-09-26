@@ -56,7 +56,7 @@ Ray Camera::RayForPixel(int X, int Y)
     return Ray(Origin, Direction);
 }
 
-Canvas Camera::Render(World &W, bool RenderShadow, bool printLog)
+Canvas Camera::Render(World &W, bool RenderShadow=true, bool printLog=false, int RayDepth=5)
 {
     Canvas Image(HSize, VSize);
 
@@ -73,7 +73,7 @@ Canvas Camera::Render(World &W, bool RenderShadow, bool printLog)
         for (int X = 0; X < HSize; ++X)
         {
             auto R = RayForPixel(X, Y);
-            auto Col = W.ColorAt(R, RenderShadow);
+            auto Col = W.ColorAt(R, RenderShadow, RayDepth);
             Image.WritePixel(X, Y, Col);
 
             if (printLog)

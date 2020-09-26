@@ -38,5 +38,5 @@ public:
     // indicated (X, Y) pixel on the canvas.
     Ray RayForPixel(int X, int Y);
 
-    Canvas Render(World &W, bool RenderShadow=true, bool printLog=false);
+    Canvas Render(World &W, bool RenderShadow, bool printLog, int RayDepth);
 };

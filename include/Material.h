@@ -13,6 +13,7 @@ class Material
     double Specular;
     double Shininess;
     std::shared_ptr<Pattern> APattern;
+    double Reflective;
 
 public:
     Material();
@@ -23,6 +24,7 @@ public:
     inline double GetDiffuse() const { return Diffuse; }
     inline double GetSpecular() const { return Specular; }
     inline double GetShininess() const { return Shininess; }
+    inline double GetReflective() const { return Reflective; }
     inline Color GetColor() const { return AColor; }
     inline std::shared_ptr<Pattern> GetPattern() const { return APattern; }
 
@@ -30,6 +32,7 @@ public:
     inline void SetDiffuse(double Diff) { Diffuse = Diff; }
     inline void SetSpecular(double Spec) { Specular = Spec; }
     inline void SetShininess(double Shini) { Shininess = Shini; }
+    inline void SetReflective(double Reflect) { Reflective = Reflect; }
     inline void SetColor(Color &C) { AColor = C; }
     inline void SetColor(Color &&C) { AColor = C; }
 

@@ -34,9 +34,11 @@ public:
     std::vector<Intersection<Object>> Intersect(const Ray &R);
     std::vector<Intersection<Object>> Intersect(const Ray &R, std::shared_ptr<Object> &ObjectPtr);
 
-    Color ShadeHit(PreComputations<Object> &Comps, bool RenderShadow=true);
+    Color ShadeHit(PreComputations<Object> &Comps, bool RenderShadow, int Remaining);
 
-    Color ColorAt(Ray &R, bool RenderShadow=true);
+    Color ColorAt(Ray &R, bool RenderShadow, int Remaining);
 
     bool IsShadowed(Point &P);
+
+    Color ReflectedColor(PreComputations<Object> &Comps, bool RenderShadow, int Remaining);
 };

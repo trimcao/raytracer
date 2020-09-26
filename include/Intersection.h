@@ -16,6 +16,7 @@ struct PreComputations
     Vector EyeV;
     Vector NormalV;
     bool IsInside;
+    Vector ReflectV;
 };
 
 template <class ObjectType>
@@ -28,6 +29,7 @@ public:
     Intersection();
     Intersection(double T, const ObjectType &O);
     Intersection(double T, std::shared_ptr<ObjectType> &O);
+    Intersection(double T, std::shared_ptr<ObjectType> &&O);
 
     double GetT() const;
     std::shared_ptr<ObjectType> GetObject() const;

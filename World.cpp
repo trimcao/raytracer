@@ -1,7 +1,10 @@
 #include "include/World.h"
 #include "include/Object.h"
 #include "include/Sphere.h"
+#include "include/Plane.h"
+#include "include/Transformations.h"
 #include "include/Intersection.h"
+#include <cmath>
 
 World::World(Light &NewLight, std::vector<std::shared_ptr<Object>> &NewObjects)
 {
@@ -55,7 +58,7 @@ std::vector<Intersection<Object>> World::Intersect(const Ray &R)
     return Intersections;
 }
 
-Color World::ShadeHit(PreComputations<Object> &Comps, bool RenderShadow)
+Color World::ShadeHit(PreComputations<Object> &Comps, bool RenderShadow=true, int Remaining=5)
 {
     if (!ALight)
         return Color(0., 0., 0.);
@@ -64,17 +67,21 @@ Color World::ShadeHit(PreComputations<Object> &Comps, bool RenderShadow)
     if (RenderShadow)
         IsInShadow = IsShadowed(Comps.OverPosition);
 
-    return Lighting(Comps.AObject->GetMaterial(), Comps.AObject, *ALight, Comps.OverPosition, Comps.EyeV, Comps.NormalV, IsInShadow);
+    auto Surface = Lighting(Comps.AObject->GetMaterial(), Comps.AObject, *ALight, Comps.OverPosition, Comps.EyeV, Comps.NormalV, IsInShadow);
+
+    auto Reflected = ReflectedColor(Comps, RenderShadow, Remaining);
+
+    return Surface + Reflected;
 }
 
-Color World::ColorAt(Ray &R, bool RenderShadow)
+Color World::ColorAt(Ray &R, bool RenderShadow=true, int Remaining=5)
 {
     auto Intersects = Intersect(R);
     auto H = Hit(Intersects);
     if (H != nullptr)
     {
         auto Comps = H->PrepareComputations(R);
-        return ShadeHit(Comps, RenderShadow);
+        return ShadeHit(Comps, RenderShadow, Remaining);
     }
 
     return Color(0., 0., 0.);
@@ -99,6 +106,22 @@ bool World::IsShadowed(Point &P)
     }
 
     return false;
+}
+
+Color World::ReflectedColor(PreComputations<Object> &Comps, bool RenderShadow=true, int Remaining=5)
+{
+    if (Remaining <= 0)
+        return Color(0., 0., 0.);
+
+    auto Reflective = Comps.AObject->GetMaterial().GetReflective();
+
+    if (Reflective == 0.)
+        return Color(0., 0., 0.);
+
+    Ray ReflectedRay(Comps.OverPosition, Comps.ReflectV);
+
+    auto Col = ColorAt(ReflectedRay, RenderShadow, Remaining - 1);
+    return Col * Reflective;
 }
 
 TEST_CASE("Creating a world")
@@ -248,8 +271,6 @@ TEST_CASE("The color with an intersection behind the ray")
     Mat.SetAmbient(1.);
     Inner->SetMaterial(Mat);
 
-    // std::cout << "Inner ambient:" << Inner->GetMaterial().GetAmbient() << '\n';
-
     Ray R(Point(0., 0., 0.75), Vector(0., 0., -1.));
 
     auto C = W.ColorAt(R, true);
@@ -303,4 +324,97 @@ TEST_CASE("ShadeHit() is given an intersection in shadow")
     auto C = W.ShadeHit(Comps);
 
     CHECK(C == Color(0.1, 0.1, 0.1));
+}
+
+TEST_CASE("The reflected color for a nonreflective material")
+{
+    auto W = World::DefaultWorld();
+    Ray R(Point(0., 0., 0.), Vector(0., 0., 1.));
+    auto S = W.GetObjectAt(1);
+    auto Mat = S->GetMaterial();
+    Mat.SetAmbient(1.);
+    Intersection I(1., S);
+    auto Comps = I.PrepareComputations(R);
+    auto C = W.ReflectedColor(Comps);
+
+    CHECK(C == Color(0., 0., 0.));
+}
+
+TEST_CASE("The reflected color for a reflective material")
+{
+    auto W = World::DefaultWorld();
+    Ray R(Point(0., 0., -3.), Vector(0., -std::sqrt(2.)/2, std::sqrt(2.)/2));
+
+    Plane P;
+    Material Mat;
+    Mat.SetReflective(0.5);
+    P.SetMaterial(Mat);
+    P.SetTransform(Transformations::Translation(0., -1., 0.));
+    W.AddObject(P);
+
+    Intersection I(std::sqrt(2.), W.GetObjectAt(2));
+    auto Comps = I.PrepareComputations(R);
+    auto C = W.ReflectedColor(Comps);
+
+    CHECK(C == Color(0.190332, 0.237915, 0.142749));
+}
+
+TEST_CASE("ShadeHit with a reflective material")
+{
+    auto W = World::DefaultWorld();
+    Ray R(Point(0., 0., -3.), Vector(0., -std::sqrt(2.)/2, std::sqrt(2.)/2));
+
+    Plane P;
+    Material Mat;
+    Mat.SetReflective(0.5);
+    P.SetMaterial(Mat);
+    P.SetTransform(Transformations::Translation(0., -1., 0.));
+    W.AddObject(P);
+
+    Intersection I(std::sqrt(2.), W.GetObjectAt(2));
+    auto Comps = I.PrepareComputations(R);
+    auto C = W.ShadeHit(Comps);
+
+    CHECK(C == Color(0.876757, 0.92434, 0.829174));
+}
+
+TEST_CASE("ColorAt() with mutually reflective surfaces")
+{
+    World W;
+    W.SetLight(Light(Color(1., 1., 1.), Point(0., 0., 0.)));
+
+    Material Mat;
+    Mat.SetReflective(1.);
+    Plane Lower;
+    Lower.SetMaterial(Mat);
+    Lower.SetTransform(Transformations::Translation(0., -1., 0.));
+
+    Plane Higher;
+    Higher.SetMaterial(Mat);
+    Higher.SetTransform(Transformations::Translation(0., 1., 0.));
+
+    W.AddObject(Lower);
+    W.AddObject(Higher);
+
+    Ray R(Point(0., 0., 0.), Vector(0., 1., 0.));
+    W.ColorAt(R);
+}
+
+TEST_CASE("The reflected color at the maximum recursive depth")
+{
+    auto W = World::DefaultWorld();
+    Ray R(Point(0., 0., -3.), Vector(0., -std::sqrt(2.)/2, std::sqrt(2.)/2));
+
+    Plane P;
+    Material Mat;
+    Mat.SetReflective(0.5);
+    P.SetMaterial(Mat);
+    P.SetTransform(Transformations::Translation(0., -1., 0.));
+    W.AddObject(P);
+
+    Intersection I(std::sqrt(2.), W.GetObjectAt(2));
+    auto Comps = I.PrepareComputations(R);
+    auto C = W.ReflectedColor(Comps, true, 0);
+
+    CHECK(C == Color(0., 0., 0.));
 }

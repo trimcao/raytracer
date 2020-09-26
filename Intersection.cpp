@@ -7,9 +7,6 @@
 #include "include/Intersection.h"
 #include "include/Ray.h"
 #include "include/Util.h"
-// #include "include/Light.h"
-// #include "include/Object.h"
-// #include "include/Sphere.h"
 
 template <class OT>
 Intersection<OT>::Intersection() {}
@@ -35,6 +32,13 @@ Intersection<OT>::Intersection(double T, const OT &O)
 
 template<class OT>
 Intersection<OT>::Intersection(double T, std::shared_ptr<OT> &O)
+{
+    this->T = T;
+    this->O = O;
+}
+
+template<class OT>
+Intersection<OT>::Intersection(double T, std::shared_ptr<OT> &&O)
 {
     this->T = T;
     this->O = O;
@@ -95,6 +99,8 @@ PreComputations<OT> Intersection<OT>::PrepareComputations(Ray &R)
     }
 
     Comps.OverPosition = Comps.Position + Comps.NormalV * Util::EPSILON;
+
+    Comps.ReflectV = R.GetDirection().Reflect(Comps.NormalV);
 
     return Comps;
 }
