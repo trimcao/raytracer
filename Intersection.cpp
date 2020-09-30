@@ -4,6 +4,7 @@
 #include <memory>
 #include <algorithm>
 #include <cmath>
+#include <vector>
 #include "include/Intersection.h"
 #include "include/Ray.h"
 #include "include/Util.h"

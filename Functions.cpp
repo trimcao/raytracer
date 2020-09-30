@@ -1,4 +1,5 @@
 #include "include/Functions.h"
+#include "include/Object.h"
 #include "include/Sphere.h"
 #include "include/Transformations.h"
 #include "include/Plane.h"
@@ -11,6 +12,92 @@ Color TRay::PatternAtShape(std::shared_ptr<Pattern> &Pat, std::shared_ptr<Object
     auto LocalPos = Obj->GetTransform().Inverse().Mul(P);
     auto PatternPos = Pat->GetTransform().Inverse().Mul(LocalPos);
     return Pat->PatternAt(PatternPos);
+}
+
+template<class OT>
+std::vector<double> TRay::ComputeRefractiveIndex(Intersection<OT> &I, std::vector<Intersection<OT>> IntersectionList)
+{
+    std::vector<double> NS;
+
+    std::vector<std::shared_ptr<Object>> Containers;
+    for (auto &Intersect : IntersectionList)
+    {
+        if (Intersect == I)
+        {
+            if (Containers.size() == 0)
+            {
+                NS.push_back(1.);
+            } else
+            {
+                NS.push_back(Containers[Containers.size()-1]->GetMaterial().GetRefractiveIndex());
+            }
+        }
+
+        // search containers for Intersect.GetObject()
+        int ObjectIdx = -1;
+        for (int j = 0; j < Containers.size(); ++j)
+        {
+            if (Containers[j] == Intersect.GetObject())
+            {
+                ObjectIdx = j;
+            }
+        }
+
+        if (ObjectIdx == -1)
+        {
+            Containers.push_back(Intersect.GetObject());
+        } else
+        {
+            Containers.erase(Containers.begin() + ObjectIdx);
+        }
+
+        if (Intersect == I)
+        {
+            if (Containers.size() == 0)
+            {
+                NS.push_back(1.);
+            } else
+            {
+                NS.push_back(Containers[Containers.size()-1]->GetMaterial().GetRefractiveIndex());
+            }
+
+            break;
+        }
+    }
+
+    return NS;
+}
+
+template<class OT>
+PreComputations<OT> TRay::PrepareComputations(Intersection<OT> &I, Ray &R, std::vector<Intersection<OT>> IntersectionList)
+{
+    if (IntersectionList.size() == 0)
+        IntersectionList.push_back(I);
+
+    PreComputations<OT> Comps;
+    Comps.T = I.GetT();
+    Comps.AObject = I.GetObject();
+    Comps.Position = R.Position(Comps.T);
+    Comps.EyeV = -R.GetDirection();
+    Comps.NormalV = Comps.AObject->NormalAt(Comps.Position);
+    Comps.IsInside = false;
+
+    if (Comps.NormalV.Dot(Comps.EyeV) < 0.)
+    {
+        Comps.IsInside = true;
+        Comps.NormalV = -Comps.NormalV;
+    }
+
+    Comps.OverPosition = Comps.Position + Comps.NormalV * Util::EPSILON;
+
+    Comps.ReflectV = R.GetDirection().Reflect(Comps.NormalV);
+
+    // determine N1 and N2
+    auto NS = ComputeRefractiveIndex(I, IntersectionList);
+    Comps.N1 = NS[0];
+    Comps.N2 = NS[1];
+
+    return Comps;
 }
 
 TEST_CASE("Stripes with an object transformation")
@@ -117,37 +204,40 @@ TEST_CASE("Finding refractive indices n1 and n2 at various intersections")
 
     Ray R(Point(0., 0., -4.), Vector(0., 0., 1.));
 
-    auto I0 = Intersection(2., A);
-    auto I1 = Intersection(2.75, B);
-    auto I2 = Intersection(3.25, C);
-    auto I3 = Intersection(4.75, B);
-    auto I4 = Intersection(5.25, C);
-    auto I5 = Intersection(6., A);
+    auto APtr = std::make_shared<Sphere>(A);
+    auto BPtr = std::make_shared<Sphere>(B);
+    auto CPtr = std::make_shared<Sphere>(C);
 
-    std::vector<Intersection<Sphere>> XS {I0, I1, I2, I3, I4, I5};
+    auto I0 = Intersection<Object>(2., APtr);
+    auto I1 = Intersection<Object>(2.75, BPtr);
+    auto I2 = Intersection<Object>(3.25, CPtr);
+    auto I3 = Intersection<Object>(4.75, BPtr);
+    auto I4 = Intersection<Object>(5.25, CPtr);
+    auto I5 = Intersection<Object>(6., APtr);
 
-    auto Comps = XS[0].PrepareComputations(R, XS);
+    std::vector<Intersection<Object>> XS {I0, I1, I2, I3, I4, I5};
+
+    auto Comps = TRay::PrepareComputations(XS[0], R, XS);
     CHECK(Util::Equal(Comps.N1, 1.));
     CHECK(Util::Equal(Comps.N2, 1.5));
 
-    Comps = XS[1].PrepareComputations(R, XS);
+    Comps = TRay::PrepareComputations(XS[1], R, XS);
     CHECK(Util::Equal(Comps.N1, 1.5));
     CHECK(Util::Equal(Comps.N2, 2.));
 
-    Comps = XS[2].PrepareComputations(R, XS);
+    Comps = TRay::PrepareComputations(XS[2], R, XS);
     CHECK(Util::Equal(Comps.N1, 2.));
     CHECK(Util::Equal(Comps.N2, 2.5));
 
-    Comps = XS[3].PrepareComputations(R, XS);
+    Comps = TRay::PrepareComputations(XS[3], R, XS);
     CHECK(Util::Equal(Comps.N1, 2.5));
     CHECK(Util::Equal(Comps.N2, 2.5));
 
-    Comps = XS[4].PrepareComputations(R, XS);
+    Comps = TRay::PrepareComputations(XS[4], R, XS);
     CHECK(Util::Equal(Comps.N1, 2.5));
     CHECK(Util::Equal(Comps.N2, 1.5));
 
-    Comps = XS[5].PrepareComputations(R, XS);
+    Comps = TRay::PrepareComputations(XS[5], R, XS);
     CHECK(Util::Equal(Comps.N1, 1.5));
     CHECK(Util::Equal(Comps.N2, 1.));
-
 }
