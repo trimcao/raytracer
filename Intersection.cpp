@@ -82,8 +82,11 @@ std::shared_ptr<Intersection<OT>> Hit(std::vector<Intersection<OT>> &Intersectio
 }
 
 template<class OT>
-PreComputations<OT> Intersection<OT>::PrepareComputations(Ray &R)
+PreComputations<OT> Intersection<OT>::PrepareComputations(Ray &R, std::vector<Intersection<OT>> IntersectionList)
 {
+    if (IntersectionList.size() == 0)
+        IntersectionList.push_back(*this);
+
     PreComputations<OT> Comps;
     Comps.T = T;
     Comps.AObject = O;
@@ -101,6 +104,9 @@ PreComputations<OT> Intersection<OT>::PrepareComputations(Ray &R)
     Comps.OverPosition = Comps.Position + Comps.NormalV * Util::EPSILON;
 
     Comps.ReflectV = R.GetDirection().Reflect(Comps.NormalV);
+
+    Comps.N1 = 1.;
+    Comps.N2 = 1.;
 
     return Comps;
 }

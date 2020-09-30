@@ -10,6 +10,8 @@ Material::Material()
     Shininess = 200.;
     APattern = nullptr;
     Reflective = 0.;
+    Transparency = 0.;
+    RefractiveIndex = 1.;
 }
 
 Material::Material(Color &C, double Amb, double Dif, double Spec, double Shini)
@@ -49,4 +51,6 @@ TEST_CASE("The default material")
     CHECK(Util::Equal(M.GetSpecular(), 0.9));
     CHECK(Util::Equal(M.GetShininess(), 200.));
     CHECK(Util::Equal(M.GetReflective(), 0.));
+    CHECK(Util::Equal(M.GetTransparency(), 0.));
+    CHECK(Util::Equal(M.GetRefractiveIndex(), 1.));
 }

@@ -76,6 +76,16 @@ std::vector<Intersection<Object>> Sphere::LocalIntersect(const Ray &LocalRay, st
     return Intersections;
 }
 
+Sphere Sphere::GlassSphere()
+{
+    Sphere S;
+    Material Mat;
+    Mat.SetTransparency(1.);
+    Mat.SetRefractiveIndex(1.5);
+    S.SetMaterial(Mat);
+    return S;
+}
+
 TEST_CASE("A sphere's default transformation")
 {
     Sphere S(2);

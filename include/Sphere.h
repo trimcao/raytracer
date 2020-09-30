@@ -23,4 +23,6 @@ public:
 
     virtual std::vector<Intersection<Object>> Intersect(const Ray &R) override;
     virtual std::vector<Intersection<Object>> LocalIntersect(const Ray &LocalRay, std::shared_ptr<Object> &ObjectPtr) override;
+
+    static Sphere GlassSphere();
 };

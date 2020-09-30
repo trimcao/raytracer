@@ -17,6 +17,8 @@ struct PreComputations
     Vector NormalV;
     bool IsInside;
     Vector ReflectV;
+    double N1;
+    double N2;
 };
 
 template <class ObjectType>
@@ -36,7 +38,9 @@ public:
 
     bool operator<(const Intersection &RHS) const { return T < RHS.GetT(); }
 
-    PreComputations<ObjectType> PrepareComputations(Ray &R);
+    PreComputations<ObjectType> PrepareComputations(Ray &R,
+        std::vector<Intersection<ObjectType>> IntersectionList = std::vector<Intersection<ObjectType>>{}
+    );
 };
 
 template <class OT>

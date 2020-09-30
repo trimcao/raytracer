@@ -14,6 +14,8 @@ class Material
     double Shininess;
     std::shared_ptr<Pattern> APattern;
     double Reflective;
+    double Transparency;
+    double RefractiveIndex;
 
 public:
     Material();
@@ -27,6 +29,8 @@ public:
     inline double GetReflective() const { return Reflective; }
     inline Color GetColor() const { return AColor; }
     inline std::shared_ptr<Pattern> GetPattern() const { return APattern; }
+    inline double GetTransparency() const { return Transparency; }
+    inline double GetRefractiveIndex() const { return RefractiveIndex; }
 
     inline void SetAmbient(double Amb) { Ambient = Amb; }
     inline void SetDiffuse(double Diff) { Diffuse = Diff; }
@@ -35,6 +39,9 @@ public:
     inline void SetReflective(double Reflect) { Reflective = Reflect; }
     inline void SetColor(Color &C) { AColor = C; }
     inline void SetColor(Color &&C) { AColor = C; }
+    inline void SetTransparency(double Trans) { Transparency = Trans; }
+    inline void SetRefractiveIndex(double RIndex) { RefractiveIndex = RIndex; }
+
 
     inline void SetPattern(std::shared_ptr<Pattern> &P) { APattern = P; }
     inline void SetPattern(std::shared_ptr<Pattern> &&P) { APattern = P; }
