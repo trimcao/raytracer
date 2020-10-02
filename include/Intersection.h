@@ -13,6 +13,7 @@ struct PreComputations
     double T;
     Point Position;
     Point OverPosition;
+    Point UnderPosition;
     Vector EyeV;
     Vector NormalV;
     bool IsInside;

@@ -22,6 +22,9 @@ Material::Material(Color &C, double Amb, double Dif, double Spec, double Shini)
     Specular = Spec;
     Shininess = Shini;
     APattern = nullptr;
+    Reflective = 0.;
+    Transparency = 0.;
+    RefractiveIndex = 1.;
 }
 
 Material::Material(Color &&C, double Amb, double Dif, double Spec, double Shini) : Material(C, Amb, Dif, Spec, Shini)

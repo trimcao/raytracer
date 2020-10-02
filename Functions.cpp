@@ -89,6 +89,7 @@ PreComputations<OT> TRay::PrepareComputations(Intersection<OT> &I, Ray &R, std::
     }
 
     Comps.OverPosition = Comps.Position + Comps.NormalV * Util::EPSILON;
+    Comps.UnderPosition = Comps.Position - Comps.NormalV * Util::EPSILON;
 
     Comps.ReflectV = R.GetDirection().Reflect(Comps.NormalV);
 
@@ -240,4 +241,18 @@ TEST_CASE("Finding refractive indices n1 and n2 at various intersections")
     Comps = TRay::PrepareComputations(XS[5], R, XS);
     CHECK(Util::Equal(Comps.N1, 1.5));
     CHECK(Util::Equal(Comps.N2, 1.));
+}
+
+TEST_CASE("The under point is offset below the surface")
+{
+    Ray R(Point(0., 0., -5.), Vector(0., 0., 1.));
+    std::shared_ptr<Object> S = std::make_shared<Sphere>(Sphere::GlassSphere());
+    S->SetTransform(Transformations::Translation(0., 0., 1.));
+
+    Intersection I(5., S);
+    std::vector<Intersection<Object>> XS {I};
+
+    auto Comps = TRay::PrepareComputations(I, R, XS);
+    CHECK(Comps.UnderPosition.Z() > Util::EPSILON/2);
+    CHECK(Comps.Position.Z() < Comps.UnderPosition.Z());
 }

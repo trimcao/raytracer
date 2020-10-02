@@ -4,6 +4,7 @@
 #include "include/Plane.h"
 #include "include/Transformations.h"
 #include "include/Intersection.h"
+#include "include/Functions.h"
 #include <cmath>
 
 World::World(Light &NewLight, std::vector<std::shared_ptr<Object>> &NewObjects)
@@ -71,7 +72,9 @@ Color World::ShadeHit(PreComputations<Object> &Comps, bool RenderShadow=true, in
 
     auto Reflected = ReflectedColor(Comps, RenderShadow, Remaining);
 
-    return Surface + Reflected;
+    auto Refracted = RefractedColor(Comps, RenderShadow, Remaining);
+
+    return Surface + Reflected + Refracted;
 }
 
 Color World::ColorAt(Ray &R, bool RenderShadow=true, int Remaining=5)
@@ -80,7 +83,7 @@ Color World::ColorAt(Ray &R, bool RenderShadow=true, int Remaining=5)
     auto H = Hit(Intersects);
     if (H != nullptr)
     {
-        auto Comps = H->PrepareComputations(R);
+        auto Comps = TRay::PrepareComputations(*H, R, Intersects);
         return ShadeHit(Comps, RenderShadow, Remaining);
     }
 
@@ -115,13 +118,47 @@ Color World::ReflectedColor(PreComputations<Object> &Comps, bool RenderShadow=tr
 
     auto Reflective = Comps.AObject->GetMaterial().GetReflective();
 
-    if (Reflective == 0.)
+    if (Util::Equal(Reflective, 0.))
         return Color(0., 0., 0.);
 
     Ray ReflectedRay(Comps.OverPosition, Comps.ReflectV);
 
     auto Col = ColorAt(ReflectedRay, RenderShadow, Remaining - 1);
     return Col * Reflective;
+}
+
+Color World::RefractedColor(PreComputations<Object> &Comps, bool RenderShadow, int Remaining)
+{
+    if (Remaining <= 0)
+        return Color(0., 0., 0.);
+
+    auto Transparency = Comps.AObject->GetMaterial().GetTransparency();
+
+    // std::cout << "Transparency: " << Transparency << '\n';
+
+    if (Util::Equal(Transparency, 0.))
+        return Color(0., 0., 0.);
+
+    // Find the ratio of first index of refraction to the second.
+    auto NRatio = Comps.N1 / Comps.N2;
+    // cos(theta_i) is the same as the dot product of the two vectors
+    auto CosI = Comps.EyeV.Dot(Comps.NormalV);
+    // find sin(theta_t)^2 via trigonometric identity
+    auto Sin2T = NRatio * NRatio * (1 - CosI * CosI);
+    // if Sin2T > 1. we got total internal reflection
+    if (Sin2T > 1.)
+        return Color(0., 0., 0.);
+
+    // Find cos(theta_t) via trigonometric identity
+    auto CosT = std::sqrt(1. - Sin2T);
+    auto Direction = Comps.NormalV * (NRatio * CosI - CosT) - Comps.EyeV * NRatio;
+
+    // Create the Refracted Ray
+    auto RefractRay = Ray(Comps.UnderPosition, Direction);
+
+    // Find the color of the refracted ray, making sure to multiply
+    // by the transparency value to account for any opacity
+    return ColorAt(RefractRay, RenderShadow, Remaining - 1) * Transparency;
 }
 
 TEST_CASE("Creating a world")
@@ -417,4 +454,113 @@ TEST_CASE("The reflected color at the maximum recursive depth")
     auto C = W.ReflectedColor(Comps, true, 0);
 
     CHECK(C == Color(0., 0., 0.));
+}
+
+TEST_CASE("The refracted color with an opaque surface")
+{
+    auto W = World::DefaultWorld();
+    auto S = W.GetObjectAt(0);
+    Ray R(Point(0., 0., -5.), Vector(0., 0., 1.));
+    std::vector<Intersection<Object>> XS {Intersection(4., S), Intersection(6., S)};
+
+    auto Comps = TRay::PrepareComputations(XS[0], R, XS);
+    auto Col = W.RefractedColor(Comps, true, 5);
+
+    CHECK(Col == Color(0., 0., 0.));
+}
+
+TEST_CASE("The refracted color at the maximum recursive depth")
+{
+    auto W = World::DefaultWorld();
+    auto S = W.GetObjectAt(0);
+
+    auto Mat = S->GetMaterial();
+    Mat.SetTransparency(1.);
+    Mat.SetRefractiveIndex(1.5);
+    S->SetMaterial(Mat);
+
+    Ray R(Point(0., 0., -5.), Vector(0., 0., 1.));
+    std::vector<Intersection<Object>> XS {Intersection(4., S), Intersection(6., S)};
+
+    auto Comps = TRay::PrepareComputations(XS[0], R, XS);
+    auto Col = W.RefractedColor(Comps, true, 0);
+
+    CHECK(Col == Color(0., 0., 0.));
+}
+
+TEST_CASE("The refracted color under total internal reflection")
+{
+    auto W = World::DefaultWorld();
+    auto S = W.GetObjectAt(0);
+
+    auto Mat = S->GetMaterial();
+    Mat.SetTransparency(1.);
+    Mat.SetRefractiveIndex(1.5);
+    S->SetMaterial(Mat);
+
+    Ray R(Point(0., 0., std::sqrt(2.)/2), Vector(0., 1., 0.));
+    std::vector<Intersection<Object>> XS   {Intersection(-std::sqrt(2.)/2, S),
+                                            Intersection(std::sqrt(2.)/2, S)};
+
+    auto Comps = TRay::PrepareComputations(XS[1], R, XS);
+    auto Col = W.RefractedColor(Comps, true, 5);
+
+    CHECK(Col == Color(0., 0., 0.));
+}
+
+TEST_CASE("The refracted color with a refracted ray")
+{
+    auto W = World::DefaultWorld();
+    auto A = W.GetObjectAt(0);
+    auto B = W.GetObjectAt(1);
+
+    auto Mat = A->GetMaterial();
+    Mat.SetAmbient(1.);
+    Mat.SetPattern(std::make_shared<TestPattern>());
+    A->SetMaterial(Mat);
+
+    Mat = B->GetMaterial();
+    Mat.SetTransparency(1.);
+    Mat.SetRefractiveIndex(1.5);
+    B->SetMaterial(Mat);
+
+    Ray R(Point(0., 0., 0.1), Vector(0., 1., 0.));
+    std::vector<Intersection<Object>> XS   {Intersection(-0.9899, A),
+                                            Intersection(-0.4899, B),
+                                            Intersection(0.4899, B),
+                                            Intersection(0.9899, A)};
+
+    auto Comps = TRay::PrepareComputations(XS[2], R, XS);
+    auto Col = W.RefractedColor(Comps, true, 5);
+
+    CHECK(Col == Color(0., 0.998875, 0.047219));
+}
+
+TEST_CASE("ShadeHit() with a transparent material")
+{
+    auto W = World::DefaultWorld();
+
+    std::shared_ptr<Object> Floor = std::make_shared<Plane>(Plane());
+    Floor->SetTransform(Transformations::Translation(0., -1., 0.));
+    auto Mat = Floor->GetMaterial();
+    Mat.SetTransparency(0.5);
+    Mat.SetRefractiveIndex(1.5);
+    Floor->SetMaterial(Mat);
+    W.AddObject(Floor);
+
+    std::shared_ptr<Object> Ball = std::make_shared<Sphere>(Sphere());
+    Ball->SetTransform(Transformations::Translation(0., -3.5, -0.5));
+    Mat = Ball->GetMaterial();
+    Mat.SetColor(Color(1., 0., 0.));
+    Mat.SetAmbient(0.5);
+    Ball->SetMaterial(Mat);
+    W.AddObject(Ball);
+
+    Ray R(Point(0., 0., -3.), Vector(0., -std::sqrt(2.)/2, std::sqrt(2.)/2));
+    std::vector<Intersection<Object>> XS {Intersection(std::sqrt(2.), Floor)};
+
+    auto Comps = TRay::PrepareComputations(XS[0], R, XS);
+    auto Col = W.ShadeHit(Comps, true, 5);
+
+    CHECK(Col == Color(0.93642, 0.68642, 0.68642));
 }

@@ -27,6 +27,8 @@ public:
     // template <class Derived>
     // inline void AddObject(Derived &&NewObject) { AddObject(NewObject); }
 
+    inline void AddObject(std::shared_ptr<Object> &NewObjectPtr) { Objects.push_back(NewObjectPtr); }
+
     inline std::shared_ptr<Light> GetLight() const { return ALight; }
     inline std::shared_ptr<Object> GetObjectAt(int Idx) const { return Objects[Idx]; }
     inline std::vector<std::shared_ptr<Object>> GetObjects() const { return Objects; }
@@ -41,4 +43,5 @@ public:
     bool IsShadowed(Point &P);
 
     Color ReflectedColor(PreComputations<Object> &Comps, bool RenderShadow, int Remaining);
+    Color RefractedColor(PreComputations<Object> &Comps, bool RenderShadow=true, int Remaining=5);
 };
