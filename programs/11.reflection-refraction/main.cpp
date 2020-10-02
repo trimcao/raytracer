@@ -64,12 +64,17 @@ int main(int argc, char **argv)
     Mat.SetSpecular(0.3);
     Right.SetMaterial(Mat);
 
-    Sphere Left(5);
+    auto Left = Sphere::GlassSphere();
+    // Sphere Left(5);
     Left.SetTransform(Matrix::Scaling(0.33, 0.33, 0.33).Translate(-1.5, 0.33, -0.75));
-    Mat = Material();
-    Mat.SetColor(Color(1., 0.8, 0.1));
-    Mat.SetDiffuse(0.7);
-    Mat.SetSpecular(0.3);
+    Mat = Left.GetMaterial();
+    Mat.SetColor(Color(0.8, 0.8, 0.9));
+    Mat.SetAmbient(0.);
+    Mat.SetDiffuse(0.2);
+    Mat.SetSpecular(0.9);
+    Mat.SetShininess(300.);
+    Mat.SetTransparency(0.8);
+    Mat.SetRefractiveIndex(1.57);
     Left.SetMaterial(Mat);
 
     World W;
@@ -95,7 +100,7 @@ int main(int argc, char **argv)
     bool RenderShadow = true;
     auto CV = Cam.Render(W, RenderShadow, true, 5);
 
-    std::ofstream out("reflection.ppm");
+    std::ofstream out("refraction.ppm");
     out << CV.ToPPM();
     out.close();
 

@@ -82,6 +82,7 @@ Sphere Sphere::GlassSphere()
     Material Mat;
     Mat.SetTransparency(1.);
     Mat.SetRefractiveIndex(1.5);
+    // Mat.SetReflective(0.9);
     S.SetMaterial(Mat);
     return S;
 }
