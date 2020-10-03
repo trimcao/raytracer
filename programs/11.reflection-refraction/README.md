@@ -8,5 +8,4 @@ Refraction in action. We can see how the glass sphere bends the light.
 
 ![alt text](refraction.png "Refraction first example")
 
-However, it does not look good with a major part of the sphere rendered in black.
-That's due to total internal reflection. We will fix that by incorporating Fresnel effect.
+Why the bottom part of the glass sphere is black? That's because the glass sphere inverts the scene, the black part is actually the black "sky" above. In other words, when we look at the glass sphere, we see an upside-down mini version of the scene.
