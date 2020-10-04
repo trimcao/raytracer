@@ -65,7 +65,7 @@ Color World::ShadeHit(PreComputations<Object> &Comps, bool RenderShadow=true, in
         return Color(0., 0., 0.);
 
     bool IsInShadow = false;
-    if (RenderShadow)
+    if (Comps.AObject->ShadowOn() && RenderShadow)
         IsInShadow = IsShadowed(Comps.OverPosition);
 
     auto Mat = Comps.AObject->GetMaterial();

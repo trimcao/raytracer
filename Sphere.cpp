@@ -15,6 +15,7 @@ Sphere::Sphere(int ID)
     Transform = Matrix::Identity(4);
     Origin = Point(0., 0., 0.);
     AMaterial = Material();
+    UseShadow = true;
     this->ID = ID;
 }
 

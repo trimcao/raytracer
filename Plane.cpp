@@ -13,6 +13,7 @@ Plane::Plane(int ID)
     Transform = Matrix::Identity();
     Origin = Point(0., 0., 0.);
     AMaterial = Material();
+    UseShadow = true;
     this->ID = ID;
 }
 

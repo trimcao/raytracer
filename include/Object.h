@@ -17,6 +17,7 @@ protected:
     Matrix Transform;
     Point Origin;
     Material AMaterial;
+    bool UseShadow;
 
 public:
     Object();
@@ -25,12 +26,15 @@ public:
 
     Matrix GetTransform() const { return Transform; }
     Material GetMaterial() const { return AMaterial; }
+    bool ShadowOn() const { return UseShadow; }
 
     inline void SetTransform(Matrix &M) { Transform = M; }
     inline void SetTransform(Matrix &&M) { Transform = M; }
 
     inline void SetMaterial(Material &M) { AMaterial = M; }
     inline void SetMaterial(Material &&M) { AMaterial = M; }
+
+    inline void SetShadowOn(bool Shadow) { UseShadow = Shadow; }
 
     virtual Vector NormalAt(Point &P);
     inline virtual Vector NormalAt(Point &&P) { return NormalAt(P); }
