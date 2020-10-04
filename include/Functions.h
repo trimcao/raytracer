@@ -18,4 +18,6 @@ namespace TRay
     template<class OT>
     std::vector<double> ComputeRefractiveIndex(Intersection<OT> &I,
         std::vector<Intersection<OT>> IntersectionList);
+
+    float Schlick(PreComputations<Object> &Comps);
 }

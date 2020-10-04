@@ -68,11 +68,18 @@ Color World::ShadeHit(PreComputations<Object> &Comps, bool RenderShadow=true, in
     if (RenderShadow)
         IsInShadow = IsShadowed(Comps.OverPosition);
 
-    auto Surface = Lighting(Comps.AObject->GetMaterial(), Comps.AObject, *ALight, Comps.OverPosition, Comps.EyeV, Comps.NormalV, IsInShadow);
+    auto Mat = Comps.AObject->GetMaterial();
+    auto Surface = Lighting(Mat, Comps.AObject, *ALight, Comps.OverPosition, Comps.EyeV, Comps.NormalV, IsInShadow);
 
     auto Reflected = ReflectedColor(Comps, RenderShadow, Remaining);
 
     auto Refracted = RefractedColor(Comps, RenderShadow, Remaining);
+
+    if (Mat.GetReflective() > 0. && Mat.GetTransparency() > 0.)
+    {
+        auto Reflectance = TRay::Schlick(Comps);
+        return Surface + Reflected * Reflectance + Refracted * (1 - Reflectance);
+    }
 
     return Surface + Reflected + Refracted;
 }
@@ -563,4 +570,34 @@ TEST_CASE("ShadeHit() with a transparent material")
     auto Col = W.ShadeHit(Comps, true, 5);
 
     CHECK(Col == Color(0.93642, 0.68642, 0.68642));
+}
+
+TEST_CASE("ShadeHit() with a reflective, transparent material")
+{
+    auto W = World::DefaultWorld();
+
+    std::shared_ptr<Object> Floor = std::make_shared<Plane>(Plane());
+    Floor->SetTransform(Transformations::Translation(0., -1., 0.));
+    auto Mat = Floor->GetMaterial();
+    Mat.SetTransparency(0.5);
+    Mat.SetReflective(0.5);
+    Mat.SetRefractiveIndex(1.5);
+    Floor->SetMaterial(Mat);
+    W.AddObject(Floor);
+
+    std::shared_ptr<Object> Ball = std::make_shared<Sphere>(Sphere());
+    Ball->SetTransform(Transformations::Translation(0., -3.5, -0.5));
+    Mat = Ball->GetMaterial();
+    Mat.SetColor(Color(1., 0., 0.));
+    Mat.SetAmbient(0.5);
+    Ball->SetMaterial(Mat);
+    W.AddObject(Ball);
+
+    Ray R(Point(0., 0., -3.), Vector(0., -std::sqrt(2.)/2, std::sqrt(2.)/2));
+    std::vector<Intersection<Object>> XS {Intersection(std::sqrt(2.), Floor)};
+
+    auto Comps = TRay::PrepareComputations(XS[0], R, XS);
+    auto Col = W.ShadeHit(Comps, true, 5);
+
+    CHECK(Col == Color(0.93391, 0.69643, 0.69243));
 }

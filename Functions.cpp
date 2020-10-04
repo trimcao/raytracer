@@ -101,6 +101,29 @@ PreComputations<OT> TRay::PrepareComputations(Intersection<OT> &I, Ray &R, std::
     return Comps;
 }
 
+float TRay::Schlick(PreComputations<Object> &Comps)
+{
+    // cos(theta_i) is the same as the dot product of the two vectors
+    auto CosI = Comps.EyeV.Dot(Comps.NormalV);
+    // total internal reflection can only occur if n1 > n2
+    if (Comps.N1 > Comps.N2)
+    {
+        auto N = Comps.N1 / Comps.N2;
+        auto Sin2T = N * N * (1. - CosI * CosI);
+
+        if (Sin2T > 1.) return 1.;
+
+        // compute cosine of theta_t using trig identity
+        auto CosT = std::sqrt(1. - Sin2T);
+        // when n1 > n2, use cos(theta_t) instead
+        CosI = CosT;
+    }
+
+    auto R0 = std::pow( (Comps.N1 - Comps.N2) / (Comps.N1 + Comps.N2), 2. );
+
+    return R0 + (1 - R0) * std::pow( (1 - CosI), 5.);
+}
+
 TEST_CASE("Stripes with an object transformation")
 {
     std::shared_ptr<Object> Obj = std::make_shared<Sphere>();
@@ -255,4 +278,39 @@ TEST_CASE("The under point is offset below the surface")
     auto Comps = TRay::PrepareComputations(I, R, XS);
     CHECK(Comps.UnderPosition.Z() > Util::EPSILON/2);
     CHECK(Comps.Position.Z() < Comps.UnderPosition.Z());
+}
+
+TEST_CASE("The Schlick approximation under total internal reflection")
+{
+    std::shared_ptr<Object> S = std::make_shared<Sphere>(Sphere::GlassSphere());
+    Ray R(Point(0., 0., std::sqrt(2.)/2), Vector(0., 1., 0.));
+    std::vector<Intersection<Object>> XS   {Intersection(-std::sqrt(2.)/2, S),
+                                            Intersection(std::sqrt(2.)/2, S)};
+    auto Comps = TRay::PrepareComputations(XS[1], R, XS);
+    auto Reflectance = TRay::Schlick(Comps);
+
+    CHECK(Util::Equal(Reflectance, 1.));
+}
+
+TEST_CASE("The Schlick approximation with a perpendicular viewing angle")
+{
+    std::shared_ptr<Object> S = std::make_shared<Sphere>(Sphere::GlassSphere());
+    Ray R(Point(0., 0., 0.), Vector(0., 1., 0.));
+    std::vector<Intersection<Object>> XS   {Intersection(-1., S),
+                                            Intersection(1., S)};
+    auto Comps = TRay::PrepareComputations(XS[1], R, XS);
+    auto Reflectance = TRay::Schlick(Comps);
+
+    CHECK(Util::Equal(Reflectance, 0.04));
+}
+
+TEST_CASE("The Schlick approximation with a small angle and n2 > n1")
+{
+    std::shared_ptr<Object> S = std::make_shared<Sphere>(Sphere::GlassSphere());
+    Ray R(Point(0., 0.99, -2.), Vector(0., 0., 1.));
+    std::vector<Intersection<Object>> XS   {Intersection(1.8589, S)};
+    auto Comps = TRay::PrepareComputations(XS[0], R, XS);
+    auto Reflectance = TRay::Schlick(Comps);
+
+    CHECK(Util::Equal(Reflectance, 0.48873));
 }
