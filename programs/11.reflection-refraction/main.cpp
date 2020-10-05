@@ -87,7 +87,7 @@ void CrystalBallScene()
     W.AddObject(Right);
     W.AddObject(Front);
 
-    Camera Cam(64, 48, M_PI/3);
+    Camera Cam(128, 72, M_PI/3);
     Cam.SetTransform(Transformations::ViewTransform(Point(0.1, 1.5, -5.),
                                                     Point(0., 1., 0.),
                                                     Vector(0., 1., 0.)));
@@ -125,7 +125,8 @@ void PondScene()
     Mat.SetColor(Color(0.8, 0.8, 0.9));
     Mat.SetSpecular(0.);
     // Mat.SetReflective(0.75);
-    Mat.SetPattern(std::make_shared<CheckersPattern>(Color(0.5, 1., 0.1), Color(0.98, 0.035, 0.043)));
+    // Mat.SetPattern(std::make_shared<CheckersPattern>(Color(0.191, 0.468, 0.449), Color(0., 0.5, 0.5)));
+    Mat.SetPattern(std::make_shared<CheckersPattern>(Color(0.191, 0.468, 0.449), Color(0., 0.5, 0.5)));
     // Mat.SetTransparency(0.8);
     // Mat.SetRefractiveIndex(1.333);
     Bottom.SetMaterial(Mat);
@@ -136,7 +137,7 @@ void PondScene()
     Mat.SetColor(Color(0.8, 0.8, 0.9));
     Mat.SetSpecular(0.);
     // Mat.SetReflective(0.75);
-    Mat.SetPattern(std::make_shared<CheckersPattern>(Color(1., 1., 1.), Color(0.27, 0.68, 0.765)));
+    Mat.SetPattern(std::make_shared<CheckersPattern>(Color(0.93, 0.453, 0.129), Color(0.95, 0.613, 0.387)));
     // Mat.SetTransparency(0.8);
     // Mat.SetRefractiveIndex(1.333);
     Wall.SetMaterial(Mat);
@@ -154,9 +155,9 @@ void PondScene()
 
     Sphere Right(4);
     // Right.SetTransform(Matrix::Scaling(0.5, 0.5, 0.5).Translate(0.7, 0.5, 1.));
-    Right.SetTransform(Matrix::Scaling(0.33, 0.33, 0.33).Translate(0., 0., 1.));
+    Right.SetTransform(Matrix::Scaling(0.5, 0.5, 0.5).Translate(0., 0., 5.));
     Mat = Material();
-    Mat.SetColor(Color(0.5, 0.1, 1.));
+    Mat.SetColor(Color(0.99, 0., 0.96));
     Mat.SetDiffuse(0.7);
     Mat.SetSpecular(0.3);
     Right.SetMaterial(Mat);
@@ -185,7 +186,7 @@ void PondScene()
     W.AddObject(Right);
     // W.AddObject(Front);
 
-    Camera Cam(128, 72, M_PI/3);
+    Camera Cam(640, 360, M_PI/3);
     Cam.SetTransform(Transformations::ViewTransform(Point(0.1, 1.5, -5.),
                                                     Point(0., 1., 0.),
                                                     Vector(0., 1., 0.)));
@@ -198,7 +199,7 @@ void PondScene()
     bool RenderShadow = false;
     auto CV = Cam.Render(W, RenderShadow, true, 5);
 
-    std::ofstream out("pond2.ppm");
+    std::ofstream out("pond.ppm");
     out << CV.ToPPM();
     out.close();
 }
