@@ -18,6 +18,7 @@ public:
     Ray(Point &&O, Vector &&D);
     Ray(Point &O, Vector &&D);
     Ray(Point &O, Vector &D);
+    Ray(Point &&O, Vector &D);
 
     Point GetOrigin() const;
     Vector GetDirection() const;

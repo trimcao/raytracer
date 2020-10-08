@@ -25,6 +25,12 @@ Ray::Ray(Point &O, Vector &D)
     Direction = D;
 }
 
+Ray::Ray(Point &&O, Vector &D)
+{
+    Origin = O;
+    Direction = D;
+}
+
 Point Ray::GetOrigin() const
 {
     return Origin;
