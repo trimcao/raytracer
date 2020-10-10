@@ -62,7 +62,7 @@ std::vector<Intersection<Object>> Cylinders::LocalIntersect(const Ray &LocalRay,
     // check case: ray is parallel to the y axis
     if (!Util::Equal(A, 0.))
     {
-        auto B = 2 * RayOrigin.X() * RayDirection.X() + 2 * RayOrigin.Z() * RayDirection.Z();
+        auto B = 2. * RayOrigin.X() * RayDirection.X() + 2. * RayOrigin.Z() * RayDirection.Z();
         auto C = RayOrigin.X() * RayOrigin.X() + RayOrigin.Z() * RayOrigin.Z() - 1.;
 
         auto Disc = B * B - 4 * A * C;
