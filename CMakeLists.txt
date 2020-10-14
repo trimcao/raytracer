@@ -8,7 +8,38 @@ set(CMAKE_CXX_STANDARD_REQUIRED True)
 include(CTest)
 enable_testing()
 
-add_executable(raytracer main.cpp Vector.cpp Point.cpp Util.cpp Color.cpp Canvas.cpp Matrix.cpp Tuple.cpp Ray.cpp Object.cpp Sphere.cpp Material.cpp Light.cpp World.cpp Transformations.cpp Camera.cpp Plane.cpp Pattern.cpp Functions.cpp Cubes.cpp Cylinders.cpp Cones.cpp Groups.cpp)
+set(SOURCES
+    main.cpp
+    Vector.cpp
+    Point.cpp
+    Util.cpp
+    Color.cpp
+    Canvas.cpp
+    Matrix.cpp
+    Tuple.cpp
+    Ray.cpp
+    Object.cpp
+    Sphere.cpp
+    Material.cpp
+    Light.cpp
+    World.cpp
+    Transformations.cpp
+    Camera.cpp
+    Plane.cpp
+    Pattern.cpp
+    Functions.cpp
+    Cubes.cpp
+    Cylinders.cpp
+    Cones.cpp
+    Groups.cpp
+)
+
+add_executable(raytracer ${SOURCES})
+
+target_include_directories(raytracer
+    PRIVATE
+        ${PROJECT_SOURCE_DIR}/include
+)
 
 set(CPACK_PROJECT_NAME ${PROJECT_NAME})
 set(CPACK_PROJECT_VERSION ${PROJECT_VERSION})
