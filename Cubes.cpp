@@ -17,6 +17,7 @@ Cubes::Cubes(int ID)
     AMaterial = Material();
     UseShadow = true;
     this->ID = ID;
+    Parent = nullptr;
 }
 
 Cubes::Cubes() : Cubes(0)

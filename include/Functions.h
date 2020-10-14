@@ -20,4 +20,10 @@ namespace TRay
         std::vector<Intersection<OT>> IntersectionList);
 
     float Schlick(PreComputations<Object> &Comps);
+
+    Point WorldToObject(Object *O, Point &P);
+    inline Point WorldToObject(Object *O, Point &&P) { return WorldToObject(O, P); }
+
+    Vector NormalToWorld(Object *O, Vector &N);
+    inline Vector NormalToWorld(Object *O, Vector &&N) { return NormalToWorld(O, N); }
 }

@@ -20,6 +20,7 @@ Cones::Cones(int ID)
     Min = -std::numeric_limits<double>::infinity();
     Max = std::numeric_limits<double>::infinity();
     Closed = false;
+    Parent = nullptr;
 }
 
 Cones::Cones() : Cones(0)

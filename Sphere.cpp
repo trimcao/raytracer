@@ -17,6 +17,7 @@ Sphere::Sphere(int ID)
     AMaterial = Material();
     UseShadow = true;
     this->ID = ID;
+    Parent = nullptr;
 }
 
 Sphere::Sphere() : Sphere(0)

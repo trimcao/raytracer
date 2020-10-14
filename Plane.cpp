@@ -15,6 +15,7 @@ Plane::Plane(int ID)
     AMaterial = Material();
     UseShadow = true;
     this->ID = ID;
+    Parent = nullptr;
 }
 
 Plane::Plane() : Plane(0)

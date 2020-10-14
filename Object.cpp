@@ -4,6 +4,7 @@
 #include <memory>
 #include "include/Object.h"
 #include "include/Transformations.h"
+#include "include/Functions.h"
 
 Object::Object()
 {
@@ -24,11 +25,9 @@ std::vector<Intersection<Object>> Object::Intersect(const Ray &R, std::shared_pt
 
 Vector Object::NormalAt(Point &P)
 {
-    auto LocalPoint = Transform.Inverse().Mul(P);
+    auto LocalPoint = TRay::WorldToObject(this, P);
     auto LocalNormal = LocalNormalAt(LocalPoint);
-    auto WorldNormal = Transform.Inverse().T().Mul(LocalNormal);
-    WorldNormal.SetW(0.);
-    return WorldNormal.Normalize();
+    return TRay::NormalToWorld(this, LocalNormal);
 }
 
 TestShape::TestShape(int ID)
@@ -38,6 +37,8 @@ TestShape::TestShape(int ID)
     AMaterial = Material();
     UseShadow = true;
     this->ID = ID;
+
+    Parent = nullptr;
 }
 
 TestShape::TestShape() : TestShape(0)
@@ -125,4 +126,10 @@ TEST_CASE("Computing the normal on a transformed shape")
     auto N = S.NormalAt(Point(0., std::sqrt(2.f)/2, -std::sqrt(2.f)/2));
 
     CHECK(N == Vector(0., 0.97014, -0.24254));
+}
+
+TEST_CASE("A shape has a parent attribute")
+{
+    TestShape S;
+    CHECK(S.GetParent() == nullptr);
 }

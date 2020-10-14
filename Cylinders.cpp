@@ -20,6 +20,7 @@ Cylinders::Cylinders(int ID)
     Min = -std::numeric_limits<double>::infinity();
     Max = std::numeric_limits<double>::infinity();
     Closed = false;
+    Parent = nullptr;
 }
 
 Cylinders::Cylinders() : Cylinders(0)

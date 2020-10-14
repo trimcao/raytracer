@@ -9,7 +9,7 @@
 
 Color TRay::PatternAtShape(std::shared_ptr<Pattern> &Pat, std::shared_ptr<Object> &Obj, Point &P)
 {
-    auto LocalPos = Obj->GetTransform().Inverse().Mul(P);
+    auto LocalPos = WorldToObject(Obj.get(), P);
     auto PatternPos = Pat->GetTransform().Inverse().Mul(LocalPos);
     return Pat->PatternAt(PatternPos);
 }
@@ -122,6 +122,32 @@ float TRay::Schlick(PreComputations<Object> &Comps)
     auto R0 = std::pow( (Comps.N1 - Comps.N2) / (Comps.N1 + Comps.N2), 2. );
 
     return R0 + (1 - R0) * std::pow( (1 - CosI), 5.);
+}
+
+Point TRay::WorldToObject(Object *O, Point &P)
+{
+    Point NewPoint = P;
+
+    if (O->GetParent())
+    {
+        NewPoint = WorldToObject(O->GetParent(), P);
+    }
+
+    return O->GetTransform().Inverse().Mul(NewPoint);
+}
+
+Vector TRay::NormalToWorld(Object *O, Vector &N)
+{
+    auto Normal = O->GetTransform().Inverse().T().Mul(N);
+    Normal.SetW(0);
+    Normal = Normal.Normalize();
+
+    if (O->GetParent())
+    {
+        Normal = NormalToWorld(O->GetParent(), Normal);
+    }
+
+    return Normal;
 }
 
 TEST_CASE("Stripes with an object transformation")

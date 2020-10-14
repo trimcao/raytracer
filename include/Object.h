@@ -18,6 +18,7 @@ protected:
     Point Origin;
     Material AMaterial;
     bool UseShadow;
+    Object *Parent;
 
 public:
     Object();
@@ -27,12 +28,15 @@ public:
     Matrix GetTransform() const { return Transform; }
     Material GetMaterial() const { return AMaterial; }
     bool ShadowOn() const { return UseShadow; }
+    Object *GetParent() { return Parent; }
 
     inline void SetTransform(Matrix &M) { Transform = M; }
     inline void SetTransform(Matrix &&M) { Transform = M; }
 
     inline void SetMaterial(Material &M) { AMaterial = M; }
     inline void SetMaterial(Material &&M) { AMaterial = M; }
+
+    inline void SetParent(Object *P) { Parent = P; }
 
     inline void SetShadowOn(bool Shadow) { UseShadow = Shadow; }
 
