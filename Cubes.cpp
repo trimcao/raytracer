@@ -47,7 +47,7 @@ Vector Cubes::LocalNormalAt(Point &&LocalPoint)
     return LocalNormalAt(LocalPoint);
 }
 
-std::vector<Intersection<Object>> Cubes::LocalIntersect(const Ray &LocalRay, std::shared_ptr<Object> &ObjectPtr)
+std::vector<Intersection<Object>> Cubes::LocalIntersect(const Ray &LocalRay)
 {
     std::vector<Intersection<Object>> Intersections;
 
@@ -63,8 +63,8 @@ std::vector<Intersection<Object>> Cubes::LocalIntersect(const Ray &LocalRay, std
     if (TMin > TMax)
         return Intersections;
 
-    Intersections.push_back(Intersection(TMin, ObjectPtr));
-    Intersections.push_back(Intersection(TMax, ObjectPtr));
+    Intersections.push_back(Intersection<Object>(TMin, this));
+    Intersections.push_back(Intersection<Object>(TMax, this));
 
     return Intersections;
 }
@@ -102,43 +102,43 @@ TEST_CASE("A ray intersects a cube")
     std::vector<Intersection<Object>> XS;
 
     R = Ray(Point(5., 0.5, 0.), Vector(-1., 0., 0.));
-    XS = C->LocalIntersect(R, C);
+    XS = C->LocalIntersect(R);
     CHECK(XS.size() == 2);
     CHECK(XS[0].GetT() == 4.);
     CHECK(XS[1].GetT() == 6.);
 
     R = Ray(Point(-5., 0.5, 0.), Vector(1., 0., 0.));
-    XS = C->LocalIntersect(R, C);
+    XS = C->LocalIntersect(R);
     CHECK(XS.size() == 2);
     CHECK(XS[0].GetT() == 4.);
     CHECK(XS[1].GetT() == 6.);
 
     R = Ray(Point(0.5, 5., 0.), Vector(0., -1., 0.));
-    XS = C->LocalIntersect(R, C);
+    XS = C->LocalIntersect(R);
     CHECK(XS.size() == 2);
     CHECK(XS[0].GetT() == 4.);
     CHECK(XS[1].GetT() == 6.);
 
     R = Ray(Point(0.5, -5., 0.), Vector(0., 1., 0.));
-    XS = C->LocalIntersect(R, C);
+    XS = C->LocalIntersect(R);
     CHECK(XS.size() == 2);
     CHECK(XS[0].GetT() == 4.);
     CHECK(XS[1].GetT() == 6.);
 
     R = Ray(Point(0.5, 0., 5.), Vector(0., 0., -1.));
-    XS = C->LocalIntersect(R, C);
+    XS = C->LocalIntersect(R);
     CHECK(XS.size() == 2);
     CHECK(XS[0].GetT() == 4.);
     CHECK(XS[1].GetT() == 6.);
 
     R = Ray(Point(0.5, 0., -5.), Vector(0., 0., 1.));
-    XS = C->LocalIntersect(R, C);
+    XS = C->LocalIntersect(R);
     CHECK(XS.size() == 2);
     CHECK(XS[0].GetT() == 4.);
     CHECK(XS[1].GetT() == 6.);
 
     R = Ray(Point(0., 0.5, 0.), Vector(0., 0., 1.));
-    XS = C->LocalIntersect(R, C);
+    XS = C->LocalIntersect(R);
     CHECK(XS.size() == 2);
     CHECK(XS[0].GetT() == -1.);
     CHECK(XS[1].GetT() == 1.);
@@ -151,27 +151,27 @@ TEST_CASE("A ray misses a cube")
     std::vector<Intersection<Object>> XS;
 
     R = Ray(Point(-2., 0., 0.), Vector(0.2673, 0.5345, 0.8018));
-    XS = C->LocalIntersect(R, C);
+    XS = C->LocalIntersect(R);
     CHECK(XS.size() == 0);
 
     R = Ray(Point(0., -2., 0.), Vector(0.8018, 0.2673, 0.5345));
-    XS = C->LocalIntersect(R, C);
+    XS = C->LocalIntersect(R);
     CHECK(XS.size() == 0);
 
     R = Ray(Point(0., 0., -2.), Vector(0.5345, 0.8018, 0.2673));
-    XS = C->LocalIntersect(R, C);
+    XS = C->LocalIntersect(R);
     CHECK(XS.size() == 0);
 
     R = Ray(Point(2., 0., 2.), Vector(0., 0., -1.));
-    XS = C->LocalIntersect(R, C);
+    XS = C->LocalIntersect(R);
     CHECK(XS.size() == 0);
 
     R = Ray(Point(0., 2., 2.), Vector(0., -1., 0.));
-    XS = C->LocalIntersect(R, C);
+    XS = C->LocalIntersect(R);
     CHECK(XS.size() == 0);
 
     R = Ray(Point(2., 2., 0.), Vector(-1., 0., 0.));
-    XS = C->LocalIntersect(R, C);
+    XS = C->LocalIntersect(R);
     CHECK(XS.size() == 0);
 }
 

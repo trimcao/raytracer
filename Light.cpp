@@ -20,7 +20,7 @@ Light::Light(Color &&C, Point &&P) : Light(C, P)
 {
 }
 
-Color Lighting(Material &M, std::shared_ptr<Object> &Obj, Light &L, Point &Pos, Vector &EyeV, Vector &NormalV, bool IsInShadow)
+Color Lighting(Material &M, Object *Obj, Light &L, Point &Pos, Vector &EyeV, Vector &NormalV, bool IsInShadow)
 {
     // use color from pattern if applicable
     Color ColorUsed;
@@ -68,21 +68,19 @@ Color Lighting(Material &M, std::shared_ptr<Object> &Obj, Light &L, Point &Pos, 
     return Ambient + Diffuse + Specular;
 }
 
-Color Lighting(Material &&M, std::shared_ptr<Object> &Obj, Light &L, Point &Pos, Vector &EyeV, Vector &NormalV, bool IsInShadow)
+Color Lighting(Material &&M, Object *Obj, Light &L, Point &Pos, Vector &EyeV, Vector &NormalV, bool IsInShadow)
 {
     return Lighting(M, Obj, L, Pos, EyeV, NormalV, IsInShadow);
 }
 
 Color Lighting(Material &M, Light &L, Point &Pos, Vector &EyeV, Vector &NormalV, bool IsInShadow)
 {
-    auto Obj = std::shared_ptr<Object>(nullptr);
-    return Lighting(M, Obj, L, Pos, EyeV, NormalV, IsInShadow);
+    return Lighting(M, nullptr, L, Pos, EyeV, NormalV, IsInShadow);
 }
 
 Color Lighting(Material &&M, Light &L, Point &Pos, Vector &EyeV, Vector &NormalV, bool IsInShadow)
 {
-    auto Obj = std::shared_ptr<Object>(nullptr);
-    return Lighting(M, Obj, L, Pos, EyeV, NormalV, IsInShadow);
+    return Lighting(M, nullptr, L, Pos, EyeV, NormalV, IsInShadow);
 }
 
 
@@ -181,8 +179,8 @@ TEST_CASE("Lighting with a pattern applied")
 
     std::shared_ptr<Object> Obj = std::make_shared<TestShape>();
 
-    auto C1 = Lighting(M, Obj, L, Pos1, EyeV, NormalV, true);
-    auto C2 = Lighting(M, Obj, L, Pos2, EyeV, NormalV, true);
+    auto C1 = Lighting(M, Obj.get(), L, Pos1, EyeV, NormalV, true);
+    auto C2 = Lighting(M, Obj.get(), L, Pos2, EyeV, NormalV, true);
 
     CHECK(C1 == Color(1., 1., 1.));
     CHECK(C2 == Color(0., 0., 0.));

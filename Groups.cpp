@@ -40,13 +40,13 @@ void Groups::AddChild(std::shared_ptr<Object> &S)
     Shapes.push_back(S);
 }
 
-std::vector<Intersection<Object>> Groups::LocalIntersect(const Ray &LocalRay, std::shared_ptr<Object> &ObjectPtr)
+std::vector<Intersection<Object>> Groups::LocalIntersect(const Ray &LocalRay)
 {
     std::vector<Intersection<Object>> Intersections;
 
     for (auto &S : Shapes)
     {
-        auto XS = S->Intersect(LocalRay, S);
+        auto XS = S->Intersect(LocalRay);
         Intersections.insert(Intersections.end(), XS.begin(), XS.end());
     }
 
@@ -76,7 +76,7 @@ TEST_CASE("Intersecting a ray with an empty group")
     auto G = std::make_shared<Groups>(Groups());
     auto GPtr = std::shared_ptr<Object>(G);
     Ray R(Point(0., 0., 0.), Vector(0., 0., 1.));
-    auto XS = G->LocalIntersect(R, GPtr);
+    auto XS = G->LocalIntersect(R);
 
     CHECK(XS.size() == 0);
 }
@@ -97,15 +97,15 @@ TEST_CASE("Intersecting a ray with a nonempty group")
     G->AddChild(S3);
 
     Ray R(Point(0., 0., -5.), Vector(0., 0., 1.));
-    auto XS = G->LocalIntersect(R, GPtr);
+    auto XS = G->LocalIntersect(R);
 
     auto Children = G->GetShapes();
 
     CHECK(XS.size() == 4);
-    CHECK(XS[0].GetObject() == S2);
-    CHECK(XS[1].GetObject() == S2);
-    CHECK(XS[2].GetObject() == S1);
-    CHECK(XS[3].GetObject() == S1);
+    CHECK(XS[0].GetObject() == S2.get());
+    CHECK(XS[1].GetObject() == S2.get());
+    CHECK(XS[2].GetObject() == S1.get());
+    CHECK(XS[3].GetObject() == S1.get());
 }
 
 TEST_CASE("Intersecting a transformed group")
@@ -120,7 +120,7 @@ TEST_CASE("Intersecting a transformed group")
     G->AddChild(S);
 
     Ray R(Point(10., 0., -10.), Vector(0., 0., 1.));
-    auto XS = G->Intersect(R, GPtr);
+    auto XS = G->Intersect(R);
 
     CHECK(XS.size() == 2);
 }

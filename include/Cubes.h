@@ -19,7 +19,7 @@ public:
     virtual Vector LocalNormalAt(Point &LocalPoint) override;
     virtual Vector LocalNormalAt(Point &&LocalPoint) override;
 
-    virtual std::vector<Intersection<Object>> LocalIntersect(const Ray &LocalRay, std::shared_ptr<Object> &ObjectPtr) override;
+    virtual std::vector<Intersection<Object>> LocalIntersect(const Ray &LocalRay) override;
 };
 
 std::vector<double> CheckAxis(double Origin, double Direction);

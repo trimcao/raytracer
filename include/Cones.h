@@ -22,7 +22,7 @@ public:
     virtual Vector LocalNormalAt(Point &LocalPoint) override;
     virtual Vector LocalNormalAt(Point &&LocalPoint) override;
 
-    virtual std::vector<Intersection<Object>> LocalIntersect(const Ray &LocalRay, std::shared_ptr<Object> &ObjectPtr) override;
+    virtual std::vector<Intersection<Object>> LocalIntersect(const Ray &LocalRay) override;
 
     inline double GetMin() { return Min; }
     inline double GetMax() { return Max; }
@@ -38,7 +38,7 @@ private:
     // of abs(Y) (the radius of your Cones) from the y axis
     bool CheckCap(const Ray &R, double T, double AbsY);
 
-    void IntersectCaps(const Ray &R, std::vector<Intersection<Object>> &Intersections, std::shared_ptr<Object> &ObjectPtr);
+    void IntersectCaps(const Ray &R, std::vector<Intersection<Object>> &Intersections);
 };
 
 std::vector<double> CheckAxis(double Origin, double Direction);

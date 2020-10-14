@@ -7,9 +7,9 @@
 
 namespace TRay
 {
-    Color PatternAtShape(std::shared_ptr<Pattern> &Pat, std::shared_ptr<Object> &Obj, Point &P);
-    inline Color PatternAtShape(std::shared_ptr<Pattern> &Pat, std::shared_ptr<Object> &Obj, Point &&P) { return PatternAtShape(Pat, Obj, P); }
-    inline Color PatternAtShape(std::shared_ptr<Pattern> &&Pat, std::shared_ptr<Object> &Obj, Point &P) { return PatternAtShape(Pat, Obj, P); }
+    Color PatternAtShape(std::shared_ptr<Pattern> &Pat, Object *Obj, Point &P);
+    inline Color PatternAtShape(std::shared_ptr<Pattern> &Pat, Object *Obj, Point &&P) { return PatternAtShape(Pat, Obj, P); }
+    inline Color PatternAtShape(std::shared_ptr<Pattern> &&Pat, Object *Obj, Point &P) { return PatternAtShape(Pat, Obj, P); }
 
     template<class OT>
     PreComputations<OT> PrepareComputations(Intersection<OT> &I, Ray &R,

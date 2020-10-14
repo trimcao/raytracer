@@ -45,14 +45,9 @@ public:
     inline virtual Vector LocalNormalAt(Point &P) { return Vector(0.f, 0.f, 0.f); }
     inline virtual Vector LocalNormalAt(Point &&P) { return Vector(0.f, 0.f, 0.f); }
 
-    inline virtual std::vector<Intersection<Object>> Intersect(const Ray &R)
-    {
-        return std::vector<Intersection<Object>>();
-    }
+    virtual std::vector<Intersection<Object>> Intersect(const Ray &R);
 
-    virtual std::vector<Intersection<Object>> Intersect(const Ray &R, std::shared_ptr<Object> &ObjectPtr);
-
-    inline virtual std::vector<Intersection<Object>> LocalIntersect(const Ray &R, std::shared_ptr<Object> &ObjectPtr)
+    inline virtual std::vector<Intersection<Object>> LocalIntersect(const Ray &R)
     {
         return std::vector<Intersection<Object>>();
     }
@@ -67,6 +62,6 @@ public:
 
     Ray SavedRay;
 
-    virtual std::vector<Intersection<Object>> LocalIntersect(const Ray &R, std::shared_ptr<Object> &ObjectPtr) override;
+    virtual std::vector<Intersection<Object>> LocalIntersect(const Ray &R) override;
     virtual Vector LocalNormalAt(Point &LocalPoint) override;
 };

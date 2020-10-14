@@ -19,27 +19,20 @@ double Intersection<OT>::GetT() const
 }
 
 template<class OT>
-std::shared_ptr<OT> Intersection<OT>::GetObject() const
+OT *Intersection<OT>::GetObject() const
 {
     return O;
 }
 
 template<class OT>
-Intersection<OT>::Intersection(double T, const OT &O)
+Intersection<OT>::Intersection(double T, OT &O)
 {
     this->T = T;
-    this->O = std::make_shared<OT>(O);
+    this->O = &O;
 }
 
 template<class OT>
-Intersection<OT>::Intersection(double T, std::shared_ptr<OT> &O)
-{
-    this->T = T;
-    this->O = O;
-}
-
-template<class OT>
-Intersection<OT>::Intersection(double T, std::shared_ptr<OT> &&O)
+Intersection<OT>::Intersection(double T, OT *O)
 {
     this->T = T;
     this->O = O;

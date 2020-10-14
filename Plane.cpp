@@ -37,7 +37,7 @@ Vector Plane::LocalNormalAt(Point &&LocalPoint)
     return Vector(0., 1., 0.);
 }
 
-std::vector<Intersection<Object>> Plane::LocalIntersect(const Ray &LocalRay, std::shared_ptr<Object> &ObjectPtr)
+std::vector<Intersection<Object>> Plane::LocalIntersect(const Ray &LocalRay)
 {
     std::vector<Intersection<Object>> Intersections;
 
@@ -47,7 +47,7 @@ std::vector<Intersection<Object>> Plane::LocalIntersect(const Ray &LocalRay, std
     }
 
     auto T = -LocalRay.GetOrigin().Y() / LocalRay.GetDirection().Y();
-    Intersections.push_back(Intersection(T, ObjectPtr));
+    Intersections.push_back(Intersection<Object>(T, this));
 
     return Intersections;
 }
@@ -69,7 +69,7 @@ TEST_CASE("Intersect with a ray parallel to the plane")
     Plane P;
     std::shared_ptr<Object> Ptr = std::make_shared<Plane>(P);
     Ray R(Point(0., 10., 0.), Vector(0., 0., 1.));
-    auto XS = P.LocalIntersect(R, Ptr);
+    auto XS = P.LocalIntersect(R);
 
     CHECK(XS.size() == 0);
 }
@@ -79,7 +79,7 @@ TEST_CASE("Intersect with a coplanar ray")
     Plane P;
     std::shared_ptr<Object> Ptr = std::make_shared<Plane>(P);
     Ray R(Point(0., 0., 0.), Vector(0., 0., 1.));
-    auto XS = P.LocalIntersect(R, Ptr);
+    auto XS = P.LocalIntersect(R);
 
     CHECK(XS.size() == 0);
 }
@@ -87,23 +87,21 @@ TEST_CASE("Intersect with a coplanar ray")
 TEST_CASE("A ray intersecting a plane from above")
 {
     Plane P;
-    std::shared_ptr<Object> Ptr = std::make_shared<Plane>(P);
     Ray R(Point(0., 1., 0.), Vector(0., -1., 0.));
-    auto XS = P.LocalIntersect(R, Ptr);
+    auto XS = P.LocalIntersect(R);
 
     CHECK(XS.size() == 1);
     CHECK(Util::Equal(XS[0].GetT(), 1.f));
-    CHECK(XS[0].GetObject() == Ptr);
+    CHECK(XS[0].GetObject() == &P);
 }
 
 TEST_CASE("A ray intersecting a plane from below")
 {
     Plane P;
-    std::shared_ptr<Object> Ptr = std::make_shared<Plane>(P);
     Ray R(Point(0., -1., 0.), Vector(0., 1., 0.));
-    auto XS = P.LocalIntersect(R, Ptr);
+    auto XS = P.LocalIntersect(R);
 
     CHECK(XS.size() == 1);
     CHECK(Util::Equal(XS[0].GetT(), 1.f));
-    CHECK(XS[0].GetObject() == Ptr);
+    CHECK(XS[0].GetObject() == &P);
 }

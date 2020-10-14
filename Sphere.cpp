@@ -57,7 +57,7 @@ std::vector<Intersection<Object>> Sphere::Intersect(const Ray &R)
     return Intersections;
 }
 
-std::vector<Intersection<Object>> Sphere::LocalIntersect(const Ray &LocalRay, std::shared_ptr<Object> &ObjectPtr)
+std::vector<Intersection<Object>> Sphere::LocalIntersect(const Ray &LocalRay)
 {
     std::vector<Intersection<Object>> Intersections;
 
@@ -71,8 +71,8 @@ std::vector<Intersection<Object>> Sphere::LocalIntersect(const Ray &LocalRay, st
 
     if (Discriminant >= 0.)
     {
-        Intersections.push_back(Intersection<Object>((-B - std::sqrt(Discriminant)) / (2 * A), ObjectPtr));
-        Intersections.push_back(Intersection<Object>((-B + std::sqrt(Discriminant)) / (2 * A), ObjectPtr));
+        Intersections.push_back(Intersection<Object>((-B - std::sqrt(Discriminant)) / (2 * A), this));
+        Intersections.push_back(Intersection<Object>((-B + std::sqrt(Discriminant)) / (2 * A), this));
     }
 
     return Intersections;
