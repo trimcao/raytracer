@@ -51,7 +51,7 @@ Vector Cylinders::LocalNormalAt(Point &&LocalPoint)
     return LocalNormalAt(LocalPoint);
 }
 
-std::vector<Intersection<Object>> Cylinders::LocalIntersect(const Ray &LocalRay, std::shared_ptr<Object> &ObjectPtr)
+std::vector<Intersection<Object>> Cylinders::LocalIntersect(const Ray &LocalRay)
 {
     std::vector<Intersection<Object>> Intersections;
 
@@ -77,15 +77,15 @@ std::vector<Intersection<Object>> Cylinders::LocalIntersect(const Ray &LocalRay,
 
         auto Y0 = RayOrigin.Y() + T0 * RayDirection.Y();
         if (Min < Y0 && Y0 < Max)
-            Intersections.push_back(Intersection(T0, ObjectPtr));
+            Intersections.push_back(Intersection<Object>(T0, this));
 
         auto Y1 = RayOrigin.Y() + T1 * RayDirection.Y();
         if (Min < Y1 && Y1 < Max)
-            Intersections.push_back(Intersection(T1, ObjectPtr));
+            Intersections.push_back(Intersection<Object>(T1, this));
     }
 
     // check intersection with caps
-    IntersectCaps(LocalRay, Intersections, ObjectPtr);
+    IntersectCaps(LocalRay, Intersections);
 
     return Intersections;
 }
@@ -98,7 +98,7 @@ bool Cylinders::CheckCap(const Ray &R, double T)
     return (X * X + Z * Z) <= 1.;
 }
 
-void Cylinders::IntersectCaps(const Ray &R, std::vector<Intersection<Object>> &Intersections, std::shared_ptr<Object> &ObjectPtr)
+void Cylinders::IntersectCaps(const Ray &R, std::vector<Intersection<Object>> &Intersections)
 {
     // Caps only matter if the cylinder is closed, and might
     // possibly be intersected by the ray
@@ -111,14 +111,14 @@ void Cylinders::IntersectCaps(const Ray &R, std::vector<Intersection<Object>> &I
     T = (Min - R.GetOrigin().Y()) / R.GetDirection().Y();
     if (CheckCap(R, T))
     {
-        Intersections.push_back(Intersection(T, ObjectPtr));
+        Intersections.push_back(Intersection<Object>(T, this));
     }
 
     // same as above for cylinder.GetMax()
     T = (Max - R.GetOrigin().Y()) / R.GetDirection().Y();
     if (CheckCap(R, T))
     {
-        Intersections.push_back(Intersection(T, ObjectPtr));
+        Intersections.push_back(Intersection<Object>(T, this));
     }
 }
 
@@ -131,17 +131,17 @@ TEST_CASE("A ray misses a cylinder")
 
     Direction = Vector(0., 1., 0.).Normalize();
     R = Ray(Point(1., 0., 0.), Direction);
-    XS = Cyl->LocalIntersect(R, Cyl);
+    XS = Cyl->LocalIntersect(R);
     CHECK(XS.size() == 0);
 
     Direction = Vector(0., 1., 0.).Normalize();
     R = Ray(Point(0., 0., 0.), Direction);
-    XS = Cyl->LocalIntersect(R, Cyl);
+    XS = Cyl->LocalIntersect(R);
     CHECK(XS.size() == 0);
 
     Direction = Vector(1., 1., 1.).Normalize();
     R = Ray(Point(0., 0., -5.), Direction);
-    XS = Cyl->LocalIntersect(R, Cyl);
+    XS = Cyl->LocalIntersect(R);
     CHECK(XS.size() == 0);    
 }
 
@@ -154,21 +154,21 @@ TEST_CASE("A ray strikes a cylinder")
 
     Direction = Vector(0., 0., 1.).Normalize();
     R = Ray(Point(1., 0., -5.), Direction);
-    XS = Cyl->LocalIntersect(R, Cyl);
+    XS = Cyl->LocalIntersect(R);
     CHECK(XS.size() == 2);
     CHECK(Util::Equal(XS[0].GetT(), 5.));
     CHECK(Util::Equal(XS[1].GetT(), 5.));
 
     Direction = Vector(0., 0., 1.).Normalize();
     R = Ray(Point(0., 0., -5.), Direction);
-    XS = Cyl->LocalIntersect(R, Cyl);
+    XS = Cyl->LocalIntersect(R);
     CHECK(XS.size() == 2);
     CHECK(Util::Equal(XS[0].GetT(), 4.));
     CHECK(Util::Equal(XS[1].GetT(), 6.));
 
     Direction = Vector(0.1, 1., 1.).Normalize();
     R = Ray(Point(0.5, 0., -5.), Direction);
-    XS = Cyl->LocalIntersect(R, Cyl);
+    XS = Cyl->LocalIntersect(R);
     CHECK(XS.size() == 2);
     CHECK(Util::Equal(XS[0].GetT(), 6.80798));
     CHECK(Util::Equal(XS[1].GetT(), 7.08872));
@@ -212,32 +212,32 @@ TEST_CASE("Intersecting a constrained cylinder")
 
     Direction = Vector(0.1, 1., 0.).Normalize();
     R = Ray(Point(0., 1.5, 0.), Direction);
-    XS = Cyl->LocalIntersect(R, Cyl);
+    XS = Cyl->LocalIntersect(R);
     CHECK(XS.size() == 0);
 
     Direction = Vector(0., 0., 1.).Normalize();
     R = Ray(Point(0., 3., -5.), Direction);
-    XS = Cyl->LocalIntersect(R, Cyl);
+    XS = Cyl->LocalIntersect(R);
     CHECK(XS.size() == 0);
 
     Direction = Vector(0., 0., 1.).Normalize();
     R = Ray(Point(0., 0., -5.), Direction);
-    XS = Cyl->LocalIntersect(R, Cyl);
+    XS = Cyl->LocalIntersect(R);
     CHECK(XS.size() == 0);
 
     Direction = Vector(0., 0., 1.).Normalize();
     R = Ray(Point(0., 2., -5.), Direction);
-    XS = Cyl->LocalIntersect(R, Cyl);
+    XS = Cyl->LocalIntersect(R);
     CHECK(XS.size() == 0);
 
     Direction = Vector(0., 0., 1.).Normalize();
     R = Ray(Point(0., 1., -5.), Direction);
-    XS = Cyl->LocalIntersect(R, Cyl);
+    XS = Cyl->LocalIntersect(R);
     CHECK(XS.size() == 0);
 
     Direction = Vector(0., 0., 1.).Normalize();
     R = Ray(Point(0., 1.5, -2.), Direction);
-    XS = Cyl->LocalIntersect(R, Cyl);
+    XS = Cyl->LocalIntersect(R);
     CHECK(XS.size() == 2);
 }
 
@@ -261,27 +261,27 @@ TEST_CASE("Intersecting the caps of a closed cylinder")
 
     Direction = Vector(0., -1., 0.).Normalize();
     R = Ray(Point(0., 3., 0.), Direction);
-    XS = Cyl->LocalIntersect(R, Cyl);
+    XS = Cyl->LocalIntersect(R);
     CHECK(XS.size() == 2);
 
     Direction = Vector(0., -1., 2.).Normalize();
     R = Ray(Point(0., 3., -2.), Direction);
-    XS = Cyl->LocalIntersect(R, Cyl);
+    XS = Cyl->LocalIntersect(R);
     CHECK(XS.size() == 2);
 
     Direction = Vector(0., -1., 1.).Normalize();
     R = Ray(Point(0., 4., -2.), Direction);
-    XS = Cyl->LocalIntersect(R, Cyl);
+    XS = Cyl->LocalIntersect(R);
     CHECK(XS.size() == 2);
 
     Direction = Vector(0., 1., 2.).Normalize();
     R = Ray(Point(0., 0., -2.), Direction);
-    XS = Cyl->LocalIntersect(R, Cyl);
+    XS = Cyl->LocalIntersect(R);
     CHECK(XS.size() == 2);
 
     Direction = Vector(0., 1., 1.).Normalize();
     R = Ray(Point(0., -1., -2.), Direction);
-    XS = Cyl->LocalIntersect(R, Cyl);
+    XS = Cyl->LocalIntersect(R);
     CHECK(XS.size() == 2);
 }
 

@@ -22,7 +22,7 @@ public:
     virtual Vector LocalNormalAt(Point &LocalPoint) override;
 
     virtual std::vector<Intersection<Object>> Intersect(const Ray &R) override;
-    virtual std::vector<Intersection<Object>> LocalIntersect(const Ray &LocalRay, std::shared_ptr<Object> &ObjectPtr) override;
+    virtual std::vector<Intersection<Object>> LocalIntersect(const Ray &LocalRay) override;
 
     static Sphere GlassSphere();
 };

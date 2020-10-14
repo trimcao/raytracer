@@ -7,9 +7,9 @@
 #include <vector>
 #include <cmath>
 
-Color TRay::PatternAtShape(std::shared_ptr<Pattern> &Pat, std::shared_ptr<Object> &Obj, Point &P)
+Color TRay::PatternAtShape(std::shared_ptr<Pattern> &Pat, Object *Obj, Point &P)
 {
-    auto LocalPos = WorldToObject(Obj.get(), P);
+    auto LocalPos = WorldToObject(Obj, P);
     auto PatternPos = Pat->GetTransform().Inverse().Mul(LocalPos);
     return Pat->PatternAt(PatternPos);
 }
@@ -19,7 +19,7 @@ std::vector<double> TRay::ComputeRefractiveIndex(Intersection<OT> &I, std::vecto
 {
     std::vector<double> NS;
 
-    std::vector<std::shared_ptr<Object>> Containers;
+    std::vector<Object*> Containers;
     for (auto &Intersect : IntersectionList)
     {
         if (Intersect == I)
@@ -155,7 +155,7 @@ TEST_CASE("Stripes with an object transformation")
     std::shared_ptr<Object> Obj = std::make_shared<Sphere>();
     Obj->SetTransform(Transformations::Scaling(2., 2., 2.));
     std::shared_ptr<Pattern> Pat = std::make_shared<StripePattern>(Pattern::White, Pattern::Black);
-    auto C = TRay::PatternAtShape(Pat, Obj, Point(1.5, 0., 0.));
+    auto C = TRay::PatternAtShape(Pat, Obj.get(), Point(1.5, 0., 0.));
 
     CHECK(C == Pattern::White);
 }
@@ -168,7 +168,7 @@ TEST_CASE("Stripes with a pattern transformation")
     std::shared_ptr<Pattern> Pat = std::make_shared<StripePattern>(Pattern::White, Pattern::Black);
     Pat->SetTransform(Transformations::Scaling(2., 2., 2.));
 
-    auto C = TRay::PatternAtShape(Pat, Obj, Point(1.5, 0., 0.));
+    auto C = TRay::PatternAtShape(Pat, Obj.get(), Point(1.5, 0., 0.));
 
     CHECK(C == Pattern::White);
 }
@@ -181,7 +181,7 @@ TEST_CASE("Stripes with both an object and a pattern transformation")
     std::shared_ptr<Pattern> Pat = std::make_shared<StripePattern>(Pattern::White, Pattern::Black);
     Pat->SetTransform(Transformations::Translation(0.5, 0., 0.));
 
-    auto C = TRay::PatternAtShape(Pat, Obj, Point(2.5, 0., 0.));
+    auto C = TRay::PatternAtShape(Pat, Obj.get(), Point(2.5, 0., 0.));
 
     CHECK(C == Pattern::White);
 }
@@ -193,7 +193,7 @@ TEST_CASE("A pattern with an object transformation")
 
     std::shared_ptr<Pattern> TP = std::make_shared<TestPattern>();
 
-    auto C = TRay::PatternAtShape(TP, S, Point(2., 3., 4.));
+    auto C = TRay::PatternAtShape(TP, S.get(), Point(2., 3., 4.));
 
     CHECK(C == Color(1., 1.5, 2.));
 }
@@ -205,7 +205,7 @@ TEST_CASE("A pattern with a pattern transformation")
     std::shared_ptr<Pattern> TP = std::make_shared<TestPattern>();
     TP->SetTransform(Transformations::Scaling(2., 2., 2.));
 
-    auto C = TRay::PatternAtShape(TP, S, Point(2., 3., 4.));
+    auto C = TRay::PatternAtShape(TP, S.get(), Point(2., 3., 4.));
 
     CHECK(C == Color(1., 1.5, 2.));
 }
@@ -218,7 +218,7 @@ TEST_CASE("A pattern with both an object and a pattern transformation")
     std::shared_ptr<Pattern> TP = std::make_shared<TestPattern>();
     TP->SetTransform(Transformations::Translation(0.5, 1., 1.5));
 
-    auto C = TRay::PatternAtShape(TP, S, Point(2.5, 3., 3.5));
+    auto C = TRay::PatternAtShape(TP, S.get(), Point(2.5, 3., 3.5));
 
     CHECK(C == Color(0.75, 0.5, 0.25));
 }
@@ -258,12 +258,12 @@ TEST_CASE("Finding refractive indices n1 and n2 at various intersections")
     auto BPtr = std::make_shared<Sphere>(B);
     auto CPtr = std::make_shared<Sphere>(C);
 
-    auto I0 = Intersection<Object>(2., APtr);
-    auto I1 = Intersection<Object>(2.75, BPtr);
-    auto I2 = Intersection<Object>(3.25, CPtr);
-    auto I3 = Intersection<Object>(4.75, BPtr);
-    auto I4 = Intersection<Object>(5.25, CPtr);
-    auto I5 = Intersection<Object>(6., APtr);
+    auto I0 = Intersection<Object>(2., APtr.get());
+    auto I1 = Intersection<Object>(2.75, BPtr.get());
+    auto I2 = Intersection<Object>(3.25, CPtr.get());
+    auto I3 = Intersection<Object>(4.75, BPtr.get());
+    auto I4 = Intersection<Object>(5.25, CPtr.get());
+    auto I5 = Intersection<Object>(6., APtr.get());
 
     std::vector<Intersection<Object>> XS {I0, I1, I2, I3, I4, I5};
 
@@ -298,7 +298,7 @@ TEST_CASE("The under point is offset below the surface")
     std::shared_ptr<Object> S = std::make_shared<Sphere>(Sphere::GlassSphere());
     S->SetTransform(Transformations::Translation(0., 0., 1.));
 
-    Intersection I(5., S);
+    Intersection I(5., S.get());
     std::vector<Intersection<Object>> XS {I};
 
     auto Comps = TRay::PrepareComputations(I, R, XS);
@@ -310,8 +310,8 @@ TEST_CASE("The Schlick approximation under total internal reflection")
 {
     std::shared_ptr<Object> S = std::make_shared<Sphere>(Sphere::GlassSphere());
     Ray R(Point(0., 0., std::sqrt(2.)/2), Vector(0., 1., 0.));
-    std::vector<Intersection<Object>> XS   {Intersection(-std::sqrt(2.)/2, S),
-                                            Intersection(std::sqrt(2.)/2, S)};
+    std::vector<Intersection<Object>> XS   {Intersection(-std::sqrt(2.)/2, S.get()),
+                                            Intersection(std::sqrt(2.)/2, S.get())};
     auto Comps = TRay::PrepareComputations(XS[1], R, XS);
     auto Reflectance = TRay::Schlick(Comps);
 
@@ -322,8 +322,8 @@ TEST_CASE("The Schlick approximation with a perpendicular viewing angle")
 {
     std::shared_ptr<Object> S = std::make_shared<Sphere>(Sphere::GlassSphere());
     Ray R(Point(0., 0., 0.), Vector(0., 1., 0.));
-    std::vector<Intersection<Object>> XS   {Intersection(-1., S),
-                                            Intersection(1., S)};
+    std::vector<Intersection<Object>> XS   {Intersection(-1., S.get()),
+                                            Intersection(1., S.get())};
     auto Comps = TRay::PrepareComputations(XS[1], R, XS);
     auto Reflectance = TRay::Schlick(Comps);
 
@@ -334,7 +334,7 @@ TEST_CASE("The Schlick approximation with a small angle and n2 > n1")
 {
     std::shared_ptr<Object> S = std::make_shared<Sphere>(Sphere::GlassSphere());
     Ray R(Point(0., 0.99, -2.), Vector(0., 0., 1.));
-    std::vector<Intersection<Object>> XS   {Intersection(1.8589, S)};
+    std::vector<Intersection<Object>> XS   {Intersection(1.8589, S.get())};
     auto Comps = TRay::PrepareComputations(XS[0], R, XS);
     auto Reflectance = TRay::Schlick(Comps);
 

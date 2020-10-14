@@ -54,7 +54,7 @@ Vector Cones::LocalNormalAt(Point &&LocalPoint)
     return LocalNormalAt(LocalPoint);
 }
 
-std::vector<Intersection<Object>> Cones::LocalIntersect(const Ray &LocalRay, std::shared_ptr<Object> &ObjectPtr)
+std::vector<Intersection<Object>> Cones::LocalIntersect(const Ray &LocalRay)
 {
     std::vector<Intersection<Object>> Intersections;
 
@@ -82,20 +82,20 @@ std::vector<Intersection<Object>> Cones::LocalIntersect(const Ray &LocalRay, std
 
         auto Y0 = RayOrigin.Y() + T0 * RayDirection.Y();
         if (Min < Y0 && Y0 < Max)
-            Intersections.push_back(Intersection(T0, ObjectPtr));
+            Intersections.push_back(Intersection<Object>(T0, this));
 
         auto Y1 = RayOrigin.Y() + T1 * RayDirection.Y();
         if (Min < Y1 && Y1 < Max)
-            Intersections.push_back(Intersection(T1, ObjectPtr));
+            Intersections.push_back(Intersection<Object>(T1, this));
     }
     else
     {
         auto T = (-C) / (2 * B);
-        Intersections.push_back(Intersection(T, ObjectPtr));
+        Intersections.push_back(Intersection<Object>(T, this));
     }
 
     // check intersection with caps
-    IntersectCaps(LocalRay, Intersections, ObjectPtr);
+    IntersectCaps(LocalRay, Intersections);
 
     return Intersections;
 }
@@ -108,7 +108,7 @@ bool Cones::CheckCap(const Ray &R, double T, double AbsY)
     return (X * X + Z * Z) <= (AbsY * AbsY);
 }
 
-void Cones::IntersectCaps(const Ray &R, std::vector<Intersection<Object>> &Intersections, std::shared_ptr<Object> &ObjectPtr)
+void Cones::IntersectCaps(const Ray &R, std::vector<Intersection<Object>> &Intersections)
 {
     // Caps only matter if the Cone is closed, and might
     // possibly be intersected by the ray
@@ -121,14 +121,14 @@ void Cones::IntersectCaps(const Ray &R, std::vector<Intersection<Object>> &Inter
     T = (Min - R.GetOrigin().Y()) / R.GetDirection().Y();
     if (CheckCap(R, T, std::abs(Min)))
     {
-        Intersections.push_back(Intersection(T, ObjectPtr));
+        Intersections.push_back(Intersection<Object>(T, this));
     }
 
     // same as above for GetMax()
     T = (Max - R.GetOrigin().Y()) / R.GetDirection().Y();
     if (CheckCap(R, T, std::abs(Max)))
     {
-        Intersections.push_back(Intersection(T, ObjectPtr));
+        Intersections.push_back(Intersection<Object>(T, this));
     }
 }
 
@@ -141,21 +141,21 @@ TEST_CASE("Intersecting a cone with a ray")
 
     Direction = Vector(0., 0., 1.).Normalize();
     R = Ray(Point(0., 0., -5.), Direction);
-    XS = Cone->LocalIntersect(R, Cone);
+    XS = Cone->LocalIntersect(R);
     CHECK(XS.size() == 2);
     CHECK(Util::Equal(XS[0].GetT(), 5.));
     CHECK(Util::Equal(XS[1].GetT(), 5.));
 
     Direction = Vector(1., 1., 1.).Normalize();
     R = Ray(Point(0., 0., -5.), Direction);
-    XS = Cone->LocalIntersect(R, Cone);
+    XS = Cone->LocalIntersect(R);
     CHECK(XS.size() == 2);
     CHECK(Util::Equal(XS[0].GetT(), 8.66025));
     CHECK(Util::Equal(XS[1].GetT(), 8.66025));
 
     Direction = Vector(-0.5, -1., 1.).Normalize();
     R = Ray(Point(1., 1., -5.), Direction);
-    XS = Cone->LocalIntersect(R, Cone);
+    XS = Cone->LocalIntersect(R);
     CHECK(XS.size() == 2);
     CHECK(Util::Equal(XS[0].GetT(), 4.55006));
     CHECK(Util::Equal(XS[1].GetT(), 49.44994));
@@ -170,7 +170,7 @@ TEST_CASE("Intersecting a cone with a ray parallel to one of its halves")
 
     Direction = Vector(0., 1., 1.).Normalize();
     R = Ray(Point(0., 0., -1.), Direction);
-    XS = Cone->LocalIntersect(R, Cone);
+    XS = Cone->LocalIntersect(R);
     CHECK(XS.size() == 1);
     CHECK(Util::Equal(XS[0].GetT(), 0.35355));
 }
@@ -189,17 +189,17 @@ TEST_CASE("Intersecting a cone's end caps")
 
     Direction = Vector(0., 1., 0.).Normalize();
     R = Ray(Point(0., 0., -5.), Direction);
-    XS = ConePtr->LocalIntersect(R, ConePtr);
+    XS = ConePtr->LocalIntersect(R);
     CHECK(XS.size() == 0);
 
     Direction = Vector(0., 1., 1.).Normalize();
     R = Ray(Point(0., 0., -0.25), Direction);
-    XS = ConePtr->LocalIntersect(R, ConePtr);
+    XS = ConePtr->LocalIntersect(R);
     CHECK(XS.size() == 2);
 
     Direction = Vector(0., 1., 0.).Normalize();
     R = Ray(Point(0., 0., -0.25), Direction);
-    XS = ConePtr->LocalIntersect(R, ConePtr);
+    XS = ConePtr->LocalIntersect(R);
     CHECK(XS.size() == 4);
 }
 

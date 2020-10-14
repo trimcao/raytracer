@@ -48,7 +48,7 @@ std::vector<Intersection<Object>> World::Intersect(const Ray &R)
     // now all objects are sphere
     for (auto &O : Objects)
     {
-        auto XS = O->Intersect(R, O);
+        auto XS = O->Intersect(R);
 
         Intersections.insert(Intersections.end(), XS.begin(), XS.end());
     }
@@ -242,7 +242,7 @@ TEST_CASE("Shading an intersection")
     auto W = World::DefaultWorld();
     Ray R(Point(0., 0., -5.), Vector(0., 0., 1.));
     auto Shape = W.GetObjectAt(0);
-    auto I = Intersection<Object>(4., Shape);
+    auto I = Intersection<Object>(4., Shape.get());
     auto Comps = I.PrepareComputations(R);
     auto C = W.ShadeHit(Comps);
 
@@ -256,7 +256,7 @@ TEST_CASE("Shading an intersection from the inside")
 
     Ray R(Point(0., 0., 0.), Vector(0., 0., 1.));
     auto Shape = W.GetObjectAt(1);
-    auto I = Intersection<Object>(0.5, Shape);
+    auto I = Intersection<Object>(0.5, Shape.get());
     auto Comps = I.PrepareComputations(R);
     
     bool IsInShadow = W.IsShadowed(Comps.OverPosition);
@@ -377,7 +377,7 @@ TEST_CASE("The reflected color for a nonreflective material")
     auto S = W.GetObjectAt(1);
     auto Mat = S->GetMaterial();
     Mat.SetAmbient(1.);
-    Intersection I(1., S);
+    Intersection I(1., S.get());
     auto Comps = I.PrepareComputations(R);
     auto C = W.ReflectedColor(Comps);
 
@@ -396,7 +396,7 @@ TEST_CASE("The reflected color for a reflective material")
     P.SetTransform(Transformations::Translation(0., -1., 0.));
     W.AddObject(P);
 
-    Intersection I(std::sqrt(2.), W.GetObjectAt(2));
+    Intersection I(std::sqrt(2.), W.GetObjectAt(2).get());
     auto Comps = I.PrepareComputations(R);
     auto C = W.ReflectedColor(Comps);
 
@@ -415,7 +415,7 @@ TEST_CASE("ShadeHit with a reflective material")
     P.SetTransform(Transformations::Translation(0., -1., 0.));
     W.AddObject(P);
 
-    Intersection I(std::sqrt(2.), W.GetObjectAt(2));
+    Intersection I(std::sqrt(2.), W.GetObjectAt(2).get());
     auto Comps = I.PrepareComputations(R);
     auto C = W.ShadeHit(Comps);
 
@@ -456,7 +456,7 @@ TEST_CASE("The reflected color at the maximum recursive depth")
     P.SetTransform(Transformations::Translation(0., -1., 0.));
     W.AddObject(P);
 
-    Intersection I(std::sqrt(2.), W.GetObjectAt(2));
+    Intersection I(std::sqrt(2.), W.GetObjectAt(2).get());
     auto Comps = I.PrepareComputations(R);
     auto C = W.ReflectedColor(Comps, true, 0);
 
@@ -468,7 +468,7 @@ TEST_CASE("The refracted color with an opaque surface")
     auto W = World::DefaultWorld();
     auto S = W.GetObjectAt(0);
     Ray R(Point(0., 0., -5.), Vector(0., 0., 1.));
-    std::vector<Intersection<Object>> XS {Intersection(4., S), Intersection(6., S)};
+    std::vector<Intersection<Object>> XS {Intersection(4., S.get()), Intersection(6., S.get())};
 
     auto Comps = TRay::PrepareComputations(XS[0], R, XS);
     auto Col = W.RefractedColor(Comps, true, 5);
@@ -487,7 +487,7 @@ TEST_CASE("The refracted color at the maximum recursive depth")
     S->SetMaterial(Mat);
 
     Ray R(Point(0., 0., -5.), Vector(0., 0., 1.));
-    std::vector<Intersection<Object>> XS {Intersection(4., S), Intersection(6., S)};
+    std::vector<Intersection<Object>> XS {Intersection(4., S.get()), Intersection(6., S.get())};
 
     auto Comps = TRay::PrepareComputations(XS[0], R, XS);
     auto Col = W.RefractedColor(Comps, true, 0);
@@ -506,8 +506,8 @@ TEST_CASE("The refracted color under total internal reflection")
     S->SetMaterial(Mat);
 
     Ray R(Point(0., 0., std::sqrt(2.)/2), Vector(0., 1., 0.));
-    std::vector<Intersection<Object>> XS   {Intersection(-std::sqrt(2.)/2, S),
-                                            Intersection(std::sqrt(2.)/2, S)};
+    std::vector<Intersection<Object>> XS   {Intersection(-std::sqrt(2.)/2, S.get()),
+                                            Intersection(std::sqrt(2.)/2, S.get())};
 
     auto Comps = TRay::PrepareComputations(XS[1], R, XS);
     auto Col = W.RefractedColor(Comps, true, 5);
@@ -532,10 +532,10 @@ TEST_CASE("The refracted color with a refracted ray")
     B->SetMaterial(Mat);
 
     Ray R(Point(0., 0., 0.1), Vector(0., 1., 0.));
-    std::vector<Intersection<Object>> XS   {Intersection(-0.9899, A),
-                                            Intersection(-0.4899, B),
-                                            Intersection(0.4899, B),
-                                            Intersection(0.9899, A)};
+    std::vector<Intersection<Object>> XS   {Intersection(-0.9899, A.get()),
+                                            Intersection(-0.4899, B.get()),
+                                            Intersection(0.4899, B.get()),
+                                            Intersection(0.9899, A.get())};
 
     auto Comps = TRay::PrepareComputations(XS[2], R, XS);
     auto Col = W.RefractedColor(Comps, true, 5);
@@ -564,7 +564,7 @@ TEST_CASE("ShadeHit() with a transparent material")
     W.AddObject(Ball);
 
     Ray R(Point(0., 0., -3.), Vector(0., -std::sqrt(2.)/2, std::sqrt(2.)/2));
-    std::vector<Intersection<Object>> XS {Intersection(std::sqrt(2.), Floor)};
+    std::vector<Intersection<Object>> XS {Intersection(std::sqrt(2.), Floor.get())};
 
     auto Comps = TRay::PrepareComputations(XS[0], R, XS);
     auto Col = W.ShadeHit(Comps, true, 5);
@@ -594,7 +594,7 @@ TEST_CASE("ShadeHit() with a reflective, transparent material")
     W.AddObject(Ball);
 
     Ray R(Point(0., 0., -3.), Vector(0., -std::sqrt(2.)/2, std::sqrt(2.)/2));
-    std::vector<Intersection<Object>> XS {Intersection(std::sqrt(2.), Floor)};
+    std::vector<Intersection<Object>> XS {Intersection(std::sqrt(2.), Floor.get())};
 
     auto Comps = TRay::PrepareComputations(XS[0], R, XS);
     auto Col = W.ShadeHit(Comps, true, 5);
