@@ -18,11 +18,8 @@ public:
     int GetID();
 
     inline auto GetShapes() { return Shapes; }
-    void AddChild(std::shared_ptr<Object> &S);
     inline void SetShapes(std::vector<std::shared_ptr<Object>> &S) { Shapes = S; }
 
-    // virtual Vector LocalNormalAt(Point &LocalPoint) override;
-    // virtual Vector LocalNormalAt(Point &&LocalPoint) override;
-
+    virtual void AddChild(std::shared_ptr<Object> &S) override;
     virtual std::vector<Intersection<Object>> LocalIntersect(const Ray &LocalRay) override;
 };

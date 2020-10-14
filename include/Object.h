@@ -51,6 +51,8 @@ public:
     {
         return std::vector<Intersection<Object>>();
     }
+
+    inline virtual void AddChild(std::shared_ptr<Object> &S) {};
 };
 
 class TestShape : public Object

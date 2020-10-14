@@ -127,16 +127,14 @@ TEST_CASE("Intersecting a transformed group")
 
 TEST_CASE("Converting a point from world to object space")
 {
-    auto G1 = std::make_shared<Groups>(Groups());
-    auto G1Ptr = std::shared_ptr<Object>(G1);
+    std::shared_ptr<Object> G1 = std::make_shared<Groups>(Groups());
     G1->SetTransform(Transformations::RotationY(M_PI/2));
-    auto G2 = std::make_shared<Groups>(Groups());
-    auto G2Ptr = std::shared_ptr<Object>(G2);
+    std::shared_ptr<Object> G2 = std::make_shared<Groups>(Groups());
     G2->SetTransform(Transformations::Scaling(2., 2., 2.));
     std::shared_ptr<Object> S = std::make_shared<Sphere>(Sphere());
     S->SetTransform(Transformations::Translation(5., 0., 0.));
 
-    G1->AddChild(G2Ptr);
+    G1->AddChild(G2);
     G2->AddChild(S);
 
     auto P = TRay::WorldToObject(S.get(), Point(-2., 0., -10.));
@@ -145,16 +143,14 @@ TEST_CASE("Converting a point from world to object space")
 
 TEST_CASE("Converting a normal from object to world space")
 {
-    auto G1 = std::make_shared<Groups>(Groups());
-    auto G1Ptr = std::shared_ptr<Object>(G1);
+    std::shared_ptr<Object> G1 = std::make_shared<Groups>(Groups());
     G1->SetTransform(Transformations::RotationY(M_PI/2));
-    auto G2 = std::make_shared<Groups>(Groups());
-    auto G2Ptr = std::shared_ptr<Object>(G2);
+    std::shared_ptr<Object> G2 = std::make_shared<Groups>(Groups());
     G2->SetTransform(Transformations::Scaling(1., 2., 3.));
     std::shared_ptr<Object> S = std::make_shared<Sphere>(Sphere());
     S->SetTransform(Transformations::Translation(5., 0., 0.));
 
-    G1->AddChild(G2Ptr);
+    G1->AddChild(G2);
     G2->AddChild(S);
 
     auto N = TRay::NormalToWorld(S.get(), Vector(std::sqrt(3.)/3., std::sqrt(3.)/3, std::sqrt(3.)/3));
@@ -163,16 +159,14 @@ TEST_CASE("Converting a normal from object to world space")
 
 TEST_CASE("Finding the normal on a child object")
 {
-    auto G1 = std::make_shared<Groups>(Groups());
-    auto G1Ptr = std::shared_ptr<Object>(G1);
+    std::shared_ptr<Object> G1 = std::make_shared<Groups>(Groups());
     G1->SetTransform(Transformations::RotationY(M_PI/2));
-    auto G2 = std::make_shared<Groups>(Groups());
-    auto G2Ptr = std::shared_ptr<Object>(G2);
+    std::shared_ptr<Object> G2 = std::make_shared<Groups>(Groups());
     G2->SetTransform(Transformations::Scaling(1., 2., 3.));
     std::shared_ptr<Object> S = std::make_shared<Sphere>(Sphere());
     S->SetTransform(Transformations::Translation(5., 0., 0.));
 
-    G1->AddChild(G2Ptr);
+    G1->AddChild(G2);
     G2->AddChild(S);
 
     auto N = S->NormalAt(Point(1.7321, 1.1547, -5.5774));
