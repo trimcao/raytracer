@@ -29,7 +29,7 @@ void RoomScene()
     auto Mat = Material();
     Mat.SetColor(Color(0.8, 0.8, 0.9));
     Mat.SetSpecular(0.);
-    auto Pat = std::make_shared<CheckersPattern>(Color(0.191, 0.468, 0.449), Color(0., 0.5, 0.5));
+    auto Pat = std::make_shared<CheckersPattern>(Color(0.414, 0.293, 0.207), Color(0.332, 0.234, 0.164));
     Pat->SetTransform(Transformations::RotationY(M_PI/4));
     Mat.SetPattern(Pat);
     Floor.SetMaterial(Mat);
@@ -37,14 +37,14 @@ void RoomScene()
     Plane LeftWall(2);
     LeftWall.SetTransform(Transformations::RotationX(M_PI/2).RotateY(-M_PI/4).Translate(0., 0., 5.));
     Mat = Material();
-    Mat.SetColor(Color(0.8, 0.8, 0.8));
+    Mat.SetColor(Color(0.969, 0.902, 0.816));
     Mat.SetSpecular(0.);
     LeftWall.SetMaterial(Mat);
 
     Plane RightWall(3);
     RightWall.SetTransform(Transformations::RotationX(M_PI/2).RotateY(M_PI/4).Translate(0., 0., 5.));
     Mat = Material();
-    Mat.SetColor(Color(0.8, 0.8, 0.8));
+    Mat.SetColor(Color(0.969, 0.902, 0.816));
     Mat.SetSpecular(0.);
     RightWall.SetMaterial(Mat);
 
@@ -65,21 +65,21 @@ void RoomScene()
     Mirror.SetMaterial(Mat);
 
     Cubes Poster(4);
-    Poster.SetTransform(Transformations::Scaling(0.7, 0.01, 0.7).RotateX(M_PI/2).RotateY(-M_PI/4).Translate(-2.5, 1.25, 2.51));
+    Poster.SetTransform(Transformations::Scaling(1., 0.01, 0.2).RotateX(M_PI/2).RotateY(-M_PI/4).Translate(-2.5, 1.75, 2.51));
     Mat = Material();
-    Mat.SetColor(Color(1., 0.1, 0.1));
+    Mat.SetColor(Color(0.664, 0.082, 0.105));
     Poster.SetMaterial(Mat);
 
     Cubes Poster2(5);
-    Poster2.SetTransform(Transformations::Scaling(0.3, 0.01, 0.3).RotateX(M_PI/2).RotateY(-M_PI/4).Translate(-1.4, 1.75, 3.61));
+    Poster2.SetTransform(Transformations::Scaling(1., 0.01, 0.2).RotateX(M_PI/2).RotateY(-M_PI/4).Translate(-2.5, 1.25, 2.51));
     Mat = Material();
-    Mat.SetColor(Color(0.1, 0.1, 1.));
+    Mat.SetColor(Color(0.941, 0.746, 0.));
     Poster2.SetMaterial(Mat);
 
     Cubes Poster3(6);
-    Poster3.SetTransform(Transformations::Scaling(0.3, 0.01, 0.3).RotateX(M_PI/2).RotateY(-M_PI/4).Translate(-1.4, 0.75, 3.61));
+    Poster3.SetTransform(Transformations::Scaling(1., 0.01, 0.2).RotateX(M_PI/2).RotateY(-M_PI/4).Translate(-2.5, 0.75, 2.51));
     Mat = Material();
-    Mat.SetColor(Color(0.1, 1., 0.1));
+    Mat.SetColor(Color(0.664, 0.082, 0.105));
     Poster3.SetMaterial(Mat);
 
     Cubes TableTop(7);
@@ -129,7 +129,7 @@ void RoomScene()
     W.AddObject(Leg3);
     W.AddObject(Leg4);
 
-    Camera Cam(192, 108, M_PI/3);
+    Camera Cam(640, 360, M_PI/3);
     Cam.SetTransform(Transformations::ViewTransform(Point(0.1, 2., -5.),
                                                     Point(0., 0., 1.),
                                                     Vector(0., 1., 0.)));
