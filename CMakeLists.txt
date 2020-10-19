@@ -33,6 +33,7 @@ set(SOURCES
     Cones.cpp
     Groups.cpp
     Triangles.cpp
+    ObjParser.cpp
 )
 
 add_executable(raytracer ${SOURCES})
