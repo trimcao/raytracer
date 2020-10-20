@@ -1,4 +1,3 @@
-// #define DOCTEST_CONFIG_DISABLE
 #include "include/Matrix.h"
 #include "include/Util.h"
 #include <cmath>

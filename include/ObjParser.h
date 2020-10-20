@@ -27,7 +27,7 @@ public:
     inline std::vector<Point> GetVertices() { return Vertices; }
     inline int GetIgnoredLines() { return IgnoredLines; }
 
-    std::unordered_map<std::string, Groups> ObjToGroup();
+    std::unordered_map<std::string, std::shared_ptr<Groups>> ObjToGroup();
 
     void Parse();
 };

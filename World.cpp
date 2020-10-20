@@ -168,6 +168,13 @@ Color World::RefractedColor(PreComputations<Object> &Comps, bool RenderShadow, i
     return ColorAt(RefractRay, RenderShadow, Remaining - 1) * Transparency;
 }
 
+template <class Derived>
+void World::AddObject(std::shared_ptr<Derived> &NewObjectPtr)
+{
+    std::shared_ptr<Object> ObjectPtr = NewObjectPtr;
+    AddObject(ObjectPtr);
+}
+
 TEST_CASE("Creating a world")
 {
     World W;

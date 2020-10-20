@@ -1,4 +1,3 @@
-// #define DOCTEST_CONFIG_DISABLE
 #include <iostream>
 #include <string>
 #include <vector>

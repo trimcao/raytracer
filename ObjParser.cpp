@@ -38,10 +38,16 @@ void ObjParser::Parse()
         }
         else if (Indicator == "f")
         {
-            double Idx;
+            int Idx;
             std::vector<int> Indices;
-            while(ISS >> Idx)
+            // format of face can be: v/vt/vn
+            // for now just parse v
+            std::string NextStr;
+            std::string Delimiter = "/";
+            while(ISS >> NextStr)
             {
+                std::string Token = NextStr.substr(0, NextStr.find(Delimiter));
+                Idx = std::stoi(Token);
                 Indices.push_back(Idx);
             }
             
@@ -97,17 +103,17 @@ std::vector<Triangles> ObjParser::FanTriangulation(std::vector<int>VertexIndices
     return Tris;
 }
 
-std::unordered_map<std::string, Groups> ObjParser::ObjToGroup()
+std::unordered_map<std::string, std::shared_ptr<Groups>> ObjParser::ObjToGroup()
 {
-    std::unordered_map<std::string, Groups> OutputGroups;
+    std::unordered_map<std::string, std::shared_ptr<Groups>> OutputGroups;
 
     for (auto &G: TriGroups)
     {
-        Groups NewGroup;
+        auto NewGroup = std::make_shared<Groups>(Groups());
         for (auto &Child: G.second)
         {
             std::shared_ptr<Object> NewChild = std::make_shared<Triangles>(Child);
-            NewGroup.AddChild(NewChild);
+            NewGroup->AddChild(NewChild);
         }
 
         OutputGroups[G.first] = NewGroup;
@@ -200,6 +206,25 @@ TEST_CASE("Triangles in groups")
     Parser.Parse();
 
     auto G = Parser.ObjToGroup();
-    CHECK(G["FirstGroup"].GetShapes().size() == 1);
-    CHECK(G["SecondGroup"].GetShapes().size() == 1);
+    CHECK(G["FirstGroup"]->GetShapes().size() == 1);
+    CHECK(G["SecondGroup"]->GetShapes().size() == 1);
+}
+
+TEST_CASE("Triangles in groups, with different face format")
+{
+    ObjParser Parser("./test/obj/triangles2.obj");
+    Parser.Parse();
+
+    auto G1 = Parser.GetGroup("Teapot101");
+    auto G2 = Parser.GetGroup("Teapot202");
+    auto T1 = G1[0];
+    auto T2 = G2[0];
+
+    CHECK(T1.GetP1() == Parser.GetVertex(1));
+    CHECK(T1.GetP2() == Parser.GetVertex(2));
+    CHECK(T1.GetP3() == Parser.GetVertex(3));
+
+    CHECK(T2.GetP1() == Parser.GetVertex(1));
+    CHECK(T2.GetP2() == Parser.GetVertex(3));
+    CHECK(T2.GetP3() == Parser.GetVertex(4));
 }
