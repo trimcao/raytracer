@@ -33,6 +33,7 @@ Triangles::Triangles(Point &Point1, Point &Point2, Point &Point3) : Triangles()
 Triangles::Triangles(int ID)
 {
     Transform = Matrix::Identity();
+    TransformInverse = Matrix::Identity();
     Origin = Point(0., 0., 0.);
     AMaterial = Material();
     UseShadow = true;

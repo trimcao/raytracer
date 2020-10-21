@@ -34,25 +34,14 @@ void RoomScene()
 
     auto ParsedObjs = Parser.ObjToGroup();
 
-    for (auto &G: ParsedObjs)
-    {
-        std::cout << "Name: " << G.first << '\n';
-    }
-
     auto Teapot = ParsedObjs["Teapot001"];
-
-    // std::shared_ptr<Object> TeapotPtr = std::make_shared<Groups>(Teapot);
 
     auto TeapotShapes = Teapot->GetShapes();
 
-    // std::cout << "Parent before: " <<  TeapotShapes[0]->GetParent() << '\n';
-    // TeapotShapes[0]->SetParent(nullptr);
-    // std::cout << "Parent after: " <<  TeapotShapes[0]->GetParent() << '\n';
-
-    // W.AddObject(TeapotShapes[0]);
-    // W.AddObject(TeapotShapes[1]);
     auto Mat = Material();
-    Mat.SetColor(Color(0., 0., 0.5));
+    Mat.SetColor(Color(255, 151, 52));
+    Mat.SetDiffuse(0.7);
+    Mat.SetSpecular(0.3);
 
     for (auto &O: TeapotShapes)
     {
@@ -66,7 +55,9 @@ void RoomScene()
     Mat = Material();
     Mat.SetColor(Color(0.8, 0.8, 0.9));
     Mat.SetSpecular(0.);
-    auto Pat = std::make_shared<CheckersPattern>(Color(0.414, 0.293, 0.207), Color(0.332, 0.234, 0.164));
+    Mat.SetReflective(0.5);
+    Mat.SetDiffuse(0.2);
+    auto Pat = std::make_shared<CheckersPattern>(Color(192, 197, 204), Color(233, 241, 255));
     Pat->SetTransform(Transformations::RotationY(M_PI/4));
     Mat.SetPattern(Pat);
     Floor.SetMaterial(Mat);
@@ -74,47 +65,40 @@ void RoomScene()
     Plane LeftWall(2);
     LeftWall.SetTransform(Transformations::RotationX(M_PI/2).RotateY(-M_PI/4).Translate(0., 0., 5.));
     Mat = Material();
-    Mat.SetColor(Color(0.969, 0.902, 0.816));
+    Mat.SetColor(Color(227, 208, 191));
     Mat.SetSpecular(0.);
     LeftWall.SetMaterial(Mat);
 
     Plane RightWall(3);
     RightWall.SetTransform(Transformations::RotationX(M_PI/2).RotateY(M_PI/4).Translate(0., 0., 5.));
     Mat = Material();
-    Mat.SetColor(Color(0.969, 0.902, 0.816));
+    Mat.SetColor(Color(227, 208, 191));
     Mat.SetSpecular(0.);
     RightWall.SetMaterial(Mat);
 
-    Groups TestGroup(4);
-    std::shared_ptr<Object> FloorPtr = std::make_shared<Plane>(Floor);
-    std::shared_ptr<Object> LeftWallPtr = std::make_shared<Plane>(LeftWall);
-    std::shared_ptr<Object> RightWallPtr = std::make_shared<Plane>(RightWall);
-    TestGroup.AddChild(FloorPtr);
-    TestGroup.AddChild(LeftWallPtr);
-    TestGroup.AddChild(RightWallPtr);
-
     World W;
-    Light L(Color(1., 1., 1.), Point(-3., 10., -10.));
+    Light L(Color(1., 1., 1.), Point(-10., 8., -10.));
     W.SetLight(L);
     // W.AddObject(TestGroup);
     std::shared_ptr<Object> TeapotPtr = Teapot;
-    TeapotPtr->SetTransform(Transformations::Scaling(0.1, 0.1, 0.1).RotateX(-M_PI/2));
+    TeapotPtr->SetTransform(Transformations::Scaling(0.1, 0.1, 0.1).RotateX(-M_PI/2).Translate(0., 0., -1.));
     W.AddObject(TeapotPtr);
+    W.AddObject(Floor);
+    W.AddObject(LeftWall);
+    W.AddObject(RightWall);
 
-    std::cout << "Number of Objects: " << W.GetObjects().size() << '\n';
-
-    Camera Cam(64, 36, M_PI/3);
+    Camera Cam(640, 360, M_PI/3);
     Cam.SetTransform(Transformations::ViewTransform(Point(0.1, 2., -5.),
                                                     Point(0., 0., 1.),
                                                     Vector(0., 1., 0.)));
 
     bool RenderShadow = true;
 
-    // auto CV = Cam.Render(W, RenderShadow, true, 5);
+    auto CV = Cam.Render(W, RenderShadow, true, 5);
 
-    // std::ofstream out("output.ppm");
-    // out << CV.ToPPM();
-    // out.close();
+    std::ofstream out("output.ppm");
+    out << CV.ToPPM();
+    out.close();
 }
 
 int main(int argc, char **argv)

@@ -13,6 +13,7 @@
 Cylinders::Cylinders(int ID)
 {
     Transform = Matrix::Identity();
+    TransformInverse = Matrix::Identity();
     Origin = Point(0., 0., 0.);
     AMaterial = Material();
     UseShadow = true;

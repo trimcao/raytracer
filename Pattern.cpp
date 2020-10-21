@@ -9,9 +9,16 @@ Pattern::Pattern()
 {
 }
 
+void Pattern::SetTransform(Matrix &T)
+{
+    Transform = T;
+    TransformInverse = Transform.Inverse();
+}
+
 TestPattern::TestPattern()
 {
     Transform = Matrix::Identity();
+    TransformInverse = Matrix::Identity();
 }
 
 Color TestPattern::PatternAt(Point &P)
@@ -24,6 +31,7 @@ StripePattern::StripePattern(const Color &C1, const Color &C2)
     A = C1;
     B = C2;
     Transform = Matrix::Identity();
+    TransformInverse = Matrix::Identity();
 }
 
 Color StripePattern::PatternAt(Point &P)
@@ -42,6 +50,7 @@ GradientPattern::GradientPattern(const Color &C1, const Color &C2)
     A = C1;
     B = C2;
     Transform = Matrix::Identity();
+    TransformInverse = Matrix::Identity();
 }
 
 Color GradientPattern::PatternAt(Point &P)
@@ -57,6 +66,7 @@ RingPattern::RingPattern(const Color &C1, const Color &C2)
     A = C1;
     B = C2;
     Transform = Matrix::Identity();
+    TransformInverse = Matrix::Identity();
 }
 
 Color RingPattern::PatternAt(Point &P)
@@ -74,6 +84,7 @@ CheckersPattern::CheckersPattern(const Color &C1, const Color &C2)
     A = C1;
     B = C2;
     Transform = Matrix::Identity();
+    TransformInverse = Matrix::Identity();
 }
 
 Color CheckersPattern::PatternAt(Point &P)

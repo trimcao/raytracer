@@ -16,9 +16,15 @@ int Object::GetID()
     return ID;
 }
 
+void Object::SetTransform(Matrix &M)
+{
+    Transform = M;
+    TransformInverse = Transform.Inverse();
+}
+
 std::vector<Intersection<Object>> Object::Intersect(const Ray &R)
 {
-    auto LocalRay = R.Transform(Transform.Inverse());
+    auto LocalRay = R.Transform(TransformInverse);
 
     return LocalIntersect(LocalRay);
 }
@@ -33,6 +39,7 @@ Vector Object::NormalAt(Point &P)
 TestShape::TestShape(int ID)
 {
     Transform = Matrix::Identity(4);
+    TransformInverse = Matrix::Identity(4);
     Origin = Point(0., 0., 0.);
     AMaterial = Material();
     UseShadow = true;

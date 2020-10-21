@@ -11,6 +11,7 @@ public:
 
     Color();
     Color(double R, double G, double B);
+    Color(int R, int G, int B);
 
     Color operator-() const { return Color(-R, -G, -B); }
 

@@ -12,7 +12,14 @@ Camera::Camera(int H, int V, double FOV)
     VSize = V;
     FieldOfView = FOV;
     Transform = Matrix::Identity(4);
+    TransformInverse = Matrix::Identity(4);
     ComputePixelSize();
+}
+
+void Camera::SetTransform(Matrix &M)
+{
+    Transform = M;
+    TransformInverse = Transform.Inverse();
 }
 
 void Camera::ComputePixelSize()
@@ -48,7 +55,6 @@ Ray Camera::RayForPixel(int X, int Y)
     // using the camera matrix, transform the canvas point and the origin
     // and then compute the ray's direction vector
     // (remember that the canvas is at z=-1)
-    auto TransformInverse = Transform.Inverse();
     auto Pixel = TransformInverse.Mul(Point(WorldX, WorldY, -1.));
     auto Origin = TransformInverse.Mul(Point(0., 0., 0.));
     auto Direction = (Pixel - Origin).Normalize();

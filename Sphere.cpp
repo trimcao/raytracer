@@ -13,6 +13,7 @@
 Sphere::Sphere(int ID)
 {
     Transform = Matrix::Identity(4);
+    TransformInverse = Matrix::Identity(4);
     Origin = Point(0., 0., 0.);
     AMaterial = Material();
     UseShadow = true;
@@ -38,7 +39,7 @@ std::vector<Intersection<Object>> Sphere::Intersect(const Ray &R)
 {
     std::vector<Intersection<Object>> Intersections;
 
-    auto TransformedRay = R.Transform(Transform.Inverse());
+    auto TransformedRay = R.Transform(TransformInverse);
 
     // assume the origin of Sphere is always (0., 0., 0.)
     Vector SphereToRay = TransformedRay.GetOrigin() - Point(0., 0., 0.);

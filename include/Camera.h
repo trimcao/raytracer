@@ -14,6 +14,7 @@ class Camera
     // FOV is in radian
     double FieldOfView;
     Matrix Transform;
+    Matrix TransformInverse;
     double PixelSize;
     double HalfWidth;
     double HalfHeight;
@@ -31,8 +32,9 @@ public:
     inline double GetPixelSize() { return PixelSize; }
 
     inline void SetPixelSize(double PS) { PixelSize = PS; }
-    inline void SetTransform(Matrix &M) { Transform = M; }
-    inline void SetTransform(Matrix &&M) { Transform = M; }
+    // inline void SetTransform(Matrix &M) { Transform = M; }
+    void SetTransform(Matrix &M); 
+    inline void SetTransform(Matrix &&M) { SetTransform(M); }
 
     // RayForPixel returns a ray that starts at the camera passes through the 
     // indicated (X, Y) pixel on the canvas.

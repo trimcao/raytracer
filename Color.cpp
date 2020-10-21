@@ -18,6 +18,13 @@ Color::Color(double R, double G, double B)
     this->B = B;
 }
 
+Color::Color(int R, int G, int B)
+{
+    this->R = R / 256.;
+    this->G = G / 256.;
+    this->B = B / 256.;
+}
+
 std::vector<int> Color::ToPPMVal(int MaxColorValue)
 {
     int Red = std::round(MaxColorValue * this->R);

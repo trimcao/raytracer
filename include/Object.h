@@ -15,6 +15,7 @@ class Object
 protected:
     int ID;
     Matrix Transform;
+    Matrix TransformInverse;
     Point Origin;
     Material AMaterial;
     bool UseShadow;
@@ -26,12 +27,13 @@ public:
     int GetID();
 
     Matrix GetTransform() const { return Transform; }
+    Matrix GetTransformInverse() const { return TransformInverse; }
     Material GetMaterial() const { return AMaterial; }
     bool ShadowOn() const { return UseShadow; }
     Object *GetParent() { return Parent; }
 
-    inline void SetTransform(Matrix &M) { Transform = M; }
-    inline void SetTransform(Matrix &&M) { Transform = M; }
+    void SetTransform(Matrix &M);
+    inline void SetTransform(Matrix &&M) { SetTransform(M); }
 
     inline void SetMaterial(Material &M) { AMaterial = M; }
     inline void SetMaterial(Material &&M) { AMaterial = M; }

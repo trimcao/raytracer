@@ -10,7 +10,7 @@
 Color TRay::PatternAtShape(std::shared_ptr<Pattern> &Pat, Object *Obj, Point &P)
 {
     auto LocalPos = WorldToObject(Obj, P);
-    auto PatternPos = Pat->GetTransform().Inverse().Mul(LocalPos);
+    auto PatternPos = Pat->GetTransformInverse().Mul(LocalPos);
     return Pat->PatternAt(PatternPos);
 }
 
@@ -133,12 +133,12 @@ Point TRay::WorldToObject(Object *O, Point &P)
         NewPoint = WorldToObject(O->GetParent(), P);
     }
 
-    return O->GetTransform().Inverse().Mul(NewPoint);
+    return O->GetTransformInverse().Mul(NewPoint);
 }
 
 Vector TRay::NormalToWorld(Object *O, Vector &N)
 {
-    auto Normal = O->GetTransform().Inverse().T().Mul(N);
+    auto Normal = O->GetTransformInverse().T().Mul(N);
     Normal.SetW(0);
     Normal = Normal.Normalize();
 

@@ -12,6 +12,7 @@ class Pattern
 
 protected:
     Matrix Transform;
+    Matrix TransformInverse;
 
 public:
     static const Color Black;
@@ -20,8 +21,9 @@ public:
     Pattern();
 
     inline Matrix GetTransform() { return Transform; }
-    inline void SetTransform(Matrix &T) { Transform = T; }
-    inline void SetTransform(Matrix &&T) { Transform = T; }
+    inline Matrix GetTransformInverse() { return TransformInverse; }
+    void SetTransform(Matrix &T);
+    inline void SetTransform(Matrix &&T) { SetTransform(T); }
 
     virtual inline Color PatternAt(Point &P) { return Black; }
     virtual inline Color PatternAt(Point &&P) { return PatternAt(P); }
