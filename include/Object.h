@@ -43,9 +43,13 @@ public:
     inline void SetShadowOn(bool Shadow) { UseShadow = Shadow; }
 
     virtual Vector NormalAt(Point &P);
+    virtual Vector NormalAt(Point &P, Intersection<Object> &I);
     inline virtual Vector NormalAt(Point &&P) { return NormalAt(P); }
+    inline virtual Vector NormalAt(Point &&P, Intersection<Object> &I) { return NormalAt(P, I); }
     inline virtual Vector LocalNormalAt(Point &P) { return Vector(0.f, 0.f, 0.f); }
     inline virtual Vector LocalNormalAt(Point &&P) { return Vector(0.f, 0.f, 0.f); }
+    inline virtual Vector LocalNormalAt(Point &P, Intersection<Object> &I) { return LocalNormalAt(P); }
+    inline virtual Vector LocalNormalAt(Point &&P, Intersection<Object> &I) { return LocalNormalAt(P); }
 
     virtual std::vector<Intersection<Object>> Intersect(const Ray &R);
 

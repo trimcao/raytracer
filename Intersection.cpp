@@ -18,6 +18,18 @@ double Intersection<OT>::GetT() const
     return T;
 }
 
+template <class OT>
+double Intersection<OT>::GetU() const
+{
+    return U;
+}
+
+template <class OT>
+double Intersection<OT>::GetV() const
+{
+    return V;
+}
+
 template<class OT>
 OT *Intersection<OT>::GetObject() const
 {
@@ -36,6 +48,15 @@ Intersection<OT>::Intersection(double T, OT *O)
 {
     this->T = T;
     this->O = O;
+}
+
+template<class OT>
+Intersection<OT>::Intersection(double T, OT *O, double U, double V)
+{
+    this->T = T;
+    this->O = O;
+    this->U = U;
+    this->V = V;
 }
 
 template<class OT>

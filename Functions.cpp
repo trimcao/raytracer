@@ -4,6 +4,7 @@
 #include "include/Transformations.h"
 #include "include/Plane.h"
 #include "include/Intersection.h"
+#include "include/Triangles.h"
 #include <vector>
 #include <cmath>
 
@@ -79,7 +80,7 @@ PreComputations<OT> TRay::PrepareComputations(Intersection<OT> &I, Ray &R, std::
     Comps.AObject = I.GetObject();
     Comps.Position = R.Position(Comps.T);
     Comps.EyeV = -R.GetDirection();
-    Comps.NormalV = Comps.AObject->NormalAt(Comps.Position);
+    Comps.NormalV = Comps.AObject->NormalAt(Comps.Position, I);
     Comps.IsInside = false;
 
     if (Comps.NormalV.Dot(Comps.EyeV) < 0.)

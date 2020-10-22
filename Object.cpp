@@ -36,6 +36,13 @@ Vector Object::NormalAt(Point &P)
     return TRay::NormalToWorld(this, LocalNormal);
 }
 
+Vector Object::NormalAt(Point &P, Intersection<Object> &I)
+{
+    auto LocalPoint = TRay::WorldToObject(this, P);
+    auto LocalNormal = LocalNormalAt(LocalPoint, I);
+    return TRay::NormalToWorld(this, LocalNormal);
+}
+
 TestShape::TestShape(int ID)
 {
     Transform = Matrix::Identity(4);

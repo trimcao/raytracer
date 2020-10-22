@@ -26,14 +26,19 @@ template <class ObjectType>
 class Intersection
 {
     double T;
+    double U;
+    double V;
     ObjectType *O;
 
 public:
     Intersection();
     Intersection(double T, ObjectType &O);
     Intersection(double T, ObjectType *O);
+    Intersection(double T, ObjectType *O, double U, double V);
 
     double GetT() const;
+    double GetU() const;
+    double GetV() const;
     ObjectType *GetObject() const;
 
     bool operator<(const Intersection &RHS) const { return T < RHS.GetT(); }
