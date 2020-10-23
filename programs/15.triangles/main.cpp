@@ -29,7 +29,7 @@
 void RoomScene()
 {
     // parse the teapot obj
-    ObjParser Parser("/Users/trimcao/tri/raytracer/programs/15.triangles/teapot-low.obj");
+    ObjParser Parser("/Users/trimcao/tri/raytracer/programs/15.triangles/teapot-low.obj", false);
     Parser.Parse();
 
     auto ParsedObjs = Parser.ObjToGroup();
@@ -43,13 +43,9 @@ void RoomScene()
     Mat.SetDiffuse(0.7);
     Mat.SetSpecular(0.3);
 
-    for (auto &O: TeapotShapes)
-    {
-        // O->SetParent(nullptr);
-        // O->SetTransform(Transformations::Scaling(0.1, 0.1, 0.1));
-        // W.AddObject(O);
-        O->SetMaterial(Mat);
-    }
+    std::shared_ptr<Object> TeapotPtr = Teapot;
+    TeapotPtr->SetTransform(Transformations::Scaling(0.1, 0.1, 0.1).RotateX(-M_PI/2).Translate(0., 0., -1.));
+    Teapot->SetMaterial(Mat);
 
     Plane Floor(1);
     Mat = Material();
@@ -80,14 +76,12 @@ void RoomScene()
     Light L(Color(1., 1., 1.), Point(-10., 8., -10.));
     W.SetLight(L);
     // W.AddObject(TestGroup);
-    std::shared_ptr<Object> TeapotPtr = Teapot;
-    TeapotPtr->SetTransform(Transformations::Scaling(0.1, 0.1, 0.1).RotateX(-M_PI/2).Translate(0., 0., -1.));
     W.AddObject(TeapotPtr);
     W.AddObject(Floor);
     W.AddObject(LeftWall);
     W.AddObject(RightWall);
 
-    Camera Cam(640, 360, M_PI/3);
+    Camera Cam(128, 72, M_PI/3);
     Cam.SetTransform(Transformations::ViewTransform(Point(0.1, 2., -5.),
                                                     Point(0., 0., 1.),
                                                     Vector(0., 1., 0.)));
@@ -96,7 +90,7 @@ void RoomScene()
 
     auto CV = Cam.Render(W, RenderShadow, true, 5);
 
-    std::ofstream out("output.ppm");
+    std::ofstream out("output3.ppm");
     out << CV.ToPPM();
     out.close();
 }

@@ -6,7 +6,7 @@
 #include "include/ObjParser.h"
 #include "include/Triangles.h"
 
-ObjParser::ObjParser(std::string F)
+ObjParser::ObjParser(std::string F, bool Smoothing)
 {
     Vertices = std::vector<Point>();
     Normals = std::vector<Vector>();
@@ -17,6 +17,7 @@ ObjParser::ObjParser(std::string F)
     LatestGroup = "Default";
     TriGroups["Default"] = std::vector<Triangles>();
     STriGroups["Default"] = std::vector<SmoothTriangles>();
+    this->Smoothing = Smoothing;
 }
 
 void ObjParser::ParseFace(std::vector<int> &VIndices, std::vector<int> &TIndices, std::vector<int> &NIndices,
@@ -102,7 +103,7 @@ void ObjParser::Parse()
             }
 
             // create triangles
-            if (NIndices.size() > 0)
+            if (NIndices.size() > 0 && Smoothing)
             {
                 auto Tris = FanTriangulation(VIndices, TIndices, NIndices);
                 STriGroups[LatestGroup].insert(STriGroups[LatestGroup].end(), Tris.begin(), Tris.end());
@@ -361,4 +362,13 @@ TEST_CASE("Faces with normals")
     CHECK(T3.GetP1() == Parser.GetVertex(1));
     CHECK(T3.GetP2() == Parser.GetVertex(2));
     CHECK(T3.GetP3() == Parser.GetVertex(3));
+}
+
+TEST_CASE("Faces with normals, but ignore normals in parser")
+{
+    ObjParser Parser("./test/obj/test6.obj", false);
+    Parser.Parse();
+
+    CHECK(Parser.GetSGroup("Default").size() == 0);
+    CHECK(Parser.GetGroup("Default").size() == 3);
 }

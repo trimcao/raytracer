@@ -18,6 +18,7 @@ class ObjParser
     std::unordered_map<std::string, std::vector<Triangles>> TriGroups;
     std::unordered_map<std::string, std::vector<SmoothTriangles>> STriGroups;
     std::string LatestGroup;
+    bool Smoothing;
 
     std::vector<Triangles> FanTriangulation(std::vector<int>VertexIndices);
 
@@ -29,7 +30,7 @@ class ObjParser
                     std::string Str);
 
 public:
-    ObjParser(std::string F);
+    ObjParser(std::string F, bool Smoothing=true);
 
     Point GetVertex(int ID);
     Vector GetNormal(int ID);
@@ -38,6 +39,7 @@ public:
     inline std::vector<Point> GetVertices() { return Vertices; }
     inline std::vector<Vector> GetNormals() { return Normals; }
     inline int GetIgnoredLines() { return IgnoredLines; }
+    inline void SetSmoothing(bool B) { Smoothing = B; }
 
     std::unordered_map<std::string, std::shared_ptr<Groups>> ObjToGroup();
 
