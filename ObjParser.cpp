@@ -9,11 +9,54 @@
 ObjParser::ObjParser(std::string F)
 {
     Vertices = std::vector<Point>();
+    Normals = std::vector<Vector>();
     IgnoredLines = 0;
     Filename = F;
     TriGroups = std::unordered_map<std::string, std::vector<Triangles>>();
+    STriGroups = std::unordered_map<std::string, std::vector<SmoothTriangles>>();
     LatestGroup = "Default";
     TriGroups["Default"] = std::vector<Triangles>();
+    STriGroups["Default"] = std::vector<SmoothTriangles>();
+}
+
+void ObjParser::ParseFace(std::vector<int> &VIndices, std::vector<int> &TIndices, std::vector<int> &NIndices,
+                    std::string Str)
+{
+    int Idx;
+    std::string Delimiter = "/";
+    size_t Pos = 0;
+    int ValueType = 0;
+
+    // format of face can be: v/vt/vn
+    while ((Pos = Str.find(Delimiter)) != std::string::npos)
+    {
+        if (Pos != 0)
+        {
+            std::string Token = Str.substr(0, Pos);
+            Idx = std::stoi(Token);
+            if (ValueType == 0)
+                VIndices.push_back(Idx);
+            else if (ValueType == 1)
+                TIndices.push_back(Idx);
+            else if (ValueType == 2)
+                NIndices.push_back(Idx);
+            else
+                return;
+        }
+        ++ValueType;
+        Str.erase(0, Pos + Delimiter.length());
+    }
+
+    std::string Token = Str;
+    Idx = std::stoi(Token);
+    if (ValueType == 0)
+        VIndices.push_back(Idx);
+    else if (ValueType == 1)
+        TIndices.push_back(Idx);
+    else if (ValueType == 2)
+        NIndices.push_back(Idx);
+    else
+        return;
 }
 
 void ObjParser::Parse()
@@ -25,7 +68,7 @@ void ObjParser::Parse()
         std::istringstream ISS(Line);
         std::string Indicator;
         ISS >> Indicator;
-        // std::cout << "Indicator: " << Indicator << '\n';
+
         if (Indicator == "v")
         {
             double Num1, Num2, Num3;
@@ -36,23 +79,40 @@ void ObjParser::Parse()
 
             Vertices.push_back(Point(Num1, Num2, Num3));
         }
+        else if (Indicator == "vn")
+        {
+            double Num1, Num2, Num3;
+            if (!(ISS >> Num1 >> Num2 >> Num3))
+            {
+                throw std::invalid_argument("Wrong format for vertex normal line.");
+            }
+
+            Normals.push_back(Vector(Num1, Num2, Num3));
+        }
         else if (Indicator == "f")
         {
             int Idx;
-            std::vector<int> Indices;
-            // format of face can be: v/vt/vn
-            // for now just parse v
+            std::vector<int> VIndices;
+            std::vector<int> TIndices;
+            std::vector<int> NIndices;
             std::string NextStr;
-            std::string Delimiter = "/";
             while(ISS >> NextStr)
             {
-                std::string Token = NextStr.substr(0, NextStr.find(Delimiter));
-                Idx = std::stoi(Token);
-                Indices.push_back(Idx);
+                ParseFace(VIndices, TIndices, NIndices, NextStr);
+            }
+
+            // create triangles
+            if (NIndices.size() > 0)
+            {
+                auto Tris = FanTriangulation(VIndices, TIndices, NIndices);
+                STriGroups[LatestGroup].insert(STriGroups[LatestGroup].end(), Tris.begin(), Tris.end());
+            }
+            else
+            {
+                auto Tris = FanTriangulation(VIndices);
+                TriGroups[LatestGroup].insert(TriGroups[LatestGroup].end(), Tris.begin(), Tris.end());
             }
             
-            auto Tris = FanTriangulation(Indices);
-            TriGroups[LatestGroup].insert(TriGroups[LatestGroup].end(), Tris.begin(), Tris.end());
         }
         else if (Indicator == "g")
         {
@@ -64,6 +124,9 @@ void ObjParser::Parse()
             
             if (TriGroups.find(GroupName) == TriGroups.end())
                 TriGroups[GroupName] = std::vector<Triangles>();
+
+            if (STriGroups.find(GroupName) == STriGroups.end())
+                STriGroups[GroupName] = std::vector<SmoothTriangles>();
 
             LatestGroup = GroupName;
         }
@@ -82,6 +145,14 @@ Point ObjParser::GetVertex(int ID)
     return Vertices[ID-1];
 }
 
+Vector ObjParser::GetNormal(int ID)
+{
+    if (ID < 1 || ID > Normals.size())
+        throw std::invalid_argument("normal index is invalid");
+
+    return Normals[ID-1];
+}
+
 std::vector<Triangles> ObjParser::GetGroup(std::string Name)
 {
     if (TriGroups.find(Name) == TriGroups.end())
@@ -90,13 +161,35 @@ std::vector<Triangles> ObjParser::GetGroup(std::string Name)
     return TriGroups[Name];
 }
 
-std::vector<Triangles> ObjParser::FanTriangulation(std::vector<int>VertexIndices)
+std::vector<SmoothTriangles> ObjParser::GetSGroup(std::string Name)
+{
+    if (STriGroups.find(Name) == STriGroups.end())
+        throw std::invalid_argument("smooth-triangle group name is invalid");
+
+    return STriGroups[Name];
+}
+
+std::vector<Triangles> ObjParser::FanTriangulation(std::vector<int>VIndices)
 {
     std::vector<Triangles> Tris;
 
-    for (int i = 1; i < (VertexIndices.size()-1); ++i)
+    for (int i = 1; i < (VIndices.size()-1); ++i)
     {
-        Triangles Tri(GetVertex(VertexIndices[0]), GetVertex(VertexIndices[i]), GetVertex(VertexIndices[i+1]));
+        Triangles Tri(GetVertex(VIndices[0]), GetVertex(VIndices[i]), GetVertex(VIndices[i+1]));
+        Tris.push_back(Tri);
+    }
+
+    return Tris;
+}
+
+std::vector<SmoothTriangles> ObjParser::FanTriangulation(std::vector<int>VIndices, std::vector<int>TIndices, std::vector<int>NIndices)
+{
+    std::vector<SmoothTriangles> Tris;
+
+    for (int i = 1; i < (VIndices.size()-1); ++i)
+    {
+        SmoothTriangles Tri(GetVertex(VIndices[0]), GetVertex(VIndices[i]), GetVertex(VIndices[i+1]),
+                            GetNormal(NIndices[0]), GetNormal(NIndices[i]), GetNormal(NIndices[i+1]));
         Tris.push_back(Tri);
     }
 
@@ -227,4 +320,45 @@ TEST_CASE("Triangles in groups, with different face format")
     CHECK(T2.GetP1() == Parser.GetVertex(1));
     CHECK(T2.GetP2() == Parser.GetVertex(3));
     CHECK(T2.GetP3() == Parser.GetVertex(4));
+}
+
+TEST_CASE("Vertex normal records")
+{
+    ObjParser Parser("./test/obj/test5.obj");
+    Parser.Parse();
+
+    CHECK(Parser.GetNormal(1) == Vector(0., 0. ,1.));
+    CHECK(Parser.GetNormal(2) == Vector(0.707, 0. , -0.707));
+    CHECK(Parser.GetNormal(3) == Vector(1., 2. ,3.));
+}
+
+TEST_CASE("Faces with normals")
+{
+    ObjParser Parser("./test/obj/test6.obj");
+    Parser.Parse();
+
+    auto SG = Parser.GetSGroup("Default");
+    auto T1 = SG[0];
+    auto T2 = SG[1];
+
+    auto G = Parser.GetGroup("Default");
+    auto T3 = G[0];
+
+    CHECK(T1.GetP1() == Parser.GetVertex(1));
+    CHECK(T1.GetP2() == Parser.GetVertex(2));
+    CHECK(T1.GetP3() == Parser.GetVertex(3));
+    CHECK(T1.GetN1() == Parser.GetNormal(3));
+    CHECK(T1.GetN2() == Parser.GetNormal(1));
+    CHECK(T1.GetN3() == Parser.GetNormal(2));
+
+    CHECK(T2.GetP1() == Parser.GetVertex(1));
+    CHECK(T2.GetP2() == Parser.GetVertex(2));
+    CHECK(T2.GetP3() == Parser.GetVertex(3));
+    CHECK(T2.GetN1() == Parser.GetNormal(3));
+    CHECK(T2.GetN2() == Parser.GetNormal(1));
+    CHECK(T2.GetN3() == Parser.GetNormal(2));
+
+    CHECK(T3.GetP1() == Parser.GetVertex(1));
+    CHECK(T3.GetP2() == Parser.GetVertex(2));
+    CHECK(T3.GetP3() == Parser.GetVertex(3));
 }
