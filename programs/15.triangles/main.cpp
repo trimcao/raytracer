@@ -29,14 +29,12 @@
 void RoomScene()
 {
     // parse the teapot obj
-    ObjParser Parser("/Users/trimcao/tri/raytracer/programs/15.triangles/teapot-low.obj", false);
+    ObjParser Parser("/Users/trimcao/tri/raytracer/programs/15.triangles/teapot-low.obj", true);
     Parser.Parse();
 
     auto ParsedObjs = Parser.ObjToGroup();
 
     auto Teapot = ParsedObjs["Teapot001"];
-
-    auto TeapotShapes = Teapot->GetShapes();
 
     auto Mat = Material();
     Mat.SetColor(Color(255, 151, 52));
@@ -45,7 +43,7 @@ void RoomScene()
 
     std::shared_ptr<Object> TeapotPtr = Teapot;
     TeapotPtr->SetTransform(Transformations::Scaling(0.1, 0.1, 0.1).RotateX(-M_PI/2).Translate(0., 0., -1.));
-    Teapot->SetMaterial(Mat);
+    TeapotPtr->SetMaterial(Mat);
 
     Plane Floor(1);
     Mat = Material();
@@ -75,13 +73,12 @@ void RoomScene()
     World W;
     Light L(Color(1., 1., 1.), Point(-10., 8., -10.));
     W.SetLight(L);
-    // W.AddObject(TestGroup);
     W.AddObject(TeapotPtr);
     W.AddObject(Floor);
     W.AddObject(LeftWall);
     W.AddObject(RightWall);
 
-    Camera Cam(128, 72, M_PI/3);
+    Camera Cam(640, 360, M_PI/3);
     Cam.SetTransform(Transformations::ViewTransform(Point(0.1, 2., -5.),
                                                     Point(0., 0., 1.),
                                                     Vector(0., 1., 0.)));
@@ -90,7 +87,7 @@ void RoomScene()
 
     auto CV = Cam.Render(W, RenderShadow, true, 5);
 
-    std::ofstream out("output3.ppm");
+    std::ofstream out("smooth.ppm");
     out << CV.ToPPM();
     out.close();
 }

@@ -213,6 +213,19 @@ std::unordered_map<std::string, std::shared_ptr<Groups>> ObjParser::ObjToGroup()
         OutputGroups[G.first] = NewGroup;
     }
 
+    for (auto &G: STriGroups)
+    {
+        for (auto &Child: G.second)
+        {
+            std::shared_ptr<Object> NewChild = std::make_shared<SmoothTriangles>(Child);
+            if (OutputGroups.find(G.first) == OutputGroups.end())
+            {
+                OutputGroups[G.first] = std::make_shared<Groups>(Groups());
+            }
+            OutputGroups[G.first]->AddChild(NewChild);
+        }
+    }
+
     return OutputGroups;
 }
 
