@@ -59,6 +59,7 @@ public:
     }
 
     inline virtual void AddChild(std::shared_ptr<Object> &S) {};
+    inline virtual bool Include(Object *S) { return (this == S); }
 };
 
 class TestShape : public Object

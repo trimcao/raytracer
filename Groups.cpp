@@ -56,6 +56,16 @@ std::vector<Intersection<Object>> Groups::LocalIntersect(const Ray &LocalRay)
     return Intersections;
 }
 
+bool Groups::Include(Object *S)
+{
+    for (auto &Child: Shapes)
+    {
+        if (Child->Include(S))
+            return true;
+    }
+    return false;
+}
+
 TEST_CASE("Creating a new group")
 {
     Groups G;
