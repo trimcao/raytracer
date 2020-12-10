@@ -231,14 +231,14 @@ std::unordered_map<std::string, std::shared_ptr<Groups>> ObjParser::ObjToGroup()
 
 TEST_CASE("Ignoring unrecognized lines")
 {
-    ObjParser Parser("./test/obj/test1.obj");
+    ObjParser Parser("../test/obj/test1.obj");
     Parser.Parse();
     CHECK(Parser.GetIgnoredLines() == 5);
 }
 
 TEST_CASE("Vertex records")
 {
-    ObjParser Parser("./test/obj/test2.obj");
+    ObjParser Parser("../test/obj/test2.obj");
     Parser.Parse();
 
     CHECK(Parser.GetVertex(1) == Point(-1., 1. ,0.));
@@ -249,7 +249,7 @@ TEST_CASE("Vertex records")
 
 TEST_CASE("Parsing triangle faces")
 {
-    ObjParser Parser("./test/obj/test3.obj");
+    ObjParser Parser("../test/obj/test3.obj");
     Parser.Parse();
 
     auto G = Parser.GetGroup("Default");
@@ -267,7 +267,7 @@ TEST_CASE("Parsing triangle faces")
 
 TEST_CASE("Triangulating polygons")
 {
-    ObjParser Parser("./test/obj/test4.obj");
+    ObjParser Parser("../test/obj/test4.obj");
     Parser.Parse();
 
     auto G = Parser.GetGroup("Default");
@@ -290,7 +290,7 @@ TEST_CASE("Triangulating polygons")
 
 TEST_CASE("Triangles in groups")
 {
-    ObjParser Parser("./test/obj/triangles.obj");
+    ObjParser Parser("../test/obj/triangles.obj");
     Parser.Parse();
 
     auto G1 = Parser.GetGroup("FirstGroup");
@@ -309,7 +309,7 @@ TEST_CASE("Triangles in groups")
 
 TEST_CASE("Triangles in groups")
 {
-    ObjParser Parser("./test/obj/triangles.obj");
+    ObjParser Parser("../test/obj/triangles.obj");
     Parser.Parse();
 
     auto G = Parser.ObjToGroup();
@@ -319,7 +319,7 @@ TEST_CASE("Triangles in groups")
 
 TEST_CASE("Triangles in groups, with different face format")
 {
-    ObjParser Parser("./test/obj/triangles2.obj");
+    ObjParser Parser("../test/obj/triangles2.obj");
     Parser.Parse();
 
     auto G1 = Parser.GetGroup("Teapot101");
@@ -338,7 +338,7 @@ TEST_CASE("Triangles in groups, with different face format")
 
 TEST_CASE("Vertex normal records")
 {
-    ObjParser Parser("./test/obj/test5.obj");
+    ObjParser Parser("../test/obj/test5.obj");
     Parser.Parse();
 
     CHECK(Parser.GetNormal(1) == Vector(0., 0. ,1.));
@@ -348,7 +348,7 @@ TEST_CASE("Vertex normal records")
 
 TEST_CASE("Faces with normals")
 {
-    ObjParser Parser("./test/obj/test6.obj");
+    ObjParser Parser("../test/obj/test6.obj");
     Parser.Parse();
 
     auto SG = Parser.GetSGroup("Default");
@@ -379,7 +379,7 @@ TEST_CASE("Faces with normals")
 
 TEST_CASE("Faces with normals, but ignore normals in parser")
 {
-    ObjParser Parser("./test/obj/test6.obj", false);
+    ObjParser Parser("../test/obj/test6.obj", false);
     Parser.Parse();
 
     CHECK(Parser.GetSGroup("Default").size() == 0);
