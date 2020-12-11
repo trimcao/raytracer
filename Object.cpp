@@ -2,6 +2,7 @@
 #include <exception>
 #include <stdexcept>
 #include <memory>
+#include <cmath>
 #include "include/Object.h"
 #include "include/Transformations.h"
 #include "include/Functions.h"
