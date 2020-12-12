@@ -133,88 +133,88 @@ void Cones::IntersectCaps(const Ray &R, std::vector<Intersection<Object>> &Inter
     }
 }
 
-TEST_CASE("Intersecting a cone with a ray")
-{
-    std::shared_ptr<Object> Cone = std::make_shared<Cones>(Cones());
-    Vector Direction;
-    Ray R;
-    std::vector<Intersection<Object>> XS;
+// TEST_CASE("Intersecting a cone with a ray")
+// {
+//     std::shared_ptr<Object> Cone = std::make_shared<Cones>(Cones());
+//     Vector Direction;
+//     Ray R;
+//     std::vector<Intersection<Object>> XS;
 
-    Direction = Vector(0., 0., 1.).Normalize();
-    R = Ray(Point(0., 0., -5.), Direction);
-    XS = Cone->LocalIntersect(R);
-    CHECK(XS.size() == 2);
-    CHECK(Util::Equal(XS[0].GetT(), 5.));
-    CHECK(Util::Equal(XS[1].GetT(), 5.));
+//     Direction = Vector(0., 0., 1.).Normalize();
+//     R = Ray(Point(0., 0., -5.), Direction);
+//     XS = Cone->LocalIntersect(R);
+//     CHECK(XS.size() == 2);
+//     CHECK(Util::Equal(XS[0].GetT(), 5.));
+//     CHECK(Util::Equal(XS[1].GetT(), 5.));
 
-    Direction = Vector(1., 1., 1.).Normalize();
-    R = Ray(Point(0., 0., -5.), Direction);
-    XS = Cone->LocalIntersect(R);
-    CHECK(XS.size() == 2);
-    CHECK(Util::Equal(XS[0].GetT(), 8.66025));
-    CHECK(Util::Equal(XS[1].GetT(), 8.66025));
+//     Direction = Vector(1., 1., 1.).Normalize();
+//     R = Ray(Point(0., 0., -5.), Direction);
+//     XS = Cone->LocalIntersect(R);
+//     CHECK(XS.size() == 2);
+//     CHECK(Util::Equal(XS[0].GetT(), 8.66025));
+//     CHECK(Util::Equal(XS[1].GetT(), 8.66025));
 
-    Direction = Vector(-0.5, -1., 1.).Normalize();
-    R = Ray(Point(1., 1., -5.), Direction);
-    XS = Cone->LocalIntersect(R);
-    CHECK(XS.size() == 2);
-    CHECK(Util::Equal(XS[0].GetT(), 4.55006));
-    CHECK(Util::Equal(XS[1].GetT(), 49.44994));
-}
+//     Direction = Vector(-0.5, -1., 1.).Normalize();
+//     R = Ray(Point(1., 1., -5.), Direction);
+//     XS = Cone->LocalIntersect(R);
+//     CHECK(XS.size() == 2);
+//     CHECK(Util::Equal(XS[0].GetT(), 4.55006));
+//     CHECK(Util::Equal(XS[1].GetT(), 49.44994));
+// }
 
-TEST_CASE("Intersecting a cone with a ray parallel to one of its halves")
-{
-    std::shared_ptr<Object> Cone = std::make_shared<Cones>(Cones());
-    Vector Direction;
-    Ray R;
-    std::vector<Intersection<Object>> XS;
+// TEST_CASE("Intersecting a cone with a ray parallel to one of its halves")
+// {
+//     std::shared_ptr<Object> Cone = std::make_shared<Cones>(Cones());
+//     Vector Direction;
+//     Ray R;
+//     std::vector<Intersection<Object>> XS;
 
-    Direction = Vector(0., 1., 1.).Normalize();
-    R = Ray(Point(0., 0., -1.), Direction);
-    XS = Cone->LocalIntersect(R);
-    CHECK(XS.size() == 1);
-    CHECK(Util::Equal(XS[0].GetT(), 0.35355));
-}
+//     Direction = Vector(0., 1., 1.).Normalize();
+//     R = Ray(Point(0., 0., -1.), Direction);
+//     XS = Cone->LocalIntersect(R);
+//     CHECK(XS.size() == 1);
+//     CHECK(Util::Equal(XS[0].GetT(), 0.35355));
+// }
 
-TEST_CASE("Intersecting a cone's end caps")
-{
-    Cones Cone;
-    Cone.SetMin(-0.5);
-    Cone.SetMax(0.5);
-    Cone.SetClosed(true);
+// TEST_CASE("Intersecting a cone's end caps")
+// {
+//     Cones Cone;
+//     Cone.SetMin(-0.5);
+//     Cone.SetMax(0.5);
+//     Cone.SetClosed(true);
 
-    std::shared_ptr<Object> ConePtr = std::make_shared<Cones>(Cone);
-    Vector Direction;
-    Ray R;
-    std::vector<Intersection<Object>> XS;
+//     std::shared_ptr<Object> ConePtr = std::make_shared<Cones>(Cone);
+//     Vector Direction;
+//     Ray R;
+//     std::vector<Intersection<Object>> XS;
 
-    Direction = Vector(0., 1., 0.).Normalize();
-    R = Ray(Point(0., 0., -5.), Direction);
-    XS = ConePtr->LocalIntersect(R);
-    CHECK(XS.size() == 0);
+//     Direction = Vector(0., 1., 0.).Normalize();
+//     R = Ray(Point(0., 0., -5.), Direction);
+//     XS = ConePtr->LocalIntersect(R);
+//     CHECK(XS.size() == 0);
 
-    Direction = Vector(0., 1., 1.).Normalize();
-    R = Ray(Point(0., 0., -0.25), Direction);
-    XS = ConePtr->LocalIntersect(R);
-    CHECK(XS.size() == 2);
+//     Direction = Vector(0., 1., 1.).Normalize();
+//     R = Ray(Point(0., 0., -0.25), Direction);
+//     XS = ConePtr->LocalIntersect(R);
+//     CHECK(XS.size() == 2);
 
-    Direction = Vector(0., 1., 0.).Normalize();
-    R = Ray(Point(0., 0., -0.25), Direction);
-    XS = ConePtr->LocalIntersect(R);
-    CHECK(XS.size() == 4);
-}
+//     Direction = Vector(0., 1., 0.).Normalize();
+//     R = Ray(Point(0., 0., -0.25), Direction);
+//     XS = ConePtr->LocalIntersect(R);
+//     CHECK(XS.size() == 4);
+// }
 
-TEST_CASE("Computing the normal vector on a cone")
-{
-    std::shared_ptr<Object> Cone = std::make_shared<Cones>(Cones());
-    Vector N;
+// TEST_CASE("Computing the normal vector on a cone")
+// {
+//     std::shared_ptr<Object> Cone = std::make_shared<Cones>(Cones());
+//     Vector N;
 
-    N = Cone->LocalNormalAt(Point(0., 0., 0.));
-    CHECK(N == Vector(0., 0., 0.));
+//     N = Cone->LocalNormalAt(Point(0., 0., 0.));
+//     CHECK(N == Vector(0., 0., 0.));
 
-    N = Cone->LocalNormalAt(Point(1., 1., 1.));
-    CHECK(N == Vector(1., -std::sqrt(2.), 1.));
+//     N = Cone->LocalNormalAt(Point(1., 1., 1.));
+//     CHECK(N == Vector(1., -std::sqrt(2.), 1.));
 
-    N = Cone->LocalNormalAt(Point(-1., -1., 0.));
-    CHECK(N == Vector(-1., 1., 0.));
-}
+//     N = Cone->LocalNormalAt(Point(-1., -1., 0.));
+//     CHECK(N == Vector(-1., 1., 0.));
+// }

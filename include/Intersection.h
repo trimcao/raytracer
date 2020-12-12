@@ -1,6 +1,6 @@
 #pragma once
 
-#include "doctest.h"
+// #include "doctest.h"
 #include "Ray.h"
 #include "Util.h"
 #include <memory>

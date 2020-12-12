@@ -1,6 +1,6 @@
 #pragma once
 
-#include "doctest.h"
+// #include "doctest.h"
 #include <iostream>
 #include <vector>
 
@@ -46,7 +46,28 @@ public:
     }
 
     template<class Derived>
-    Derived Mul(const Derived &RHS);
+    inline Derived Mul(const Derived &RHS)
+    {
+        static_assert(std::is_base_of<Matrix, Derived>::value, "Derived not derived from Matrix");
+
+        if (this->GetNumCols() != RHS.GetNumRows())
+            throw std::invalid_argument("LHS matrix's rows must match RHS matrix's columns.");
+
+        int Dim = this->GetNumCols();
+
+        Derived Res(this->GetNumRows(), RHS.GetNumCols());
+        for (int r = 0; r < Res.GetNumRows(); ++r)
+        {
+            for (int c = 0; c < Res.GetNumCols(); ++c)
+            {
+                for (int i = 0; i < Dim; ++i)
+                {
+                    Res(r, c) += this->At(r, i) * RHS.At(i, c);
+                }
+            }
+        }
+        return Res;
+    }
 
     // transpose
     Matrix T();

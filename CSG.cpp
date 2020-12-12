@@ -105,105 +105,105 @@ bool CSG::Include(Object *S)
     return false;
 }
 
-TEST_CASE("CSG is created with an operation and two shapes")
-{
-    std::shared_ptr<Object> S1 = std::make_shared<Sphere>(Sphere());
-    std::shared_ptr<Object> S2 = std::make_shared<Cubes>(Cubes());
+// TEST_CASE("CSG is created with an operation and two shapes")
+// {
+//     std::shared_ptr<Object> S1 = std::make_shared<Sphere>(Sphere());
+//     std::shared_ptr<Object> S2 = std::make_shared<Cubes>(Cubes());
 
-    CSG C(CSGOp::Union, S1, S2);
-    Object *CPtr = &C;
-    CHECK(C.GetOp() == CSGOp::Union);
-    CHECK(C.GetLeft() == S1);
-    CHECK(C.GetRight() == S2);
-    CHECK(S1->GetParent() == CPtr);
-    CHECK(S2->GetParent() == CPtr);
-}
+//     CSG C(CSGOp::Union, S1, S2);
+//     Object *CPtr = &C;
+//     CHECK(C.GetOp() == CSGOp::Union);
+//     CHECK(C.GetLeft() == S1);
+//     CHECK(C.GetRight() == S2);
+//     CHECK(S1->GetParent() == CPtr);
+//     CHECK(S2->GetParent() == CPtr);
+// }
 
-TEST_CASE("Evaluating the rule for a CSG operation")
-{
-    std::shared_ptr<Object> S = std::make_shared<Sphere>(Sphere());
-    auto C = CSG(CSGOp::Union, S, S);
-    CHECK(C.IntersectionAllowed(true, true, true) == false);
-    CHECK(C.IntersectionAllowed(true, true, false) == true);
-    CHECK(C.IntersectionAllowed(true, false, true) == false);
-    CHECK(C.IntersectionAllowed(true, false, false) == true);
-    CHECK(C.IntersectionAllowed(false, true, true) == false);
-    CHECK(C.IntersectionAllowed(false, true, false) == false);
-    CHECK(C.IntersectionAllowed(false, false, true) == true);
-    CHECK(C.IntersectionAllowed(false, false, false) == true);
+// TEST_CASE("Evaluating the rule for a CSG operation")
+// {
+//     std::shared_ptr<Object> S = std::make_shared<Sphere>(Sphere());
+//     auto C = CSG(CSGOp::Union, S, S);
+//     CHECK(C.IntersectionAllowed(true, true, true) == false);
+//     CHECK(C.IntersectionAllowed(true, true, false) == true);
+//     CHECK(C.IntersectionAllowed(true, false, true) == false);
+//     CHECK(C.IntersectionAllowed(true, false, false) == true);
+//     CHECK(C.IntersectionAllowed(false, true, true) == false);
+//     CHECK(C.IntersectionAllowed(false, true, false) == false);
+//     CHECK(C.IntersectionAllowed(false, false, true) == true);
+//     CHECK(C.IntersectionAllowed(false, false, false) == true);
     
-    C = CSG(CSGOp::Intersection, S, S);
-    CHECK(C.IntersectionAllowed(true, true, true) == true);
-    CHECK(C.IntersectionAllowed(true, true, false) == false);
-    CHECK(C.IntersectionAllowed(true, false, true) == true);
-    CHECK(C.IntersectionAllowed(true, false, false) == false);
-    CHECK(C.IntersectionAllowed(false, true, true) == true);
-    CHECK(C.IntersectionAllowed(false, true, false) == true);
-    CHECK(C.IntersectionAllowed(false, false, true) == false);
-    CHECK(C.IntersectionAllowed(false, false, false) == false);
+//     C = CSG(CSGOp::Intersection, S, S);
+//     CHECK(C.IntersectionAllowed(true, true, true) == true);
+//     CHECK(C.IntersectionAllowed(true, true, false) == false);
+//     CHECK(C.IntersectionAllowed(true, false, true) == true);
+//     CHECK(C.IntersectionAllowed(true, false, false) == false);
+//     CHECK(C.IntersectionAllowed(false, true, true) == true);
+//     CHECK(C.IntersectionAllowed(false, true, false) == true);
+//     CHECK(C.IntersectionAllowed(false, false, true) == false);
+//     CHECK(C.IntersectionAllowed(false, false, false) == false);
 
-    C = CSG(CSGOp::Difference, S, S);
-    CHECK(C.IntersectionAllowed(true, true, true) == false);
-    CHECK(C.IntersectionAllowed(true, true, false) == true);
-    CHECK(C.IntersectionAllowed(true, false, true) == false);
-    CHECK(C.IntersectionAllowed(true, false, false) == true);
-    CHECK(C.IntersectionAllowed(false, true, true) == true);
-    CHECK(C.IntersectionAllowed(false, true, false) == true);
-    CHECK(C.IntersectionAllowed(false, false, true) == false);
-    CHECK(C.IntersectionAllowed(false, false, false) == false);
-}
+//     C = CSG(CSGOp::Difference, S, S);
+//     CHECK(C.IntersectionAllowed(true, true, true) == false);
+//     CHECK(C.IntersectionAllowed(true, true, false) == true);
+//     CHECK(C.IntersectionAllowed(true, false, true) == false);
+//     CHECK(C.IntersectionAllowed(true, false, false) == true);
+//     CHECK(C.IntersectionAllowed(false, true, true) == true);
+//     CHECK(C.IntersectionAllowed(false, true, false) == true);
+//     CHECK(C.IntersectionAllowed(false, false, true) == false);
+//     CHECK(C.IntersectionAllowed(false, false, false) == false);
+// }
 
-TEST_CASE("Filtering a list of intersections")
-{
-    std::shared_ptr<Object> S1 = std::make_shared<Sphere>(Sphere());
-    std::shared_ptr<Object> S2 = std::make_shared<Cubes>(Cubes());
+// TEST_CASE("Filtering a list of intersections")
+// {
+//     std::shared_ptr<Object> S1 = std::make_shared<Sphere>(Sphere());
+//     std::shared_ptr<Object> S2 = std::make_shared<Cubes>(Cubes());
 
-    std::vector<Intersection<Object>> XS { Intersection<Object>(1., S1.get()),
-                                            Intersection<Object>(2., S2.get()),
-                                            Intersection<Object>(3., S1.get()),
-                                            Intersection<Object>(4., S2.get())};
+//     std::vector<Intersection<Object>> XS { Intersection<Object>(1., S1.get()),
+//                                             Intersection<Object>(2., S2.get()),
+//                                             Intersection<Object>(3., S1.get()),
+//                                             Intersection<Object>(4., S2.get())};
 
-    auto C = CSG(CSGOp::Union, S1, S2);
-    auto Result = C.FilterIntersections(XS);
-    CHECK(Result.size() == 2);
-    CHECK(Result[0] == XS[0]);
-    CHECK(Result[1] == XS[3]);
+//     auto C = CSG(CSGOp::Union, S1, S2);
+//     auto Result = C.FilterIntersections(XS);
+//     CHECK(Result.size() == 2);
+//     CHECK(Result[0] == XS[0]);
+//     CHECK(Result[1] == XS[3]);
 
-    C = CSG(CSGOp::Intersection, S1, S2);
-    Result = C.FilterIntersections(XS);
-    CHECK(Result.size() == 2);
-    CHECK(Result[0] == XS[1]);
-    CHECK(Result[1] == XS[2]);
+//     C = CSG(CSGOp::Intersection, S1, S2);
+//     Result = C.FilterIntersections(XS);
+//     CHECK(Result.size() == 2);
+//     CHECK(Result[0] == XS[1]);
+//     CHECK(Result[1] == XS[2]);
 
-    C = CSG(CSGOp::Difference, S1, S2);
-    Result = C.FilterIntersections(XS);
-    CHECK(Result.size() == 2);
-    CHECK(Result[0] == XS[0]);
-    CHECK(Result[1] == XS[1]);
-}
+//     C = CSG(CSGOp::Difference, S1, S2);
+//     Result = C.FilterIntersections(XS);
+//     CHECK(Result.size() == 2);
+//     CHECK(Result[0] == XS[0]);
+//     CHECK(Result[1] == XS[1]);
+// }
 
-TEST_CASE("A ray misses a CSG object")
-{
-    std::shared_ptr<Object> S1 = std::make_shared<Sphere>(Sphere());
-    std::shared_ptr<Object> S2 = std::make_shared<Cubes>(Cubes());
-    auto C = CSG(CSGOp::Union, S1, S2);
-    Ray R(Point(0., 2., -5.), Vector(0., 0., 1.));
-    auto XS = C.LocalIntersect(R);
-    CHECK(XS.size() == 0);
-}
+// TEST_CASE("A ray misses a CSG object")
+// {
+//     std::shared_ptr<Object> S1 = std::make_shared<Sphere>(Sphere());
+//     std::shared_ptr<Object> S2 = std::make_shared<Cubes>(Cubes());
+//     auto C = CSG(CSGOp::Union, S1, S2);
+//     Ray R(Point(0., 2., -5.), Vector(0., 0., 1.));
+//     auto XS = C.LocalIntersect(R);
+//     CHECK(XS.size() == 0);
+// }
 
-TEST_CASE("A ray hits a CSG object")
-{
-    std::shared_ptr<Object> S1 = std::make_shared<Sphere>(Sphere());
-    std::shared_ptr<Object> S2 = std::make_shared<Sphere>(Sphere());
-    S2->SetTransform(Transformations::Translation(0., 0., 0.5));
+// TEST_CASE("A ray hits a CSG object")
+// {
+//     std::shared_ptr<Object> S1 = std::make_shared<Sphere>(Sphere());
+//     std::shared_ptr<Object> S2 = std::make_shared<Sphere>(Sphere());
+//     S2->SetTransform(Transformations::Translation(0., 0., 0.5));
 
-    auto C = CSG(CSGOp::Union, S1, S2);
-    Ray R(Point(0., 0., -5.), Vector(0., 0., 1.));
-    auto XS = C.LocalIntersect(R);
-    CHECK(XS.size() == 2);
-    CHECK(XS[0].GetObject() == S1.get());
-    CHECK(Util::Equal(XS[0].GetT(), 4.));
-    CHECK(XS[1].GetObject() == S2.get());
-    CHECK(Util::Equal(XS[1].GetT(), 6.5));
-}
+//     auto C = CSG(CSGOp::Union, S1, S2);
+//     Ray R(Point(0., 0., -5.), Vector(0., 0., 1.));
+//     auto XS = C.LocalIntersect(R);
+//     CHECK(XS.size() == 2);
+//     CHECK(XS[0].GetObject() == S1.get());
+//     CHECK(Util::Equal(XS[0].GetT(), 4.));
+//     CHECK(XS[1].GetObject() == S2.get());
+//     CHECK(Util::Equal(XS[1].GetT(), 6.5));
+// }

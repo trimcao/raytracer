@@ -44,16 +44,16 @@ bool operator!=(const Material &LHS, const Material &RHS)
     return !(LHS == RHS);
 }
 
-TEST_CASE("The default material")
-{
-    Material M;
+// TEST_CASE("The default material")
+// {
+//     Material M;
 
-    CHECK(M.GetColor() == Color(1., 1., 1.));
-    CHECK(Util::Equal(M.GetAmbient(), 0.1));
-    CHECK(Util::Equal(M.GetDiffuse(), 0.9));
-    CHECK(Util::Equal(M.GetSpecular(), 0.9));
-    CHECK(Util::Equal(M.GetShininess(), 200.));
-    CHECK(Util::Equal(M.GetReflective(), 0.));
-    CHECK(Util::Equal(M.GetTransparency(), 0.));
-    CHECK(Util::Equal(M.GetRefractiveIndex(), 1.));
-}
+//     CHECK(M.GetColor() == Color(1., 1., 1.));
+//     CHECK(Util::Equal(M.GetAmbient(), 0.1));
+//     CHECK(Util::Equal(M.GetDiffuse(), 0.9));
+//     CHECK(Util::Equal(M.GetSpecular(), 0.9));
+//     CHECK(Util::Equal(M.GetShininess(), 200.));
+//     CHECK(Util::Equal(M.GetReflective(), 0.));
+//     CHECK(Util::Equal(M.GetTransparency(), 0.));
+//     CHECK(Util::Equal(M.GetRefractiveIndex(), 1.));
+// }

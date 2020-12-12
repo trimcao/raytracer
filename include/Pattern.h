@@ -1,6 +1,6 @@
 #pragma once
 
-#include "doctest.h"
+// #include "doctest.h"
 #include "Color.h"
 #include "Point.h"
 #include "Matrix.h"

@@ -229,159 +229,159 @@ std::unordered_map<std::string, std::shared_ptr<Groups>> ObjParser::ObjToGroup()
     return OutputGroups;
 }
 
-TEST_CASE("Ignoring unrecognized lines")
-{
-    ObjParser Parser("../test/obj/test1.obj");
-    Parser.Parse();
-    CHECK(Parser.GetIgnoredLines() == 5);
-}
+// TEST_CASE("Ignoring unrecognized lines")
+// {
+//     ObjParser Parser("../test/obj/test1.obj");
+//     Parser.Parse();
+//     CHECK(Parser.GetIgnoredLines() == 5);
+// }
 
-TEST_CASE("Vertex records")
-{
-    ObjParser Parser("../test/obj/test2.obj");
-    Parser.Parse();
+// TEST_CASE("Vertex records")
+// {
+//     ObjParser Parser("../test/obj/test2.obj");
+//     Parser.Parse();
 
-    CHECK(Parser.GetVertex(1) == Point(-1., 1. ,0.));
-    CHECK(Parser.GetVertex(2) == Point(-1., 0.5 ,0.));
-    CHECK(Parser.GetVertex(3) == Point(1., 0. ,0.));
-    CHECK(Parser.GetVertex(4) == Point(1., 1. ,0.));
-}
+//     CHECK(Parser.GetVertex(1) == Point(-1., 1. ,0.));
+//     CHECK(Parser.GetVertex(2) == Point(-1., 0.5 ,0.));
+//     CHECK(Parser.GetVertex(3) == Point(1., 0. ,0.));
+//     CHECK(Parser.GetVertex(4) == Point(1., 1. ,0.));
+// }
 
-TEST_CASE("Parsing triangle faces")
-{
-    ObjParser Parser("../test/obj/test3.obj");
-    Parser.Parse();
+// TEST_CASE("Parsing triangle faces")
+// {
+//     ObjParser Parser("../test/obj/test3.obj");
+//     Parser.Parse();
 
-    auto G = Parser.GetGroup("Default");
-    auto T1 = G[0];
-    auto T2 = G[1];
+//     auto G = Parser.GetGroup("Default");
+//     auto T1 = G[0];
+//     auto T2 = G[1];
 
-    CHECK(T1.GetP1() == Parser.GetVertex(1));
-    CHECK(T1.GetP2() == Parser.GetVertex(2));
-    CHECK(T1.GetP3() == Parser.GetVertex(3));
+//     CHECK(T1.GetP1() == Parser.GetVertex(1));
+//     CHECK(T1.GetP2() == Parser.GetVertex(2));
+//     CHECK(T1.GetP3() == Parser.GetVertex(3));
 
-    CHECK(T2.GetP1() == Parser.GetVertex(1));
-    CHECK(T2.GetP2() == Parser.GetVertex(3));
-    CHECK(T2.GetP3() == Parser.GetVertex(4));
-}
+//     CHECK(T2.GetP1() == Parser.GetVertex(1));
+//     CHECK(T2.GetP2() == Parser.GetVertex(3));
+//     CHECK(T2.GetP3() == Parser.GetVertex(4));
+// }
 
-TEST_CASE("Triangulating polygons")
-{
-    ObjParser Parser("../test/obj/test4.obj");
-    Parser.Parse();
+// TEST_CASE("Triangulating polygons")
+// {
+//     ObjParser Parser("../test/obj/test4.obj");
+//     Parser.Parse();
 
-    auto G = Parser.GetGroup("Default");
-    auto T1 = G[0];
-    auto T2 = G[1];
-    auto T3 = G[2];
+//     auto G = Parser.GetGroup("Default");
+//     auto T1 = G[0];
+//     auto T2 = G[1];
+//     auto T3 = G[2];
 
-    CHECK(T1.GetP1() == Parser.GetVertex(1));
-    CHECK(T1.GetP2() == Parser.GetVertex(2));
-    CHECK(T1.GetP3() == Parser.GetVertex(3));
+//     CHECK(T1.GetP1() == Parser.GetVertex(1));
+//     CHECK(T1.GetP2() == Parser.GetVertex(2));
+//     CHECK(T1.GetP3() == Parser.GetVertex(3));
 
-    CHECK(T2.GetP1() == Parser.GetVertex(1));
-    CHECK(T2.GetP2() == Parser.GetVertex(3));
-    CHECK(T2.GetP3() == Parser.GetVertex(4));
+//     CHECK(T2.GetP1() == Parser.GetVertex(1));
+//     CHECK(T2.GetP2() == Parser.GetVertex(3));
+//     CHECK(T2.GetP3() == Parser.GetVertex(4));
 
-    CHECK(T3.GetP1() == Parser.GetVertex(1));
-    CHECK(T3.GetP2() == Parser.GetVertex(4));
-    CHECK(T3.GetP3() == Parser.GetVertex(5));
-}
+//     CHECK(T3.GetP1() == Parser.GetVertex(1));
+//     CHECK(T3.GetP2() == Parser.GetVertex(4));
+//     CHECK(T3.GetP3() == Parser.GetVertex(5));
+// }
 
-TEST_CASE("Triangles in groups")
-{
-    ObjParser Parser("../test/obj/triangles.obj");
-    Parser.Parse();
+// TEST_CASE("Triangles in groups")
+// {
+//     ObjParser Parser("../test/obj/triangles.obj");
+//     Parser.Parse();
 
-    auto G1 = Parser.GetGroup("FirstGroup");
-    auto G2 = Parser.GetGroup("SecondGroup");
-    auto T1 = G1[0];
-    auto T2 = G2[0];
+//     auto G1 = Parser.GetGroup("FirstGroup");
+//     auto G2 = Parser.GetGroup("SecondGroup");
+//     auto T1 = G1[0];
+//     auto T2 = G2[0];
 
-    CHECK(T1.GetP1() == Parser.GetVertex(1));
-    CHECK(T1.GetP2() == Parser.GetVertex(2));
-    CHECK(T1.GetP3() == Parser.GetVertex(3));
+//     CHECK(T1.GetP1() == Parser.GetVertex(1));
+//     CHECK(T1.GetP2() == Parser.GetVertex(2));
+//     CHECK(T1.GetP3() == Parser.GetVertex(3));
 
-    CHECK(T2.GetP1() == Parser.GetVertex(1));
-    CHECK(T2.GetP2() == Parser.GetVertex(3));
-    CHECK(T2.GetP3() == Parser.GetVertex(4));
-}
+//     CHECK(T2.GetP1() == Parser.GetVertex(1));
+//     CHECK(T2.GetP2() == Parser.GetVertex(3));
+//     CHECK(T2.GetP3() == Parser.GetVertex(4));
+// }
 
-TEST_CASE("Triangles in groups")
-{
-    ObjParser Parser("../test/obj/triangles.obj");
-    Parser.Parse();
+// TEST_CASE("Triangles in groups")
+// {
+//     ObjParser Parser("../test/obj/triangles.obj");
+//     Parser.Parse();
 
-    auto G = Parser.ObjToGroup();
-    CHECK(G["FirstGroup"]->GetShapes().size() == 1);
-    CHECK(G["SecondGroup"]->GetShapes().size() == 1);
-}
+//     auto G = Parser.ObjToGroup();
+//     CHECK(G["FirstGroup"]->GetShapes().size() == 1);
+//     CHECK(G["SecondGroup"]->GetShapes().size() == 1);
+// }
 
-TEST_CASE("Triangles in groups, with different face format")
-{
-    ObjParser Parser("../test/obj/triangles2.obj");
-    Parser.Parse();
+// TEST_CASE("Triangles in groups, with different face format")
+// {
+//     ObjParser Parser("../test/obj/triangles2.obj");
+//     Parser.Parse();
 
-    auto G1 = Parser.GetGroup("Teapot101");
-    auto G2 = Parser.GetGroup("Teapot202");
-    auto T1 = G1[0];
-    auto T2 = G2[0];
+//     auto G1 = Parser.GetGroup("Teapot101");
+//     auto G2 = Parser.GetGroup("Teapot202");
+//     auto T1 = G1[0];
+//     auto T2 = G2[0];
 
-    CHECK(T1.GetP1() == Parser.GetVertex(1));
-    CHECK(T1.GetP2() == Parser.GetVertex(2));
-    CHECK(T1.GetP3() == Parser.GetVertex(3));
+//     CHECK(T1.GetP1() == Parser.GetVertex(1));
+//     CHECK(T1.GetP2() == Parser.GetVertex(2));
+//     CHECK(T1.GetP3() == Parser.GetVertex(3));
 
-    CHECK(T2.GetP1() == Parser.GetVertex(1));
-    CHECK(T2.GetP2() == Parser.GetVertex(3));
-    CHECK(T2.GetP3() == Parser.GetVertex(4));
-}
+//     CHECK(T2.GetP1() == Parser.GetVertex(1));
+//     CHECK(T2.GetP2() == Parser.GetVertex(3));
+//     CHECK(T2.GetP3() == Parser.GetVertex(4));
+// }
 
-TEST_CASE("Vertex normal records")
-{
-    ObjParser Parser("../test/obj/test5.obj");
-    Parser.Parse();
+// TEST_CASE("Vertex normal records")
+// {
+//     ObjParser Parser("../test/obj/test5.obj");
+//     Parser.Parse();
 
-    CHECK(Parser.GetNormal(1) == Vector(0., 0. ,1.));
-    CHECK(Parser.GetNormal(2) == Vector(0.707, 0. , -0.707));
-    CHECK(Parser.GetNormal(3) == Vector(1., 2. ,3.));
-}
+//     CHECK(Parser.GetNormal(1) == Vector(0., 0. ,1.));
+//     CHECK(Parser.GetNormal(2) == Vector(0.707, 0. , -0.707));
+//     CHECK(Parser.GetNormal(3) == Vector(1., 2. ,3.));
+// }
 
-TEST_CASE("Faces with normals")
-{
-    ObjParser Parser("../test/obj/test6.obj");
-    Parser.Parse();
+// TEST_CASE("Faces with normals")
+// {
+//     ObjParser Parser("../test/obj/test6.obj");
+//     Parser.Parse();
 
-    auto SG = Parser.GetSGroup("Default");
-    auto T1 = SG[0];
-    auto T2 = SG[1];
+//     auto SG = Parser.GetSGroup("Default");
+//     auto T1 = SG[0];
+//     auto T2 = SG[1];
 
-    auto G = Parser.GetGroup("Default");
-    auto T3 = G[0];
+//     auto G = Parser.GetGroup("Default");
+//     auto T3 = G[0];
 
-    CHECK(T1.GetP1() == Parser.GetVertex(1));
-    CHECK(T1.GetP2() == Parser.GetVertex(2));
-    CHECK(T1.GetP3() == Parser.GetVertex(3));
-    CHECK(T1.GetN1() == Parser.GetNormal(3));
-    CHECK(T1.GetN2() == Parser.GetNormal(1));
-    CHECK(T1.GetN3() == Parser.GetNormal(2));
+//     CHECK(T1.GetP1() == Parser.GetVertex(1));
+//     CHECK(T1.GetP2() == Parser.GetVertex(2));
+//     CHECK(T1.GetP3() == Parser.GetVertex(3));
+//     CHECK(T1.GetN1() == Parser.GetNormal(3));
+//     CHECK(T1.GetN2() == Parser.GetNormal(1));
+//     CHECK(T1.GetN3() == Parser.GetNormal(2));
 
-    CHECK(T2.GetP1() == Parser.GetVertex(1));
-    CHECK(T2.GetP2() == Parser.GetVertex(2));
-    CHECK(T2.GetP3() == Parser.GetVertex(3));
-    CHECK(T2.GetN1() == Parser.GetNormal(3));
-    CHECK(T2.GetN2() == Parser.GetNormal(1));
-    CHECK(T2.GetN3() == Parser.GetNormal(2));
+//     CHECK(T2.GetP1() == Parser.GetVertex(1));
+//     CHECK(T2.GetP2() == Parser.GetVertex(2));
+//     CHECK(T2.GetP3() == Parser.GetVertex(3));
+//     CHECK(T2.GetN1() == Parser.GetNormal(3));
+//     CHECK(T2.GetN2() == Parser.GetNormal(1));
+//     CHECK(T2.GetN3() == Parser.GetNormal(2));
 
-    CHECK(T3.GetP1() == Parser.GetVertex(1));
-    CHECK(T3.GetP2() == Parser.GetVertex(2));
-    CHECK(T3.GetP3() == Parser.GetVertex(3));
-}
+//     CHECK(T3.GetP1() == Parser.GetVertex(1));
+//     CHECK(T3.GetP2() == Parser.GetVertex(2));
+//     CHECK(T3.GetP3() == Parser.GetVertex(3));
+// }
 
-TEST_CASE("Faces with normals, but ignore normals in parser")
-{
-    ObjParser Parser("../test/obj/test6.obj", false);
-    Parser.Parse();
+// TEST_CASE("Faces with normals, but ignore normals in parser")
+// {
+//     ObjParser Parser("../test/obj/test6.obj", false);
+//     Parser.Parse();
 
-    CHECK(Parser.GetSGroup("Default").size() == 0);
-    CHECK(Parser.GetGroup("Default").size() == 3);
-}
+//     CHECK(Parser.GetSGroup("Default").size() == 0);
+//     CHECK(Parser.GetGroup("Default").size() == 3);
+// }

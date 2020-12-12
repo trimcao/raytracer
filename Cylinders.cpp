@@ -123,193 +123,193 @@ void Cylinders::IntersectCaps(const Ray &R, std::vector<Intersection<Object>> &I
     }
 }
 
-TEST_CASE("A ray misses a cylinder")
-{
-    std::shared_ptr<Object> Cyl = std::make_shared<Cylinders>(Cylinders());
-    Vector Direction;
-    Ray R;
-    std::vector<Intersection<Object>> XS;
+// TEST_CASE("A ray misses a cylinder")
+// {
+//     std::shared_ptr<Object> Cyl = std::make_shared<Cylinders>(Cylinders());
+//     Vector Direction;
+//     Ray R;
+//     std::vector<Intersection<Object>> XS;
 
-    Direction = Vector(0., 1., 0.).Normalize();
-    R = Ray(Point(1., 0., 0.), Direction);
-    XS = Cyl->LocalIntersect(R);
-    CHECK(XS.size() == 0);
+//     Direction = Vector(0., 1., 0.).Normalize();
+//     R = Ray(Point(1., 0., 0.), Direction);
+//     XS = Cyl->LocalIntersect(R);
+//     CHECK(XS.size() == 0);
 
-    Direction = Vector(0., 1., 0.).Normalize();
-    R = Ray(Point(0., 0., 0.), Direction);
-    XS = Cyl->LocalIntersect(R);
-    CHECK(XS.size() == 0);
+//     Direction = Vector(0., 1., 0.).Normalize();
+//     R = Ray(Point(0., 0., 0.), Direction);
+//     XS = Cyl->LocalIntersect(R);
+//     CHECK(XS.size() == 0);
 
-    Direction = Vector(1., 1., 1.).Normalize();
-    R = Ray(Point(0., 0., -5.), Direction);
-    XS = Cyl->LocalIntersect(R);
-    CHECK(XS.size() == 0);    
-}
+//     Direction = Vector(1., 1., 1.).Normalize();
+//     R = Ray(Point(0., 0., -5.), Direction);
+//     XS = Cyl->LocalIntersect(R);
+//     CHECK(XS.size() == 0);    
+// }
 
-TEST_CASE("A ray strikes a cylinder")
-{
-    std::shared_ptr<Object> Cyl = std::make_shared<Cylinders>(Cylinders());
-    Vector Direction;
-    Ray R;
-    std::vector<Intersection<Object>> XS;
+// TEST_CASE("A ray strikes a cylinder")
+// {
+//     std::shared_ptr<Object> Cyl = std::make_shared<Cylinders>(Cylinders());
+//     Vector Direction;
+//     Ray R;
+//     std::vector<Intersection<Object>> XS;
 
-    Direction = Vector(0., 0., 1.).Normalize();
-    R = Ray(Point(1., 0., -5.), Direction);
-    XS = Cyl->LocalIntersect(R);
-    CHECK(XS.size() == 2);
-    CHECK(Util::Equal(XS[0].GetT(), 5.));
-    CHECK(Util::Equal(XS[1].GetT(), 5.));
+//     Direction = Vector(0., 0., 1.).Normalize();
+//     R = Ray(Point(1., 0., -5.), Direction);
+//     XS = Cyl->LocalIntersect(R);
+//     CHECK(XS.size() == 2);
+//     CHECK(Util::Equal(XS[0].GetT(), 5.));
+//     CHECK(Util::Equal(XS[1].GetT(), 5.));
 
-    Direction = Vector(0., 0., 1.).Normalize();
-    R = Ray(Point(0., 0., -5.), Direction);
-    XS = Cyl->LocalIntersect(R);
-    CHECK(XS.size() == 2);
-    CHECK(Util::Equal(XS[0].GetT(), 4.));
-    CHECK(Util::Equal(XS[1].GetT(), 6.));
+//     Direction = Vector(0., 0., 1.).Normalize();
+//     R = Ray(Point(0., 0., -5.), Direction);
+//     XS = Cyl->LocalIntersect(R);
+//     CHECK(XS.size() == 2);
+//     CHECK(Util::Equal(XS[0].GetT(), 4.));
+//     CHECK(Util::Equal(XS[1].GetT(), 6.));
 
-    Direction = Vector(0.1, 1., 1.).Normalize();
-    R = Ray(Point(0.5, 0., -5.), Direction);
-    XS = Cyl->LocalIntersect(R);
-    CHECK(XS.size() == 2);
-    CHECK(Util::Equal(XS[0].GetT(), 6.80798));
-    CHECK(Util::Equal(XS[1].GetT(), 7.08872));
-}
+//     Direction = Vector(0.1, 1., 1.).Normalize();
+//     R = Ray(Point(0.5, 0., -5.), Direction);
+//     XS = Cyl->LocalIntersect(R);
+//     CHECK(XS.size() == 2);
+//     CHECK(Util::Equal(XS[0].GetT(), 6.80798));
+//     CHECK(Util::Equal(XS[1].GetT(), 7.08872));
+// }
 
-TEST_CASE("Normal vector on a cylinder")
-{
-    std::shared_ptr<Object> Cyl = std::make_shared<Cylinders>(Cylinders());
-    Vector N;
+// TEST_CASE("Normal vector on a cylinder")
+// {
+//     std::shared_ptr<Object> Cyl = std::make_shared<Cylinders>(Cylinders());
+//     Vector N;
 
-    N = Cyl->LocalNormalAt(Point(1., 0., 0.));
-    CHECK(N == Vector(1., 0., 0.));
+//     N = Cyl->LocalNormalAt(Point(1., 0., 0.));
+//     CHECK(N == Vector(1., 0., 0.));
 
-    N = Cyl->LocalNormalAt(Point(0., 5., -1.));
-    CHECK(N == Vector(0., 0., -1.));
+//     N = Cyl->LocalNormalAt(Point(0., 5., -1.));
+//     CHECK(N == Vector(0., 0., -1.));
 
-    N = Cyl->LocalNormalAt(Point(0., -2., 1.));
-    CHECK(N == Vector(0., 0., 1.));
+//     N = Cyl->LocalNormalAt(Point(0., -2., 1.));
+//     CHECK(N == Vector(0., 0., 1.));
 
-    N = Cyl->LocalNormalAt(Point(-1., 1., 0.));
-    CHECK(N == Vector(-1., 0., 0.));
-}
+//     N = Cyl->LocalNormalAt(Point(-1., 1., 0.));
+//     CHECK(N == Vector(-1., 0., 0.));
+// }
 
-TEST_CASE("The default minimum and maximum for a cylinder")
-{
-    Cylinders Cyl;
-    CHECK(Cyl.GetMin() == -std::numeric_limits<double>::infinity());
-    CHECK(Cyl.GetMax() == std::numeric_limits<double>::infinity());
-}
+// TEST_CASE("The default minimum and maximum for a cylinder")
+// {
+//     Cylinders Cyl;
+//     CHECK(Cyl.GetMin() == -std::numeric_limits<double>::infinity());
+//     CHECK(Cyl.GetMax() == std::numeric_limits<double>::infinity());
+// }
 
-TEST_CASE("Intersecting a constrained cylinder")
-{
-    Cylinders Cylinder;
-    Cylinder.SetMin(1.);
-    Cylinder.SetMax(2.);
+// TEST_CASE("Intersecting a constrained cylinder")
+// {
+//     Cylinders Cylinder;
+//     Cylinder.SetMin(1.);
+//     Cylinder.SetMax(2.);
 
-    std::shared_ptr<Object> Cyl = std::make_shared<Cylinders>(Cylinder);
-    Vector Direction;
-    Ray R;
-    std::vector<Intersection<Object>> XS;
+//     std::shared_ptr<Object> Cyl = std::make_shared<Cylinders>(Cylinder);
+//     Vector Direction;
+//     Ray R;
+//     std::vector<Intersection<Object>> XS;
 
-    Direction = Vector(0.1, 1., 0.).Normalize();
-    R = Ray(Point(0., 1.5, 0.), Direction);
-    XS = Cyl->LocalIntersect(R);
-    CHECK(XS.size() == 0);
+//     Direction = Vector(0.1, 1., 0.).Normalize();
+//     R = Ray(Point(0., 1.5, 0.), Direction);
+//     XS = Cyl->LocalIntersect(R);
+//     CHECK(XS.size() == 0);
 
-    Direction = Vector(0., 0., 1.).Normalize();
-    R = Ray(Point(0., 3., -5.), Direction);
-    XS = Cyl->LocalIntersect(R);
-    CHECK(XS.size() == 0);
+//     Direction = Vector(0., 0., 1.).Normalize();
+//     R = Ray(Point(0., 3., -5.), Direction);
+//     XS = Cyl->LocalIntersect(R);
+//     CHECK(XS.size() == 0);
 
-    Direction = Vector(0., 0., 1.).Normalize();
-    R = Ray(Point(0., 0., -5.), Direction);
-    XS = Cyl->LocalIntersect(R);
-    CHECK(XS.size() == 0);
+//     Direction = Vector(0., 0., 1.).Normalize();
+//     R = Ray(Point(0., 0., -5.), Direction);
+//     XS = Cyl->LocalIntersect(R);
+//     CHECK(XS.size() == 0);
 
-    Direction = Vector(0., 0., 1.).Normalize();
-    R = Ray(Point(0., 2., -5.), Direction);
-    XS = Cyl->LocalIntersect(R);
-    CHECK(XS.size() == 0);
+//     Direction = Vector(0., 0., 1.).Normalize();
+//     R = Ray(Point(0., 2., -5.), Direction);
+//     XS = Cyl->LocalIntersect(R);
+//     CHECK(XS.size() == 0);
 
-    Direction = Vector(0., 0., 1.).Normalize();
-    R = Ray(Point(0., 1., -5.), Direction);
-    XS = Cyl->LocalIntersect(R);
-    CHECK(XS.size() == 0);
+//     Direction = Vector(0., 0., 1.).Normalize();
+//     R = Ray(Point(0., 1., -5.), Direction);
+//     XS = Cyl->LocalIntersect(R);
+//     CHECK(XS.size() == 0);
 
-    Direction = Vector(0., 0., 1.).Normalize();
-    R = Ray(Point(0., 1.5, -2.), Direction);
-    XS = Cyl->LocalIntersect(R);
-    CHECK(XS.size() == 2);
-}
+//     Direction = Vector(0., 0., 1.).Normalize();
+//     R = Ray(Point(0., 1.5, -2.), Direction);
+//     XS = Cyl->LocalIntersect(R);
+//     CHECK(XS.size() == 2);
+// }
 
-TEST_CASE("The default closed value for a cylinder")
-{
-    Cylinders Cyl;
-    CHECK(Cyl.IsClosed() == false);
-}
+// TEST_CASE("The default closed value for a cylinder")
+// {
+//     Cylinders Cyl;
+//     CHECK(Cyl.IsClosed() == false);
+// }
 
-TEST_CASE("Intersecting the caps of a closed cylinder")
-{
-    Cylinders Cylinder;
-    Cylinder.SetMin(1.);
-    Cylinder.SetMax(2.);
-    Cylinder.SetClosed(true);
+// TEST_CASE("Intersecting the caps of a closed cylinder")
+// {
+//     Cylinders Cylinder;
+//     Cylinder.SetMin(1.);
+//     Cylinder.SetMax(2.);
+//     Cylinder.SetClosed(true);
 
-    std::shared_ptr<Object> Cyl = std::make_shared<Cylinders>(Cylinder);
-    Vector Direction;
-    Ray R;
-    std::vector<Intersection<Object>> XS;
+//     std::shared_ptr<Object> Cyl = std::make_shared<Cylinders>(Cylinder);
+//     Vector Direction;
+//     Ray R;
+//     std::vector<Intersection<Object>> XS;
 
-    Direction = Vector(0., -1., 0.).Normalize();
-    R = Ray(Point(0., 3., 0.), Direction);
-    XS = Cyl->LocalIntersect(R);
-    CHECK(XS.size() == 2);
+//     Direction = Vector(0., -1., 0.).Normalize();
+//     R = Ray(Point(0., 3., 0.), Direction);
+//     XS = Cyl->LocalIntersect(R);
+//     CHECK(XS.size() == 2);
 
-    Direction = Vector(0., -1., 2.).Normalize();
-    R = Ray(Point(0., 3., -2.), Direction);
-    XS = Cyl->LocalIntersect(R);
-    CHECK(XS.size() == 2);
+//     Direction = Vector(0., -1., 2.).Normalize();
+//     R = Ray(Point(0., 3., -2.), Direction);
+//     XS = Cyl->LocalIntersect(R);
+//     CHECK(XS.size() == 2);
 
-    Direction = Vector(0., -1., 1.).Normalize();
-    R = Ray(Point(0., 4., -2.), Direction);
-    XS = Cyl->LocalIntersect(R);
-    CHECK(XS.size() == 2);
+//     Direction = Vector(0., -1., 1.).Normalize();
+//     R = Ray(Point(0., 4., -2.), Direction);
+//     XS = Cyl->LocalIntersect(R);
+//     CHECK(XS.size() == 2);
 
-    Direction = Vector(0., 1., 2.).Normalize();
-    R = Ray(Point(0., 0., -2.), Direction);
-    XS = Cyl->LocalIntersect(R);
-    CHECK(XS.size() == 2);
+//     Direction = Vector(0., 1., 2.).Normalize();
+//     R = Ray(Point(0., 0., -2.), Direction);
+//     XS = Cyl->LocalIntersect(R);
+//     CHECK(XS.size() == 2);
 
-    Direction = Vector(0., 1., 1.).Normalize();
-    R = Ray(Point(0., -1., -2.), Direction);
-    XS = Cyl->LocalIntersect(R);
-    CHECK(XS.size() == 2);
-}
+//     Direction = Vector(0., 1., 1.).Normalize();
+//     R = Ray(Point(0., -1., -2.), Direction);
+//     XS = Cyl->LocalIntersect(R);
+//     CHECK(XS.size() == 2);
+// }
 
-TEST_CASE("Normal vector on a cylinder's end caps")
-{
-    Cylinders Cylinder;
-    Cylinder.SetMin(1.);
-    Cylinder.SetMax(2.);
-    Cylinder.SetClosed(true);
-    std::shared_ptr<Object> Cyl = std::make_shared<Cylinders>(Cylinder);
-    Vector N;
+// TEST_CASE("Normal vector on a cylinder's end caps")
+// {
+//     Cylinders Cylinder;
+//     Cylinder.SetMin(1.);
+//     Cylinder.SetMax(2.);
+//     Cylinder.SetClosed(true);
+//     std::shared_ptr<Object> Cyl = std::make_shared<Cylinders>(Cylinder);
+//     Vector N;
 
-    N = Cyl->LocalNormalAt(Point(0., 1., 0.));
-    CHECK(N == Vector(0., -1., 0.));
+//     N = Cyl->LocalNormalAt(Point(0., 1., 0.));
+//     CHECK(N == Vector(0., -1., 0.));
 
-    N = Cyl->LocalNormalAt(Point(0.5, 1., 0.));
-    CHECK(N == Vector(0., -1., 0.));
+//     N = Cyl->LocalNormalAt(Point(0.5, 1., 0.));
+//     CHECK(N == Vector(0., -1., 0.));
 
-    N = Cyl->LocalNormalAt(Point(0., 1., 0.5));
-    CHECK(N == Vector(0., -1., 0.));
+//     N = Cyl->LocalNormalAt(Point(0., 1., 0.5));
+//     CHECK(N == Vector(0., -1., 0.));
 
-    N = Cyl->LocalNormalAt(Point(0., 2., 0.));
-    CHECK(N == Vector(0., 1., 0.));
+//     N = Cyl->LocalNormalAt(Point(0., 2., 0.));
+//     CHECK(N == Vector(0., 1., 0.));
 
-    N = Cyl->LocalNormalAt(Point(0.5, 2., 0.));
-    CHECK(N == Vector(0., 1., 0.));
+//     N = Cyl->LocalNormalAt(Point(0.5, 2., 0.));
+//     CHECK(N == Vector(0., 1., 0.));
 
-    N = Cyl->LocalNormalAt(Point(0., 2., 0.5));
-    CHECK(N == Vector(0., 1., 0.));
-}
+//     N = Cyl->LocalNormalAt(Point(0., 2., 0.5));
+//     CHECK(N == Vector(0., 1., 0.));
+// }
