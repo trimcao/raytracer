@@ -1,12 +1,9 @@
-#define DOCTEST_CONFIG_IMPLEMENT
-// #define DOCTEST_CONFIG_DISABLE
 #include <iostream>
 #include <vector>
 #include <string>
 #include <cmath>
 #include <fstream>
 
-#include "../../include/doctest.h"
 #include "../../include/Point.h"
 #include "../../include/Vector.h"
 #include "../../include/Color.h"
@@ -29,7 +26,7 @@
 void RoomScene()
 {
     // parse the teapot obj
-    ObjParser Parser("/Users/trimcao/tri/raytracer/programs/15.triangles/teapot-low.obj", true);
+    ObjParser Parser("../teapot-low.obj", true);
     Parser.Parse();
 
     auto ParsedObjs = Parser.ObjToGroup();
@@ -78,7 +75,7 @@ void RoomScene()
     W.AddObject(LeftWall);
     W.AddObject(RightWall);
 
-    Camera Cam(640, 360, M_PI/3);
+    Camera Cam(192, 108, M_PI/3);
     Cam.SetTransform(Transformations::ViewTransform(Point(0.1, 2., -5.),
                                                     Point(0., 0., 1.),
                                                     Vector(0., 1., 0.)));
