@@ -1,0 +1,13 @@
+(Very) Simple Benchmark
+
+Image size: 640x380
+Number of triangles: 230
+Reflection on
+Shadow on
+
+One thread:
+./triangles  1947.98s user 2.87s system 99% cpu 32:31.35 total
+
+Multiple threads:
+(by pixel) ./triangles  3163.16s user 11.69s system 770% cpu 6:52.06 total
+(by row) ./triangles  3161.81s user 11.29s system 764% cpu 6:54.94 total 

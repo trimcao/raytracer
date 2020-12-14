@@ -75,7 +75,7 @@ void RoomScene()
     W.AddObject(LeftWall);
     W.AddObject(RightWall);
 
-    Camera Cam(192, 108, M_PI/3);
+    Camera Cam(640, 380, M_PI/3);
     Cam.SetTransform(Transformations::ViewTransform(Point(0.1, 2., -5.),
                                                     Point(0., 0., 1.),
                                                     Vector(0., 1., 0.)));

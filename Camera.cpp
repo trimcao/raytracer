@@ -88,7 +88,6 @@ Canvas Camera::Render(World &W, bool RenderShadow, bool printLog, int RayDepth, 
     {
         for (int X = 0; X < HSize; ++X)
         {
-            // std::cout << "X-Y: "  << X << '-' << Y << "\n";
             auto CurY = Y;
             auto CurX = X;
 
@@ -101,10 +100,6 @@ Canvas Camera::Render(World &W, bool RenderShadow, bool printLog, int RayDepth, 
                 // std::cout << "Col: "  << Col << "\n";
                 Image.WritePixel(CurX, CurY, Col);
             });
-
-            // auto R = RayForPixel(CurX, CurY);
-            // auto Col = W.ColorAt(R, RenderShadow, RayDepth);
-            // Image.WritePixel(CurX, CurY, Col);
 
             // if (printLog)
             // {
