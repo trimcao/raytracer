@@ -82,7 +82,7 @@ void RoomScene()
 
     bool RenderShadow = true;
 
-    auto CV = Cam.Render(W, RenderShadow, true, 5);
+    auto CV = Cam.Render(W, RenderShadow, true, 5, true);
 
     std::ofstream out("smooth.ppm");
     out << CV.ToPPM();

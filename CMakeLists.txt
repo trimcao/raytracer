@@ -100,10 +100,13 @@ add_executable(raytracer ${SOURCES} ${HEADERS} ${TESTS})
 target_include_directories(raytracer
         PRIVATE
         ${PROJECT_SOURCE_DIR}/include
+        ${PROJECT_SOURCE_DIR}/threadpool
         )
 
+add_subdirectory(threadpool)
+
 # Now simply link against gtest or gtest_main as needed. Eg
-target_link_libraries(raytracer gtest_main)
+target_link_libraries(raytracer gtest_main threadpool)
 # add_test(NAME example_test COMMAND example)
 
 set(CPACK_PROJECT_NAME ${PROJECT_NAME})
