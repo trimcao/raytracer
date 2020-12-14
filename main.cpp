@@ -1,4 +1,4 @@
-#define DOCTEST_CONFIG_IMPLEMENT
+// #define DOCTEST_CONFIG_IMPLEMENT
 // #define DOCTEST_CONFIG_DISABLE
 #include <iostream>
 #include <vector>
@@ -9,20 +9,20 @@
 #include "include/Util.h"
 #include "include/main.h"
 
-int main(int argc, char **argv)
-{
-    // use doctest to run unit tests
-    doctest::Context ctx;
-    ctx.applyCommandLine(argc, argv);
-    int res = ctx.run();
-    if (ctx.shouldExit())
-        return res;
+// int main(int argc, char **argv)
+// {
+//     // use doctest to run unit tests
+//     // doctest::Context ctx;
+//     // ctx.applyCommandLine(argc, argv);
+//     // int res = ctx.run();
+//     // if (ctx.shouldExit())
+//     //     return res;
 
-    // main code
-    int res_main = program();
+//     // main code
+//     int res_main = program();
 
-    return res + res_main;
-}
+//     return res_main;
+// }
 
 int program()
 {

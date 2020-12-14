@@ -2,7 +2,7 @@
 
 #include <unordered_map>
 #include <vector>
-#include "doctest.h"
+// #include "doctest.h"
 #include "Object.h"
 #include "Pattern.h"
 #include "Point.h"

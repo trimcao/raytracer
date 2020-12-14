@@ -1,6 +1,6 @@
 #pragma once
 
-#include "doctest.h"
+// #include "doctest.h"
 #include <vector>
 #include <memory>
 #include "Light.h"

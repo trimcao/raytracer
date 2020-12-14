@@ -19,6 +19,12 @@ add_executable(triangles main.cpp ${PARENT_DIR}/Vector.cpp ${PARENT_DIR}/Matrix.
                 ${PARENT_DIR}/ObjParser.cpp
 )
 
+target_include_directories(triangles
+        PRIVATE
+        ${PROJECT_SOURCE_DIR}/../../include
+        ${PROJECT_SOURCE_DIR}/../../threadpool
+        )
+
 set(CPACK_PROJECT_NAME ${PROJECT_NAME})
 set(CPACK_PROJECT_VERSION ${PROJECT_VERSION})
 include(CPack)

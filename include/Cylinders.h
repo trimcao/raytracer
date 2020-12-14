@@ -1,6 +1,6 @@
 #pragma once
 
-#include "doctest.h"
+// #include "doctest.h"
 #include "Object.h"
 #include "Point.h"
 #include "Vector.h"

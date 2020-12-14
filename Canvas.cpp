@@ -100,65 +100,65 @@ std::string Canvas::ToPPM()
     return s;
 }
 
-TEST_CASE("creating a canvas")
-{
-    Canvas A = Canvas(10, 20);
-    CHECK(A.GetWidth() == 10);
-    CHECK(A.GetHeight() == 20);
-    CHECK(A.GetWidth() == 10);
-}
+// TEST_CASE("creating a canvas")
+// {
+//     Canvas A = Canvas(10, 20);
+//     CHECK(A.GetWidth() == 10);
+//     CHECK(A.GetHeight() == 20);
+//     CHECK(A.GetWidth() == 10);
+// }
 
-TEST_CASE("writing pixels to a canvas")
-{
-    Canvas A = Canvas(10, 20);
-    Color Red = Color(1., 0., 0.);
-    A.WritePixel(2, 3, Red);
-    CHECK(*A.GetPixel(2, 3) == Color(1., 0., 0.));
-}
+// TEST_CASE("writing pixels to a canvas")
+// {
+//     Canvas A = Canvas(10, 20);
+//     Color Red = Color(1., 0., 0.);
+//     A.WritePixel(2, 3, Red);
+//     CHECK(*A.GetPixel(2, 3) == Color(1., 0., 0.));
+// }
 
-TEST_CASE("constructing the PPM pixel data")
-{
-    Canvas A = Canvas(5, 3);
-    Color C1 = Color(1.5, 0., 0.);
-    Color C2 = Color(0., 0.5, 0.);
-    Color C3 = Color(-0.5, 0., 1.);
+// TEST_CASE("constructing the PPM pixel data")
+// {
+//     Canvas A = Canvas(5, 3);
+//     Color C1 = Color(1.5, 0., 0.);
+//     Color C2 = Color(0., 0.5, 0.);
+//     Color C3 = Color(-0.5, 0., 1.);
 
-    A.WritePixel(0, 0, C1);
-    A.WritePixel(2, 1, C2);
-    A.WritePixel(4, 2, C3);
+//     A.WritePixel(0, 0, C1);
+//     A.WritePixel(2, 1, C2);
+//     A.WritePixel(4, 2, C3);
 
-    const char *Expected = R"(P3
-5 3
-255
-255 0 0 0 0 0 0 0 0 0 0 0 0 0 0
-0 0 0 0 0 0 0 128 0 0 0 0 0 0 0
-0 0 0 0 0 0 0 0 0 0 0 0 0 0 255
-)";
+//     const char *Expected = R"(P3
+// 5 3
+// 255
+// 255 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+// 0 0 0 0 0 0 0 128 0 0 0 0 0 0 0
+// 0 0 0 0 0 0 0 0 0 0 0 0 0 0 255
+// )";
 
-    std::string Generated = A.ToPPM();
-    CHECK(Generated == std::string(Expected));
+//     std::string Generated = A.ToPPM();
+//     CHECK(Generated == std::string(Expected));
 
-    // check if last character in the file is a newline character
-    CHECK(Generated[Generated.length()-1] == '\n');
+//     // check if last character in the file is a newline character
+//     CHECK(Generated[Generated.length()-1] == '\n');
 
-    // split string by lines
-    // auto result = std::vector<std::string>{};
-    // std::stringstream ss(A.ToPPM());
+//     // split string by lines
+//     // auto result = std::vector<std::string>{};
+//     // std::stringstream ss(A.ToPPM());
 
-    // for (std::string line; std::getline(ss, line, '\n');)
-    //     result.push_back(line);
-}
+//     // for (std::string line; std::getline(ss, line, '\n');)
+//     //     result.push_back(line);
+// }
 
-TEST_CASE("splitting long lines in PPM files")
-{
-    Canvas A = Canvas(10, 2, Color(1., 0.8, 0.6));
-    const char *Expected = R"(P3
-10 2
-255
-255 204 153 255 204 153 255 204 153 255 204 153 255 204 153 255 204
-153 255 204 153 255 204 153 255 204 153 255 204 153
-255 204 153 255 204 153 255 204 153 255 204 153 255 204 153 255 204
-153 255 204 153 255 204 153 255 204 153 255 204 153
-)";
-    CHECK(A.ToPPM() == std::string(Expected));
-}
+// TEST_CASE("splitting long lines in PPM files")
+// {
+//     Canvas A = Canvas(10, 2, Color(1., 0.8, 0.6));
+//     const char *Expected = R"(P3
+// 10 2
+// 255
+// 255 204 153 255 204 153 255 204 153 255 204 153 255 204 153 255 204
+// 153 255 204 153 255 204 153 255 204 153 255 204 153
+// 255 204 153 255 204 153 255 204 153 255 204 153 255 204 153 255 204
+// 153 255 204 153 255 204 153 255 204 153 255 204 153
+// )";
+//     CHECK(A.ToPPM() == std::string(Expected));
+// }

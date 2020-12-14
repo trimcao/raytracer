@@ -1,6 +1,6 @@
 #pragma once
 
-#include "doctest.h"
+// #include "doctest.h"
 #include "Matrix.h"
 #include "Color.h"
 #include "Canvas.h"
@@ -40,5 +40,5 @@ public:
     // indicated (X, Y) pixel on the canvas.
     Ray RayForPixel(int X, int Y);
 
-    Canvas Render(World &W, bool RenderShadow, bool printLog, int RayDepth);
+    Canvas Render(World &W, bool RenderShadow=true, bool printLog=false, int RayDepth=5, bool multiThreads=false);
 };

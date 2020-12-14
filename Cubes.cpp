@@ -96,121 +96,121 @@ std::vector<double> CheckAxis(double Origin, double Direction)
     return std::vector<double> { TMin, TMax };
 }
 
-TEST_CASE("A ray intersects a cube")
-{
-    std::shared_ptr<Object> C = std::make_shared<Cubes>(Cubes());
-    Ray R;
-    std::vector<Intersection<Object>> XS;
+// TEST_CASE("A ray intersects a cube")
+// {
+//     std::shared_ptr<Object> C = std::make_shared<Cubes>(Cubes());
+//     Ray R;
+//     std::vector<Intersection<Object>> XS;
 
-    R = Ray(Point(5., 0.5, 0.), Vector(-1., 0., 0.));
-    XS = C->LocalIntersect(R);
-    CHECK(XS.size() == 2);
-    CHECK(XS[0].GetT() == 4.);
-    CHECK(XS[1].GetT() == 6.);
+//     R = Ray(Point(5., 0.5, 0.), Vector(-1., 0., 0.));
+//     XS = C->LocalIntersect(R);
+//     CHECK(XS.size() == 2);
+//     CHECK(XS[0].GetT() == 4.);
+//     CHECK(XS[1].GetT() == 6.);
 
-    R = Ray(Point(-5., 0.5, 0.), Vector(1., 0., 0.));
-    XS = C->LocalIntersect(R);
-    CHECK(XS.size() == 2);
-    CHECK(XS[0].GetT() == 4.);
-    CHECK(XS[1].GetT() == 6.);
+//     R = Ray(Point(-5., 0.5, 0.), Vector(1., 0., 0.));
+//     XS = C->LocalIntersect(R);
+//     CHECK(XS.size() == 2);
+//     CHECK(XS[0].GetT() == 4.);
+//     CHECK(XS[1].GetT() == 6.);
 
-    R = Ray(Point(0.5, 5., 0.), Vector(0., -1., 0.));
-    XS = C->LocalIntersect(R);
-    CHECK(XS.size() == 2);
-    CHECK(XS[0].GetT() == 4.);
-    CHECK(XS[1].GetT() == 6.);
+//     R = Ray(Point(0.5, 5., 0.), Vector(0., -1., 0.));
+//     XS = C->LocalIntersect(R);
+//     CHECK(XS.size() == 2);
+//     CHECK(XS[0].GetT() == 4.);
+//     CHECK(XS[1].GetT() == 6.);
 
-    R = Ray(Point(0.5, -5., 0.), Vector(0., 1., 0.));
-    XS = C->LocalIntersect(R);
-    CHECK(XS.size() == 2);
-    CHECK(XS[0].GetT() == 4.);
-    CHECK(XS[1].GetT() == 6.);
+//     R = Ray(Point(0.5, -5., 0.), Vector(0., 1., 0.));
+//     XS = C->LocalIntersect(R);
+//     CHECK(XS.size() == 2);
+//     CHECK(XS[0].GetT() == 4.);
+//     CHECK(XS[1].GetT() == 6.);
 
-    R = Ray(Point(0.5, 0., 5.), Vector(0., 0., -1.));
-    XS = C->LocalIntersect(R);
-    CHECK(XS.size() == 2);
-    CHECK(XS[0].GetT() == 4.);
-    CHECK(XS[1].GetT() == 6.);
+//     R = Ray(Point(0.5, 0., 5.), Vector(0., 0., -1.));
+//     XS = C->LocalIntersect(R);
+//     CHECK(XS.size() == 2);
+//     CHECK(XS[0].GetT() == 4.);
+//     CHECK(XS[1].GetT() == 6.);
 
-    R = Ray(Point(0.5, 0., -5.), Vector(0., 0., 1.));
-    XS = C->LocalIntersect(R);
-    CHECK(XS.size() == 2);
-    CHECK(XS[0].GetT() == 4.);
-    CHECK(XS[1].GetT() == 6.);
+//     R = Ray(Point(0.5, 0., -5.), Vector(0., 0., 1.));
+//     XS = C->LocalIntersect(R);
+//     CHECK(XS.size() == 2);
+//     CHECK(XS[0].GetT() == 4.);
+//     CHECK(XS[1].GetT() == 6.);
 
-    R = Ray(Point(0., 0.5, 0.), Vector(0., 0., 1.));
-    XS = C->LocalIntersect(R);
-    CHECK(XS.size() == 2);
-    CHECK(XS[0].GetT() == -1.);
-    CHECK(XS[1].GetT() == 1.);
-}
+//     R = Ray(Point(0., 0.5, 0.), Vector(0., 0., 1.));
+//     XS = C->LocalIntersect(R);
+//     CHECK(XS.size() == 2);
+//     CHECK(XS[0].GetT() == -1.);
+//     CHECK(XS[1].GetT() == 1.);
+// }
 
-TEST_CASE("A ray misses a cube")
-{
-    std::shared_ptr<Object> C = std::make_shared<Cubes>(Cubes());
-    Ray R;
-    std::vector<Intersection<Object>> XS;
+// TEST_CASE("A ray misses a cube")
+// {
+//     std::shared_ptr<Object> C = std::make_shared<Cubes>(Cubes());
+//     Ray R;
+//     std::vector<Intersection<Object>> XS;
 
-    R = Ray(Point(-2., 0., 0.), Vector(0.2673, 0.5345, 0.8018));
-    XS = C->LocalIntersect(R);
-    CHECK(XS.size() == 0);
+//     R = Ray(Point(-2., 0., 0.), Vector(0.2673, 0.5345, 0.8018));
+//     XS = C->LocalIntersect(R);
+//     CHECK(XS.size() == 0);
 
-    R = Ray(Point(0., -2., 0.), Vector(0.8018, 0.2673, 0.5345));
-    XS = C->LocalIntersect(R);
-    CHECK(XS.size() == 0);
+//     R = Ray(Point(0., -2., 0.), Vector(0.8018, 0.2673, 0.5345));
+//     XS = C->LocalIntersect(R);
+//     CHECK(XS.size() == 0);
 
-    R = Ray(Point(0., 0., -2.), Vector(0.5345, 0.8018, 0.2673));
-    XS = C->LocalIntersect(R);
-    CHECK(XS.size() == 0);
+//     R = Ray(Point(0., 0., -2.), Vector(0.5345, 0.8018, 0.2673));
+//     XS = C->LocalIntersect(R);
+//     CHECK(XS.size() == 0);
 
-    R = Ray(Point(2., 0., 2.), Vector(0., 0., -1.));
-    XS = C->LocalIntersect(R);
-    CHECK(XS.size() == 0);
+//     R = Ray(Point(2., 0., 2.), Vector(0., 0., -1.));
+//     XS = C->LocalIntersect(R);
+//     CHECK(XS.size() == 0);
 
-    R = Ray(Point(0., 2., 2.), Vector(0., -1., 0.));
-    XS = C->LocalIntersect(R);
-    CHECK(XS.size() == 0);
+//     R = Ray(Point(0., 2., 2.), Vector(0., -1., 0.));
+//     XS = C->LocalIntersect(R);
+//     CHECK(XS.size() == 0);
 
-    R = Ray(Point(2., 2., 0.), Vector(-1., 0., 0.));
-    XS = C->LocalIntersect(R);
-    CHECK(XS.size() == 0);
-}
+//     R = Ray(Point(2., 2., 0.), Vector(-1., 0., 0.));
+//     XS = C->LocalIntersect(R);
+//     CHECK(XS.size() == 0);
+// }
 
-TEST_CASE("The normal on the surface of a cube")
-{
-    std::shared_ptr<Object> C = std::make_shared<Cubes>(Cubes());
-    Point P;
-    Vector Normal;
+// TEST_CASE("The normal on the surface of a cube")
+// {
+//     std::shared_ptr<Object> C = std::make_shared<Cubes>(Cubes());
+//     Point P;
+//     Vector Normal;
 
-    P = Point(1., 0.5, -0.8);
-    Normal = C->LocalNormalAt(P);
-    CHECK(Normal == Vector(1., 0., 0.));
+//     P = Point(1., 0.5, -0.8);
+//     Normal = C->LocalNormalAt(P);
+//     CHECK(Normal == Vector(1., 0., 0.));
 
-    P = Point(-1., -0.2, 0.9);
-    Normal = C->LocalNormalAt(P);
-    CHECK(Normal == Vector(-1., 0., 0.));
+//     P = Point(-1., -0.2, 0.9);
+//     Normal = C->LocalNormalAt(P);
+//     CHECK(Normal == Vector(-1., 0., 0.));
 
-    P = Point(-0.4, 1., -0.1);
-    Normal = C->LocalNormalAt(P);
-    CHECK(Normal == Vector(0., 1., 0.));
+//     P = Point(-0.4, 1., -0.1);
+//     Normal = C->LocalNormalAt(P);
+//     CHECK(Normal == Vector(0., 1., 0.));
 
-    P = Point(0.3, -1., -0.7);
-    Normal = C->LocalNormalAt(P);
-    CHECK(Normal == Vector(0., -1., 0.));
+//     P = Point(0.3, -1., -0.7);
+//     Normal = C->LocalNormalAt(P);
+//     CHECK(Normal == Vector(0., -1., 0.));
 
-    P = Point(-0.6, 0.3, 1.);
-    Normal = C->LocalNormalAt(P);
-    CHECK(Normal == Vector(0., 0., 1.));
+//     P = Point(-0.6, 0.3, 1.);
+//     Normal = C->LocalNormalAt(P);
+//     CHECK(Normal == Vector(0., 0., 1.));
     
-    P = Point(0.4, 0.4, -1.);
-    Normal = C->LocalNormalAt(P);
-    CHECK(Normal == Vector(0., 0., -1.));
+//     P = Point(0.4, 0.4, -1.);
+//     Normal = C->LocalNormalAt(P);
+//     CHECK(Normal == Vector(0., 0., -1.));
 
-    P = Point(1., 1., 1.);
-    Normal = C->LocalNormalAt(P);
-    CHECK(Normal == Vector(1., 0., 0.));
+//     P = Point(1., 1., 1.);
+//     Normal = C->LocalNormalAt(P);
+//     CHECK(Normal == Vector(1., 0., 0.));
 
-    P = Point(-1., -1., -1.);
-    Normal = C->LocalNormalAt(P);
-    CHECK(Normal == Vector(-1., 0., 0.));
-}
+//     P = Point(-1., -1., -1.);
+//     Normal = C->LocalNormalAt(P);
+//     CHECK(Normal == Vector(-1., 0., 0.));
+// }
