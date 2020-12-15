@@ -17,6 +17,10 @@ public:
     inline double Y() const { return this->At(1, 0); }
     inline double Z() const { return this->At(2, 0); }
 
+    inline void SetX(double Val) { return this->Set(0, 0, Val); }
+    inline void SetY(double Val) { return this->Set(1, 0, Val); }
+    inline void SetZ(double Val) { return this->Set(2, 0, Val); }
+
     Point operator-() const { return Point(-this->X(), -this->Y(), -this->Z()); }
 
     Point operator*(double Scalar) const { return Point(this->X() * Scalar, this->Y() * Scalar, this->Z() * Scalar); }

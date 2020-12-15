@@ -59,7 +59,7 @@ set(SOURCES
         Triangles.cpp
         ObjParser.cpp
         CSG.cpp
-        test/Camera_Test.cpp
+        BoundingBoxes.cpp
         )
 
 set(HEADERS
@@ -89,10 +89,12 @@ set(HEADERS
         include/ObjParser.h
         include/CSG.h
         include/Intersection.h
+        include/BoundingBoxes.h
         )
 
 set(TESTS
         test/Camera_Test.cpp
+        test/BoundingBoxes_Test.cpp
         )
 
 add_executable(raytracer ${SOURCES} ${HEADERS} ${TESTS})
