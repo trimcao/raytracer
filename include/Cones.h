@@ -16,6 +16,7 @@ class Cones : public Object
 public:
     Cones(int ID);
     Cones();
+    Cones(double Minimum, double Maximum, bool IsClosed=false);
 
     int GetID();
 
@@ -31,6 +32,8 @@ public:
     inline void SetMin(double M) { Min = M; }
     inline void SetMax(double M) { Max = M; }
     inline void SetClosed(bool IsClosed) { Closed = IsClosed; }
+
+    virtual std::pair<Point, Point> BoundsOf() override;
 
 private:
     // a helper function to reduce duplication.

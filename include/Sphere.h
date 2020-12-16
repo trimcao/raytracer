@@ -25,4 +25,6 @@ public:
     virtual std::vector<Intersection<Object>> LocalIntersect(const Ray &LocalRay) override;
 
     static Sphere GlassSphere();
+
+    virtual std::pair<Point, Point> BoundsOf() override;
 };

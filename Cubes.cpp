@@ -85,7 +85,7 @@ std::vector<double> CheckAxis(double Origin, double Direction)
     }
     else
     {
-        auto inf = std::numeric_limits<double>::infinity();
+        auto inf = std::numeric_limits<double>::max();
         TMin = TMinNumerator * inf;
         TMax = TMaxNumerator * inf;
     }
@@ -94,6 +94,11 @@ std::vector<double> CheckAxis(double Origin, double Direction)
         std::swap(TMin, TMax);
 
     return std::vector<double> { TMin, TMax };
+}
+
+std::pair<Point, Point> Cubes::BoundsOf()
+{
+    return std::pair<Point, Point>{Point(-1., -1., -1.), Point(1., 1., 1.)};
 }
 
 // TEST_CASE("A ray intersects a cube")

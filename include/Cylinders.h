@@ -16,6 +16,7 @@ class Cylinders : public Object
 public:
     Cylinders(int ID);
     Cylinders();
+    Cylinders(double Minimum, double Maximum, bool IsClosed=false);
 
     int GetID();
 
@@ -32,6 +33,8 @@ public:
     inline void SetMax(double M) { Max = M; }
     inline void SetClosed(bool IsClosed) { Closed = IsClosed; }
 
+    virtual std::pair<Point, Point> BoundsOf() override;
+
 private:
     // a helper function to reduce duplication.
     // checks to see if the intersection at 't' is within a radius
@@ -39,6 +42,7 @@ private:
     bool CheckCap(const Ray &R, double T);
 
     void IntersectCaps(const Ray &R, std::vector<Intersection<Object>> &Intersections);
+
 };
 
 std::vector<double> CheckAxis(double Origin, double Direction);

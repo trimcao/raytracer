@@ -16,6 +16,7 @@ public:
     BoundingBoxes(int ID);
     BoundingBoxes();
     BoundingBoxes(int ID, Point Minimum, Point Maximum);
+    BoundingBoxes(std::pair<Point, Point> MinMax);
 
     int GetID();
 

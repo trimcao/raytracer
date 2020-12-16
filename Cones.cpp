@@ -18,14 +18,29 @@ Cones::Cones(int ID)
     AMaterial = Material();
     UseShadow = true;
     this->ID = ID;
-    Min = -std::numeric_limits<double>::infinity();
-    Max = std::numeric_limits<double>::infinity();
+    Min = -std::numeric_limits<double>::max();
+    Max = std::numeric_limits<double>::max();
     Closed = false;
     Parent = nullptr;
 }
 
 Cones::Cones() : Cones(0)
 {
+}
+
+Cones::Cones(double Minimum, double Maximum, bool IsClosed)
+{
+    Transform = Matrix::Identity();
+    TransformInverse = Matrix::Identity();
+    Origin = Point(0., 0., 0.);
+    AMaterial = Material();
+    UseShadow = true;
+    int ID = 0;
+    this->ID = ID;
+    Min = Minimum;
+    Max = Maximum;
+    Closed = IsClosed;
+    Parent = nullptr;
 }
 
 int Cones::GetID()
@@ -131,6 +146,12 @@ void Cones::IntersectCaps(const Ray &R, std::vector<Intersection<Object>> &Inter
     {
         Intersections.push_back(Intersection<Object>(T, this));
     }
+}
+
+std::pair<Point, Point> Cones::BoundsOf()
+{
+    auto Limit = std::max(std::abs(Min), std::abs(Max));
+    return std::pair<Point, Point>{Point(-Limit, Min, -Limit), Point(Limit, Max, Limit)};
 }
 
 // TEST_CASE("Intersecting a cone with a ray")

@@ -34,6 +34,7 @@ public:
     virtual Vector LocalNormalAt(Point &&LocalPoint) override;
 
     virtual std::vector<Intersection<Object>> LocalIntersect(const Ray &LocalRay) override;
+    virtual std::pair<Point, Point> BoundsOf() override;
 };
 
 class SmoothTriangles : public Object
@@ -68,4 +69,5 @@ public:
     virtual Vector LocalNormalAt(Point &&LocalPoint, Intersection<Object> &I) override;
 
     virtual std::vector<Intersection<Object>> LocalIntersect(const Ray &LocalRay) override;
+    virtual std::pair<Point, Point> BoundsOf() override;
 };

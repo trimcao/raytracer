@@ -72,6 +72,11 @@ std::vector<Intersection<Object>> TestShape::LocalIntersect(const Ray &R)
     return std::vector<Intersection<Object>>();
 }
 
+std::pair<Point, Point> TestShape::BoundsOf()
+{
+    return std::pair<Point, Point>{Point(-1., -1., -1.), Point(1., 1., 1.)};
+}
+
 // TEST_CASE("The default transformation")
 // {
 //     TestShape S;

@@ -38,6 +38,19 @@ BoundingBoxes::BoundingBoxes(int ID, Point Minimum, Point Maximum)
     Max = Maximum;
 }
 
+BoundingBoxes::BoundingBoxes(std::pair<Point, Point> MinMax)
+{
+    Transform = Matrix::Identity();
+    TransformInverse = Matrix::Identity();
+    Origin = Point(0., 0., 0.);
+    AMaterial = Material();
+    UseShadow = true;
+    this->ID = 0;
+
+    Min = MinMax.first;
+    Max = MinMax.second;
+}
+
 int BoundingBoxes::GetID()
 {
     return ID;

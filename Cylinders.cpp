@@ -18,14 +18,29 @@ Cylinders::Cylinders(int ID)
     AMaterial = Material();
     UseShadow = true;
     this->ID = ID;
-    Min = -std::numeric_limits<double>::infinity();
-    Max = std::numeric_limits<double>::infinity();
+    Min = -std::numeric_limits<double>::max();
+    Max = std::numeric_limits<double>::max();
     Closed = false;
     Parent = nullptr;
 }
 
 Cylinders::Cylinders() : Cylinders(0)
 {
+}
+
+Cylinders::Cylinders(double Minimum, double Maximum, bool IsClosed)
+{
+    int ID = 0;
+    Transform = Matrix::Identity();
+    TransformInverse = Matrix::Identity();
+    Origin = Point(0., 0., 0.);
+    AMaterial = Material();
+    UseShadow = true;
+    this->ID = ID;
+    Min = Minimum;
+    Max = Maximum;
+    Closed = IsClosed;
+    Parent = nullptr;
 }
 
 int Cylinders::GetID()
@@ -123,6 +138,11 @@ void Cylinders::IntersectCaps(const Ray &R, std::vector<Intersection<Object>> &I
     }
 }
 
+std::pair<Point, Point> Cylinders::BoundsOf()
+{
+    return std::pair<Point, Point>{Point(-1., Min, -1.), Point(1., Max, 1.)};
+}
+
 // TEST_CASE("A ray misses a cylinder")
 // {
 //     std::shared_ptr<Object> Cyl = std::make_shared<Cylinders>(Cylinders());
@@ -196,8 +216,8 @@ void Cylinders::IntersectCaps(const Ray &R, std::vector<Intersection<Object>> &I
 // TEST_CASE("The default minimum and maximum for a cylinder")
 // {
 //     Cylinders Cyl;
-//     CHECK(Cyl.GetMin() == -std::numeric_limits<double>::infinity());
-//     CHECK(Cyl.GetMax() == std::numeric_limits<double>::infinity());
+//     CHECK(Cyl.GetMin() == -std::numeric_limits<double>::max());
+//     CHECK(Cyl.GetMax() == std::numeric_limits<double>::max());
 // }
 
 // TEST_CASE("Intersecting a constrained cylinder")

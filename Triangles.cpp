@@ -89,6 +89,26 @@ std::vector<Intersection<Object>> Triangles::LocalIntersect(const Ray &LocalRay)
     return Intersections;
 }
 
+std::pair<Point, Point> Triangles::BoundsOf()
+{
+    Point Min(Util::Inf, Util::Inf, Util::Inf);
+    Point Max(-Util::Inf, -Util::Inf, -Util::Inf);
+
+    std::vector<Point> Points {P1, P2, P3};
+    for (auto P: Points)
+    {
+        if (P.X() < Min.X()) Min.SetX(P.X());
+        if (P.Y() < Min.Y()) Min.SetY(P.Y());
+        if (P.Z() < Min.Z()) Min.SetZ(P.Z());
+
+        if (P.X() > Max.X()) Max.SetX(P.X());
+        if (P.Y() > Max.Y()) Max.SetY(P.Y());
+        if (P.Z() > Max.Z()) Max.SetZ(P.Z());
+    }
+
+    return std::pair<Point, Point> {Min, Max};
+}
+
 SmoothTriangles::SmoothTriangles(Point &&P1, Point &&P2, Point &&P3, Vector &&N1, Vector &&N2, Vector &&N3) : SmoothTriangles()
 {
     this->P1 = P1;
@@ -166,6 +186,26 @@ std::vector<Intersection<Object>> SmoothTriangles::LocalIntersect(const Ray &Loc
     auto T = F * E2.Dot(OriginCrossE1);
     Intersections.push_back(Intersection<Object>(T, this, U, V));
     return Intersections;
+}
+
+std::pair<Point, Point> SmoothTriangles::BoundsOf()
+{
+    Point Min(Util::Inf, Util::Inf, Util::Inf);
+    Point Max(-Util::Inf, -Util::Inf, -Util::Inf);
+
+    std::vector<Point> Points {P1, P2, P3};
+    for (auto P: Points)
+    {
+        if (P.X() < Min.X()) Min.SetX(P.X());
+        if (P.Y() < Min.Y()) Min.SetY(P.Y());
+        if (P.Z() < Min.Z()) Min.SetZ(P.Z());
+
+        if (P.X() > Max.X()) Max.SetX(P.X());
+        if (P.Y() > Max.Y()) Max.SetY(P.Y());
+        if (P.Z() > Max.Z()) Max.SetZ(P.Z());
+    }
+
+    return std::pair<Point, Point> {Min, Max};
 }
 
 // TEST_CASE("Constructing a triangle")
