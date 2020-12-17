@@ -9,6 +9,7 @@
 #include "Cones.h"
 #include "Triangles.h"
 #include "Groups.h"
+#include "CSG.h"
 #include "gtest/gtest.h"
 #include <limits>
 #include <memory>
@@ -153,7 +154,7 @@ TEST(BoundingBoxes, TransformingBox)
     BoundingBoxes Box(Point(-1, -1., -1.), Point(1., 1., 1.));
     auto M = Transformations::RotationX(M_PI / 4).Mul(Transformations::RotationY(M_PI / 4));
 
-    auto Box2 = Box.TransformBox(M);
+    auto Box2 = Box.Transform(M);
     EXPECT_EQ(Box2.Min, Point(-1.41421, -1.70711, -1.70711));
     EXPECT_EQ(Box2.Max, Point(1.41421, 1.70711, 1.70711));
 }
@@ -162,7 +163,7 @@ TEST(BoundingBoxes, ParentSpaceBounds)
 {
     std::shared_ptr<Object> Shape = std::make_shared<Sphere>(Sphere());
     Shape->SetTransform(Transformations::Translation(1., -3., 5.).Mul(Transformations::Scaling(0.5, 2., 4.)));
-    auto Box = BoundingBoxes::ParentSpaceBox(Shape->BoundsOf(), Shape->GetTransform());
+    auto Box = Shape->ParentSpaceBoundsOf();
     EXPECT_EQ(Box.Min, Point(0.5, -5., 1.));
     EXPECT_EQ(Box.Max, Point(1.5, -1., 9.));
 }
@@ -179,7 +180,7 @@ TEST(BoundingBoxes, GroupBoundingBox)
     Shape->AddChild(S);
     Shape->AddChild(C);
 
-    auto Box = BoundingBoxes::BoundingBoxOf(*Shape);
+    auto Box = Shape->BoundsOf();
     EXPECT_EQ(Box.Min, Point(-4.5, -3., -5.));
     EXPECT_EQ(Box.Max, Point(4., 7., 4.5));
 }
@@ -192,7 +193,7 @@ TEST(BoundingBoxes, CSGBoundingBox)
 
     auto Shape = std::make_shared<CSG>(CSG(CSGOp::Difference, Left, Right));
 
-    auto Box = BoundingBoxes::BoundingBoxOf(*Shape);
+    auto Box = Shape->BoundsOf();
     EXPECT_EQ(Box.Min, Point(-1., -1., -1.));
     EXPECT_EQ(Box.Max, Point(3., 4., 5.));
 }

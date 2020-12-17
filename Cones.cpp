@@ -148,10 +148,10 @@ void Cones::IntersectCaps(const Ray &R, std::vector<Intersection<Object>> &Inter
     }
 }
 
-std::pair<Point, Point> Cones::BoundsOf()
+BoundingBoxes Cones::BoundsOf()
 {
     auto Limit = std::max(std::abs(Min), std::abs(Max));
-    return std::pair<Point, Point>{Point(-Limit, Min, -Limit), Point(Limit, Max, Limit)};
+    return BoundingBoxes{Point(-Limit, Min, -Limit), Point(Limit, Max, Limit)};
 }
 
 // TEST_CASE("Intersecting a cone with a ray")

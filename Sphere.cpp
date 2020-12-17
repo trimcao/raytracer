@@ -90,9 +90,9 @@ Sphere Sphere::GlassSphere()
     return S;
 }
 
-std::pair<Point, Point> Sphere::BoundsOf()
+BoundingBoxes Sphere::BoundsOf()
 {
-    return std::pair<Point, Point>{Point(-1., -1., -1.), Point(1., 1., 1.)};
+    return BoundingBoxes{Point(-1., -1., -1.), Point(1., 1., 1.)};
 }
 
 // TEST_CASE("A sphere's default transformation")

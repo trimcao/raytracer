@@ -89,7 +89,7 @@ std::vector<Intersection<Object>> Triangles::LocalIntersect(const Ray &LocalRay)
     return Intersections;
 }
 
-std::pair<Point, Point> Triangles::BoundsOf()
+BoundingBoxes Triangles::BoundsOf()
 {
     Point Min(Util::Inf, Util::Inf, Util::Inf);
     Point Max(-Util::Inf, -Util::Inf, -Util::Inf);
@@ -106,7 +106,7 @@ std::pair<Point, Point> Triangles::BoundsOf()
         if (P.Z() > Max.Z()) Max.SetZ(P.Z());
     }
 
-    return std::pair<Point, Point> {Min, Max};
+    return BoundingBoxes {Min, Max};
 }
 
 SmoothTriangles::SmoothTriangles(Point &&P1, Point &&P2, Point &&P3, Vector &&N1, Vector &&N2, Vector &&N3) : SmoothTriangles()
@@ -188,7 +188,7 @@ std::vector<Intersection<Object>> SmoothTriangles::LocalIntersect(const Ray &Loc
     return Intersections;
 }
 
-std::pair<Point, Point> SmoothTriangles::BoundsOf()
+BoundingBoxes SmoothTriangles::BoundsOf()
 {
     Point Min(Util::Inf, Util::Inf, Util::Inf);
     Point Max(-Util::Inf, -Util::Inf, -Util::Inf);
@@ -205,7 +205,7 @@ std::pair<Point, Point> SmoothTriangles::BoundsOf()
         if (P.Z() > Max.Z()) Max.SetZ(P.Z());
     }
 
-    return std::pair<Point, Point> {Min, Max};
+    return BoundingBoxes {Min, Max};
 }
 
 // TEST_CASE("Constructing a triangle")

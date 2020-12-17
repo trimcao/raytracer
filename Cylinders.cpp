@@ -138,9 +138,9 @@ void Cylinders::IntersectCaps(const Ray &R, std::vector<Intersection<Object>> &I
     }
 }
 
-std::pair<Point, Point> Cylinders::BoundsOf()
+BoundingBoxes Cylinders::BoundsOf()
 {
-    return std::pair<Point, Point>{Point(-1., Min, -1.), Point(1., Max, 1.)};
+    return BoundingBoxes{Point(-1., Min, -1.), Point(1., Max, 1.)};
 }
 
 // TEST_CASE("A ray misses a cylinder")

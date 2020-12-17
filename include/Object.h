@@ -8,6 +8,7 @@
 #include "Material.h"
 #include "Ray.h"
 #include "Intersection.h"
+#include "BoundingBoxes.h"
 #include <limits>
 
 class Object
@@ -62,11 +63,8 @@ public:
     inline virtual void AddChild(std::shared_ptr<Object> &S) {};
     inline virtual bool Include(Object *S) { return (this == S); }
 
-    inline virtual std::pair<Point, Point> BoundsOf()
-    {
-        double Inf = std::numeric_limits<double>::max();
-        return std::pair<Point, Point>{Point(Inf, Inf, Inf), Point(-Inf, -Inf, -Inf)};
-    }
+    inline virtual BoundingBoxes BoundsOf() { return BoundingBoxes(); }
+    inline virtual BoundingBoxes ParentSpaceBoundsOf() { return BoundsOf().Transform(Transform); }
 };
 
 class TestShape : public Object
@@ -80,5 +78,5 @@ public:
 
     virtual std::vector<Intersection<Object>> LocalIntersect(const Ray &R) override;
     virtual Vector LocalNormalAt(Point &LocalPoint) override;
-    virtual std::pair<Point, Point> BoundsOf() override;
+    virtual BoundingBoxes BoundsOf() override;
 };

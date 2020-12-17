@@ -7,53 +7,22 @@
 // #include "include/Transformations.h"
 // #include "include/Functions.h"
 
-BoundingBoxes::BoundingBoxes(int ID)
+BoundingBoxes::BoundingBoxes()
 {
-    Transform = Matrix::Identity();
-    TransformInverse = Matrix::Identity();
-    Origin = Point(0., 0., 0.);
-    AMaterial = Material();
-    UseShadow = true;
-    this->ID = ID;
-
-    double Inf = std::numeric_limits<double>::max();
-    Min = Point(Inf, Inf, Inf);
-    Max = Point(-Inf, -Inf, -Inf);
+    Min = Point(Util::Inf, Util::Inf, Util::Inf);
+    Max = Point(-Util::Inf, -Util::Inf, -Util::Inf);
 }
 
-BoundingBoxes::BoundingBoxes() : BoundingBoxes(0)
+BoundingBoxes::BoundingBoxes(Point Minimum, Point Maximum)
 {
-}
-
-BoundingBoxes::BoundingBoxes(Point Minimum, Point Maximum, int ID)
-{
-    Transform = Matrix::Identity();
-    TransformInverse = Matrix::Identity();
-    Origin = Point(0., 0., 0.);
-    AMaterial = Material();
-    UseShadow = true;
-    this->ID = ID;
-
     Min = Minimum;
     Max = Maximum;
 }
 
 BoundingBoxes::BoundingBoxes(std::pair<Point, Point> MinMax)
 {
-    Transform = Matrix::Identity();
-    TransformInverse = Matrix::Identity();
-    Origin = Point(0., 0., 0.);
-    AMaterial = Material();
-    UseShadow = true;
-    this->ID = 0;
-
     Min = MinMax.first;
     Max = MinMax.second;
-}
-
-int BoundingBoxes::GetID()
-{
-    return ID;
 }
 
 void BoundingBoxes::AddPoint(Point P)
@@ -85,7 +54,7 @@ bool BoundingBoxes::ContainsBox(BoundingBoxes &B)
     return ContainsPoint(B.Min) && ContainsPoint(B.Max);
 }
 
-BoundingBoxes BoundingBoxes::TransformBox(Matrix &M)
+BoundingBoxes BoundingBoxes::Transform(Matrix &M)
 {
     std::vector<Point> PS {
         Min,
@@ -107,29 +76,29 @@ BoundingBoxes BoundingBoxes::TransformBox(Matrix &M)
     return NewBox;
 }
 
-BoundingBoxes BoundingBoxes::ParentSpaceBox(std::pair<Point, Point> ObjectBounds, Matrix TransformMatrix)
-{
-    BoundingBoxes Box(ObjectBounds);
-    return Box.TransformBox(TransformMatrix);
-}
+// BoundingBoxes BoundingBoxes::ParentSpaceBox(std::pair<Point, Point> ObjectBounds, Matrix TransformMatrix)
+// {
+//     BoundingBoxes Box(ObjectBounds);
+//     return Box.TransformBox(TransformMatrix);
+// }
 
-BoundingBoxes BoundingBoxes::BoundingBoxOf(Groups &G)
-{
-    BoundingBoxes Box;
-    for (auto &Child: G.GetShapes())
-    {
-        auto ChildBox = ParentSpaceBox(Child->BoundsOf(), Child->GetTransform());
-        Box.AddBox(ChildBox);
-    }
-    return Box;
-}
+// BoundingBoxes BoundingBoxes::BoundingBoxOf(Groups &G)
+// {
+//     BoundingBoxes Box;
+//     for (auto &Child: G.GetShapes())
+//     {
+//         auto ChildBox = ParentSpaceBox(Child->BoundsOf(), Child->GetTransform());
+//         Box.AddBox(ChildBox);
+//     }
+//     return Box;
+// }
 
-BoundingBoxes BoundingBoxes::BoundingBoxOf(CSG &C)
-{
-    BoundingBoxes Box;
-    auto LeftChildBox = ParentSpaceBox(C.GetLeft()->BoundsOf(), C.GetLeft()->GetTransform());
-    Box.AddBox(LeftChildBox);
-    auto RightChildBox = ParentSpaceBox(C.GetRight()->BoundsOf(), C.GetRight()->GetTransform());
-    Box.AddBox(RightChildBox);
-    return Box;
-}
+// BoundingBoxes BoundingBoxes::BoundingBoxOf(CSG &C)
+// {
+//     BoundingBoxes Box;
+//     auto LeftChildBox = ParentSpaceBox(C.GetLeft()->BoundsOf(), C.GetLeft()->GetTransform());
+//     Box.AddBox(LeftChildBox);
+//     auto RightChildBox = ParentSpaceBox(C.GetRight()->BoundsOf(), C.GetRight()->GetTransform());
+//     Box.AddBox(RightChildBox);
+//     return Box;
+// }

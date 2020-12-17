@@ -54,9 +54,9 @@ std::vector<Intersection<Object>> Plane::LocalIntersect(const Ray &LocalRay)
     return Intersections;
 }
 
-std::pair<Point, Point> Plane::BoundsOf()
+BoundingBoxes Plane::BoundsOf()
 {
-    return std::pair<Point, Point>{Point(-Util::Inf, 0., -Util::Inf), Point(Util::Inf, 0., Util::Inf)};
+    return BoundingBoxes{Point(-Util::Inf, 0., -Util::Inf), Point(Util::Inf, 0., Util::Inf)};
 }
 
 // TEST_CASE("The normal of a plane is constant everywhere")

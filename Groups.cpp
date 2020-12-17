@@ -66,6 +66,17 @@ bool Groups::Include(Object *S)
     return false;
 }
 
+BoundingBoxes Groups::BoundsOf()
+{
+    BoundingBoxes Box;
+    for (auto &Child: Shapes)
+    {
+        auto ChildBox = Child->ParentSpaceBoundsOf();
+        Box.AddBox(ChildBox);
+    }
+    return Box;
+}
+
 // TEST_CASE("Creating a new group")
 // {
 //     Groups G;

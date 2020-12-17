@@ -23,4 +23,6 @@ public:
     virtual void AddChild(std::shared_ptr<Object> &S) override;
     virtual std::vector<Intersection<Object>> LocalIntersect(const Ray &LocalRay) override;
     virtual bool Include(Object *S) override;
+
+    virtual BoundingBoxes BoundsOf() override;
 };

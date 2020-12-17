@@ -20,5 +20,5 @@ public:
 
     virtual std::vector<Intersection<Object>> LocalIntersect(const Ray &LocalRay) override;
 
-    virtual std::pair<Point, Point> BoundsOf() override;
+    virtual BoundingBoxes BoundsOf() override;
 };

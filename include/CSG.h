@@ -37,4 +37,6 @@ public:
     std::vector<Intersection<Object>> FilterIntersections(std::vector<Intersection<Object>> &XS);
 
     virtual bool Include(Object *S) override;
+
+    virtual BoundingBoxes BoundsOf() override;
 };

@@ -26,5 +26,5 @@ public:
 
     static Sphere GlassSphere();
 
-    virtual std::pair<Point, Point> BoundsOf() override;
+    virtual BoundingBoxes BoundsOf() override;
 };

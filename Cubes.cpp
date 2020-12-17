@@ -96,9 +96,9 @@ std::vector<double> CheckAxis(double Origin, double Direction)
     return std::vector<double> { TMin, TMax };
 }
 
-std::pair<Point, Point> Cubes::BoundsOf()
+BoundingBoxes Cubes::BoundsOf()
 {
-    return std::pair<Point, Point>{Point(-1., -1., -1.), Point(1., 1., 1.)};
+    return BoundingBoxes{Point(-1., -1., -1.), Point(1., 1., 1.)};
 }
 
 // TEST_CASE("A ray intersects a cube")

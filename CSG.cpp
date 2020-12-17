@@ -105,6 +105,17 @@ bool CSG::Include(Object *S)
     return false;
 }
 
+BoundingBoxes CSG::BoundsOf()
+{
+    BoundingBoxes Box;
+    auto LeftChildBox = Left->ParentSpaceBoundsOf();
+    Box.AddBox(LeftChildBox);
+    auto RightChildBox = Right->ParentSpaceBoundsOf();
+    Box.AddBox(RightChildBox);
+    return Box;
+}
+
+
 // TEST_CASE("CSG is created with an operation and two shapes")
 // {
 //     std::shared_ptr<Object> S1 = std::make_shared<Sphere>(Sphere());

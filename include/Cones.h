@@ -5,6 +5,7 @@
 #include "Point.h"
 #include "Vector.h"
 #include "Intersection.h"
+#include "BoundingBoxes.h"
 #include <vector>
 
 class Cones : public Object
@@ -33,7 +34,7 @@ public:
     inline void SetMax(double M) { Max = M; }
     inline void SetClosed(bool IsClosed) { Closed = IsClosed; }
 
-    virtual std::pair<Point, Point> BoundsOf() override;
+    virtual BoundingBoxes BoundsOf() override;
 
 private:
     // a helper function to reduce duplication.
