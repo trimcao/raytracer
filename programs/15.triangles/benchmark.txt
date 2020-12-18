@@ -10,4 +10,6 @@ One thread:
 
 Multiple threads:
 (by pixel) ./triangles  3163.16s user 11.69s system 770% cpu 6:52.06 total
-(by row) ./triangles  3161.81s user 11.29s system 764% cpu 6:54.94 total 
+(by row) ./triangles  3161.81s user 11.29s system 764% cpu 6:54.94 total
+
+With basic bounding box

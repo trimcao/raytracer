@@ -71,12 +71,20 @@ bool Groups::Include(Object *S)
 
 BoundingBoxes Groups::BoundsOf()
 {
+    // need to cache the box
+    if (IsBoundingBoxCached)
+    {
+        return BoxCache;
+    }
+
     BoundingBoxes Box;
     for (auto &Child: Shapes)
     {
         auto ChildBox = Child->ParentSpaceBoundsOf();
         Box.AddBox(ChildBox);
     }
+    BoxCache = Box;
+    IsBoundingBoxCached = true;
     return Box;
 }
 

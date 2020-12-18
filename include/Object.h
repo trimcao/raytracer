@@ -22,6 +22,8 @@ protected:
     Material AMaterial;
     bool UseShadow;
     Object *Parent;
+    BoundingBoxes BoxCache;
+    bool IsBoundingBoxCached = false;
 
 public:
     Object();

@@ -17,6 +17,7 @@ add_executable(triangles main.cpp ${PARENT_DIR}/Vector.cpp ${PARENT_DIR}/Matrix.
                 ${PARENT_DIR}/Groups.cpp
                 ${PARENT_DIR}/Triangles.cpp
                 ${PARENT_DIR}/ObjParser.cpp
+                ${PARENT_DIR}/BoundingBoxes.cpp
 )
 
 target_include_directories(triangles
