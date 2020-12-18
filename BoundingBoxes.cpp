@@ -1,5 +1,6 @@
 #include "include/BoundingBoxes.h"
 #include <limits>
+#include "include/Cubes.h"
 // #include "include/Ray.h"
 // #include "include/Intersection.h"
 // #include "include/Util.h"
@@ -76,29 +77,19 @@ BoundingBoxes BoundingBoxes::Transform(Matrix &M)
     return NewBox;
 }
 
-// BoundingBoxes BoundingBoxes::ParentSpaceBox(std::pair<Point, Point> ObjectBounds, Matrix TransformMatrix)
-// {
-//     BoundingBoxes Box(ObjectBounds);
-//     return Box.TransformBox(TransformMatrix);
-// }
+bool BoundingBoxes::Intersect(const Ray &R)
+{
+    auto XT = CheckAxis(R.GetOrigin().X(), R.GetDirection().X(), Min.X(), Max.X());
+    auto YT = CheckAxis(R.GetOrigin().Y(), R.GetDirection().Y(), Min.Y(), Max.Y());
+    auto ZT = CheckAxis(R.GetOrigin().Z(), R.GetDirection().Z(), Min.Z(), Max.Z());
 
-// BoundingBoxes BoundingBoxes::BoundingBoxOf(Groups &G)
-// {
-//     BoundingBoxes Box;
-//     for (auto &Child: G.GetShapes())
-//     {
-//         auto ChildBox = ParentSpaceBox(Child->BoundsOf(), Child->GetTransform());
-//         Box.AddBox(ChildBox);
-//     }
-//     return Box;
-// }
+    std::vector<double> TMinCandidates {XT[0], YT[0], ZT[0]};
+    std::vector<double> TMaxCandidates {XT[1], YT[1], ZT[1]};
+    auto TMin = *std::max_element(TMinCandidates.begin(), TMinCandidates.end());
+    auto TMax = *std::min_element(TMaxCandidates.begin(), TMaxCandidates.end());
 
-// BoundingBoxes BoundingBoxes::BoundingBoxOf(CSG &C)
-// {
-//     BoundingBoxes Box;
-//     auto LeftChildBox = ParentSpaceBox(C.GetLeft()->BoundsOf(), C.GetLeft()->GetTransform());
-//     Box.AddBox(LeftChildBox);
-//     auto RightChildBox = ParentSpaceBox(C.GetRight()->BoundsOf(), C.GetRight()->GetTransform());
-//     Box.AddBox(RightChildBox);
-//     return Box;
-// }
+    if (TMin > TMax)
+        return false;
+
+    return true;
+}

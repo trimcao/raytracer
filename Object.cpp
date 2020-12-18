@@ -53,6 +53,7 @@ TestShape::TestShape(int ID)
     UseShadow = true;
     this->ID = ID;
 
+    SavedRay = nullptr;
     Parent = nullptr;
 }
 
@@ -67,7 +68,7 @@ Vector TestShape::LocalNormalAt(Point &LocalPoint)
 
 std::vector<Intersection<Object>> TestShape::LocalIntersect(const Ray &R)
 {
-    SavedRay = R;
+    SavedRay = std::make_unique<Ray>(R);
 
     return std::vector<Intersection<Object>>();
 }

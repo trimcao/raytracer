@@ -74,7 +74,7 @@ public:
     TestShape(int ID);
     TestShape();
 
-    Ray SavedRay;
+    std::unique_ptr<Ray> SavedRay;
 
     virtual std::vector<Intersection<Object>> LocalIntersect(const Ray &R) override;
     virtual Vector LocalNormalAt(Point &LocalPoint) override;

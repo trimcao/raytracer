@@ -197,3 +197,149 @@ TEST(BoundingBoxes, CSGBoundingBox)
     EXPECT_EQ(Box.Min, Point(-1., -1., -1.));
     EXPECT_EQ(Box.Max, Point(3., 4., 5.));
 }
+
+TEST(BoundingBoxes, BoxIntersectAtOrigin)
+{
+    BoundingBoxes Box {Point(-1, -1, -1.), Point(1, 1, 1.)};
+    Point Origin;
+    Vector Direction;
+    Ray R;
+
+    Origin = Point(5., 0.5, 0.);
+    Direction = Vector(-1., 0., 0.).Normalize();
+    R = Ray(Origin, Direction);
+    EXPECT_EQ(true, Box.Intersect(R));
+
+    Origin = Point(-5., 0.5, 0.);
+    Direction = Vector(1., 0., 0.).Normalize();
+    R = Ray(Origin, Direction);
+    EXPECT_EQ(true, Box.Intersect(R));
+
+    Origin = Point(0.5, 5., 0.);
+    Direction = Vector(0., -1., 0.).Normalize();
+    R = Ray(Origin, Direction);
+    EXPECT_EQ(true, Box.Intersect(R));
+
+    Origin = Point(0.5, -5., 0.);
+    Direction = Vector(0., 1., 0.).Normalize();
+    R = Ray(Origin, Direction);
+    EXPECT_EQ(true, Box.Intersect(R));
+
+    Origin = Point(0.5, 0., 5.);
+    Direction = Vector(0., 0., -1.).Normalize();
+    R = Ray(Origin, Direction);
+    EXPECT_EQ(true, Box.Intersect(R));
+
+    Origin = Point(0.5, 0., -5.);
+    Direction = Vector(0., 0., 1.).Normalize();
+    R = Ray(Origin, Direction);
+    EXPECT_EQ(true, Box.Intersect(R));
+
+    Origin = Point(0., 0.5, 0.);
+    Direction = Vector(0., 0., 1.).Normalize();
+    R = Ray(Origin, Direction);
+    EXPECT_EQ(true, Box.Intersect(R));
+
+    Origin = Point(-2., 0., 0.);
+    Direction = Vector(2., 4., 6.).Normalize();
+    R = Ray(Origin, Direction);
+    EXPECT_EQ(false, Box.Intersect(R));
+
+    Origin = Point(0., -2., 0.);
+    Direction = Vector(6., 2., 4.).Normalize();
+    R = Ray(Origin, Direction);
+    EXPECT_EQ(false, Box.Intersect(R));
+
+    Origin = Point(0., 0., -2.);
+    Direction = Vector(4., 6., 2.).Normalize();
+    R = Ray(Origin, Direction);
+    EXPECT_EQ(false, Box.Intersect(R));
+
+    Origin = Point(2., 0., 2.);
+    Direction = Vector(0., 0., -1.).Normalize();
+    R = Ray(Origin, Direction);
+    EXPECT_EQ(false, Box.Intersect(R));
+
+    Origin = Point(0., 2., 2.);
+    Direction = Vector(0., -1., 0.).Normalize();
+    R = Ray(Origin, Direction);
+    EXPECT_EQ(false, Box.Intersect(R));
+
+    Origin = Point(2., 2., 0.);
+    Direction = Vector(-1., 0., 0.).Normalize();
+    R = Ray(Origin, Direction);
+    EXPECT_EQ(false, Box.Intersect(R));
+}
+
+TEST(BoundingBoxes, BoxIntersectNonCubic)
+{
+    BoundingBoxes Box {Point(5., -2., 0.), Point(11, 4., 7.)};
+    Point Origin;
+    Vector Direction;
+    Ray R;
+
+    Origin = Point(15., 1., 2.);
+    Direction = Vector(-1., 0., 0.).Normalize();
+    R = Ray(Origin, Direction);
+    EXPECT_EQ(true, Box.Intersect(R));
+
+    Origin = Point(-5., -1., 4.);
+    Direction = Vector(1., 0., 0.).Normalize();
+    R = Ray(Origin, Direction);
+    EXPECT_EQ(true, Box.Intersect(R));
+
+    Origin = Point(7., 6., 5.);
+    Direction = Vector(0., -1., 0.).Normalize();
+    R = Ray(Origin, Direction);
+    EXPECT_EQ(true, Box.Intersect(R));
+
+    Origin = Point(9., -5., 6.);
+    Direction = Vector(0., 1., 0.).Normalize();
+    R = Ray(Origin, Direction);
+    EXPECT_EQ(true, Box.Intersect(R));
+
+    Origin = Point(8, 2., 12.);
+    Direction = Vector(0., 0., -1.).Normalize();
+    R = Ray(Origin, Direction);
+    EXPECT_EQ(true, Box.Intersect(R));
+
+    Origin = Point(6., 0., -5.);
+    Direction = Vector(0., 0., 1.).Normalize();
+    R = Ray(Origin, Direction);
+    EXPECT_EQ(true, Box.Intersect(R));
+
+    Origin = Point(8., 1., 3.5);
+    Direction = Vector(0., 0., 1.).Normalize();
+    R = Ray(Origin, Direction);
+    EXPECT_EQ(true, Box.Intersect(R));
+
+    Origin = Point(9., -1., -8.);
+    Direction = Vector(2., 4., 6.).Normalize();
+    R = Ray(Origin, Direction);
+    EXPECT_EQ(false, Box.Intersect(R));
+
+    Origin = Point(8., 3., -4.);
+    Direction = Vector(6., 2., 4.).Normalize();
+    R = Ray(Origin, Direction);
+    EXPECT_EQ(false, Box.Intersect(R));
+
+    Origin = Point(9., -1., -2.);
+    Direction = Vector(4., 6., 2.).Normalize();
+    R = Ray(Origin, Direction);
+    EXPECT_EQ(false, Box.Intersect(R));
+
+    Origin = Point(4., 0., 9.);
+    Direction = Vector(0., 0., -1.).Normalize();
+    R = Ray(Origin, Direction);
+    EXPECT_EQ(false, Box.Intersect(R));
+
+    Origin = Point(8., 6., -1.);
+    Direction = Vector(0., -1., 0.).Normalize();
+    R = Ray(Origin, Direction);
+    EXPECT_EQ(false, Box.Intersect(R));
+
+    Origin = Point(12., 5., 4.);
+    Direction = Vector(-1., 0., 0.).Normalize();
+    R = Ray(Origin, Direction);
+    EXPECT_EQ(false, Box.Intersect(R));
+}

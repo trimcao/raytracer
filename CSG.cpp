@@ -47,14 +47,18 @@ std::vector<Intersection<Object>> CSG::LocalIntersect(const Ray &LocalRay)
 {
     std::vector<Intersection<Object>> Intersections;
 
-    auto LeftXS = Left->Intersect(LocalRay);
-    auto RightXS = Right->Intersect(LocalRay);
+    if (BoundsOf().Intersect(LocalRay)) {
+        auto LeftXS = Left->Intersect(LocalRay);
+        auto RightXS = Right->Intersect(LocalRay);
 
-    Intersections.insert(Intersections.end(), LeftXS.begin(), LeftXS.end());
-    Intersections.insert(Intersections.end(), RightXS.begin(), RightXS.end());
-    std::sort(Intersections.begin(), Intersections.end());
+        Intersections.insert(Intersections.end(), LeftXS.begin(), LeftXS.end());
+        Intersections.insert(Intersections.end(), RightXS.begin(), RightXS.end());
+        std::sort(Intersections.begin(), Intersections.end());
 
-    return FilterIntersections(Intersections);
+        return FilterIntersections(Intersections);
+    }
+
+    return Intersections;
 }
 
 bool CSG::IntersectionAllowed(bool LHit, bool InL, bool InR)

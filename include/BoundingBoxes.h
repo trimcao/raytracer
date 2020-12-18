@@ -3,8 +3,8 @@
 #include "Point.h"
 #include "Vector.h"
 #include "Intersection.h"
-// #include "Groups.h"
-// #include "CSG.h"
+#include "Ray.h"
+#include "Intersection.h"
 #include <vector>
 
 class BoundingBoxes
@@ -26,7 +26,5 @@ public:
 
     BoundingBoxes Transform(Matrix &M);
 
-    // static BoundingBoxes ParentSpaceBox(std::pair<Point, Point> ObjectBounds, Matrix Transformation);
-    // static BoundingBoxes BoundingBoxOf(Groups &G);
-    // static BoundingBoxes BoundingBoxOf(CSG &C);
+    bool Intersect(const Ray &R);
 };

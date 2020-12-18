@@ -24,4 +24,4 @@ public:
     virtual BoundingBoxes BoundsOf() override;
 };
 
-std::vector<double> CheckAxis(double Origin, double Direction);
+std::vector<double> CheckAxis(double Origin, double Direction, double Min, double Max);

@@ -45,13 +45,16 @@ std::vector<Intersection<Object>> Groups::LocalIntersect(const Ray &LocalRay)
 {
     std::vector<Intersection<Object>> Intersections;
 
-    for (auto &S : Shapes)
+    if (BoundsOf().Intersect(LocalRay))
     {
-        auto XS = S->Intersect(LocalRay);
-        Intersections.insert(Intersections.end(), XS.begin(), XS.end());
-    }
+        for (auto &S : Shapes)
+        {
+            auto XS = S->Intersect(LocalRay);
+            Intersections.insert(Intersections.end(), XS.begin(), XS.end());
+        }
 
-    std::sort(Intersections.begin(), Intersections.end());
+        std::sort(Intersections.begin(), Intersections.end());
+    }
 
     return Intersections;
 }

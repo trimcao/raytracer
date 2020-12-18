@@ -95,6 +95,8 @@ set(HEADERS
 set(TESTS
         test/Camera_Test.cpp
         test/BoundingBoxes_Test.cpp
+        test/Groups_Test.cpp
+        test/CSG_Test.cpp
         )
 
 add_executable(raytracer ${SOURCES} ${HEADERS} ${TESTS})

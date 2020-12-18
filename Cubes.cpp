@@ -52,9 +52,9 @@ std::vector<Intersection<Object>> Cubes::LocalIntersect(const Ray &LocalRay)
 {
     std::vector<Intersection<Object>> Intersections;
 
-    auto XT = CheckAxis(LocalRay.GetOrigin().X(), LocalRay.GetDirection().X());
-    auto YT = CheckAxis(LocalRay.GetOrigin().Y(), LocalRay.GetDirection().Y());
-    auto ZT = CheckAxis(LocalRay.GetOrigin().Z(), LocalRay.GetDirection().Z());
+    auto XT = CheckAxis(LocalRay.GetOrigin().X(), LocalRay.GetDirection().X(), -1., 1.);
+    auto YT = CheckAxis(LocalRay.GetOrigin().Y(), LocalRay.GetDirection().Y(), -1., 1.);
+    auto ZT = CheckAxis(LocalRay.GetOrigin().Z(), LocalRay.GetDirection().Z(), -1., 1.);
 
     std::vector<double> TMinCandidates {XT[0], YT[0], ZT[0]};
     std::vector<double> TMaxCandidates {XT[1], YT[1], ZT[1]};
@@ -70,12 +70,12 @@ std::vector<Intersection<Object>> Cubes::LocalIntersect(const Ray &LocalRay)
     return Intersections;
 }
 
-std::vector<double> CheckAxis(double Origin, double Direction)
+std::vector<double> CheckAxis(double Origin, double Direction, double Min, double Max)
 {
     // we consider two planes with offset -1 and 1 from origin,
     // respectively.
-    auto TMinNumerator = (-1 - Origin);
-    auto TMaxNumerator = (1 - Origin);
+    auto TMinNumerator = (Min - Origin);
+    auto TMaxNumerator = (Max - Origin);
     double TMin, TMax;
 
     if (std::abs(Direction) >= Util::EPSILON)
@@ -85,7 +85,7 @@ std::vector<double> CheckAxis(double Origin, double Direction)
     }
     else
     {
-        auto inf = std::numeric_limits<double>::max();
+        auto inf = std::numeric_limits<double>::infinity();
         TMin = TMinNumerator * inf;
         TMax = TMaxNumerator * inf;
     }
