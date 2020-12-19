@@ -25,6 +25,7 @@ public:
     bool ContainsBox(BoundingBoxes &B);
 
     BoundingBoxes Transform(Matrix &M);
+    std::pair<BoundingBoxes, BoundingBoxes> SplitBounds();
 
     bool Intersect(const Ray &R);
 };

@@ -343,3 +343,51 @@ TEST(BoundingBoxes, BoxIntersectNonCubic)
     R = Ray(Origin, Direction);
     EXPECT_EQ(false, Box.Intersect(R));
 }
+
+TEST(BoundingBoxes, SplitPerfectCube)
+{
+    BoundingBoxes Box(Point(-1., -4., -5.), Point(9., 6., 5.));
+    auto LeftRight = Box.SplitBounds();
+    auto Left = LeftRight.first;
+    auto Right = LeftRight.second;
+    EXPECT_EQ(Left.Min, Point(-1., -4., -5.));
+    EXPECT_EQ(Left.Max, Point(4., 6., 5.));
+    EXPECT_EQ(Right.Min, Point(4., -4., -5.));
+    EXPECT_EQ(Right.Max, Point(9., 6., 5.));
+}
+
+TEST(BoundingBoxes, SplitXWideBox)
+{
+    BoundingBoxes Box(Point(-1., -2., -3.), Point(9., 5.5, 3.));
+    auto LeftRight = Box.SplitBounds();
+    auto Left = LeftRight.first;
+    auto Right = LeftRight.second;
+    EXPECT_EQ(Left.Min, Point(-1., -2., -3.));
+    EXPECT_EQ(Left.Max, Point(4., 5.5, 3.));
+    EXPECT_EQ(Right.Min, Point(4., -2., -3.));
+    EXPECT_EQ(Right.Max, Point(9., 5.5, 3.));
+}
+
+TEST(BoundingBoxes, SplitYWideBox)
+{
+    BoundingBoxes Box(Point(-1., -2., -3.), Point(5., 8., 3.));
+    auto LeftRight = Box.SplitBounds();
+    auto Left = LeftRight.first;
+    auto Right = LeftRight.second;
+    EXPECT_EQ(Left.Min, Point(-1., -2., -3.));
+    EXPECT_EQ(Left.Max, Point(5., 3., 3.));
+    EXPECT_EQ(Right.Min, Point(-1., 3., -3.));
+    EXPECT_EQ(Right.Max, Point(5., 8., 3.));
+}
+
+TEST(BoundingBoxes, SplitZWideBox)
+{
+    BoundingBoxes Box(Point(-1., -2., -3.), Point(5., 3., 7.));
+    auto LeftRight = Box.SplitBounds();
+    auto Left = LeftRight.first;
+    auto Right = LeftRight.second;
+    EXPECT_EQ(Left.Min, Point(-1., -2., -3.));
+    EXPECT_EQ(Left.Max, Point(5., 3., 2.));
+    EXPECT_EQ(Right.Min, Point(-1., -2., 2.));
+    EXPECT_EQ(Right.Max, Point(5., 3., 7.));
+}

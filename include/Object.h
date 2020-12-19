@@ -67,6 +67,23 @@ public:
 
     inline virtual BoundingBoxes BoundsOf() { return BoundingBoxes(); }
     inline virtual BoundingBoxes ParentSpaceBoundsOf() { return BoundsOf().Transform(Transform); }
+
+    // divide group into subgroups
+    inline virtual std::pair<std::vector<std::shared_ptr<Object>>, std::vector<std::shared_ptr<Object>>> PartitionChildren()
+    {
+        std::vector<std::shared_ptr<Object>> Left {};
+        std::vector<std::shared_ptr<Object>> Right {};
+        return std::pair<std::vector<std::shared_ptr<Object>>, std::vector<std::shared_ptr<Object>>> {Left, Right};
+    }
+
+    inline virtual void MakeSubgroup(std::vector<std::shared_ptr<Object>> InShapes) {}
+    inline virtual void Divide(int Threshold) {}
+    inline virtual int GetCount() { return 1; }
+    inline virtual std::vector<std::shared_ptr<Object>> GetChildren()
+    {
+        return std::vector<std::shared_ptr<Object>> {};
+    }
+
 };
 
 class TestShape : public Object

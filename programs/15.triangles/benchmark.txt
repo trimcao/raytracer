@@ -13,3 +13,4 @@ Multiple threads:
 (by row) ./triangles  3161.81s user 11.29s system 764% cpu 6:54.94 total
 
 With basic bounding box
+./triangles  1513.92s user 4.47s system 778% cpu 3:14.93 total

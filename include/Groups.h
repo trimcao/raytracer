@@ -25,4 +25,12 @@ public:
     virtual bool Include(Object *S) override;
 
     virtual BoundingBoxes BoundsOf() override;
+    virtual std::pair<std::vector<std::shared_ptr<Object>>, std::vector<std::shared_ptr<Object>>> PartitionChildren() override;
+    virtual void MakeSubgroup(std::vector<std::shared_ptr<Object>> InShapes) override;
+    virtual void Divide(int Threshold) override;
+    inline virtual int GetCount() override { return Shapes.size(); }
+    inline virtual std::vector<std::shared_ptr<Object>> GetChildren() override
+    {
+        return Shapes;
+    }
 };

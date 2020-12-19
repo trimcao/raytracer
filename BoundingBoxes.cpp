@@ -1,6 +1,7 @@
 #include "include/BoundingBoxes.h"
 #include <limits>
 #include "include/Cubes.h"
+#include <algorithm>
 // #include "include/Ray.h"
 // #include "include/Intersection.h"
 // #include "include/Util.h"
@@ -92,4 +93,43 @@ bool BoundingBoxes::Intersect(const Ray &R)
         return false;
 
     return true;
+}
+
+std::pair<BoundingBoxes, BoundingBoxes> BoundingBoxes::SplitBounds()
+{
+    // figure out the box's largest dimension
+    auto Dx = Max.X() - Min.X();
+    auto Dy = Max.Y() - Min.Y();
+    auto Dz = Max.Z() - Min.Z();
+    std::vector<double> Dxyz {Dx, Dy, Dz};
+
+    auto Greatest = *max_element(std::begin(Dxyz), std::end(Dxyz));
+    auto X0 = Min.X();
+    auto Y0 = Min.Y();
+    auto Z0 = Min.Z();
+    auto X1 = Max.X();
+    auto Y1 = Max.Y();
+    auto Z1 = Max.Z();
+
+    // adjust the points so that they lie on the dividing plane
+    if (Greatest == Dx)
+    {
+        X0 = X0 + (Dx / 2.);
+        X1 = X0;
+    } else if (Greatest == Dy)
+    {
+        Y0 = Y0 + (Dy / 2.);
+        Y1 = Y0;
+    } else
+    {
+        Z0 = Z0 + (Dz / 2.);
+        Z1 = Z0;
+    }
+
+    Point MidMin(X0, Y0, Z0);
+    Point MidMax(X1, Y1, Z1);
+
+    BoundingBoxes Left(Min, MidMax);
+    BoundingBoxes Right(MidMin, Max);
+    return std::pair<BoundingBoxes, BoundingBoxes> {Left, Right};
 }

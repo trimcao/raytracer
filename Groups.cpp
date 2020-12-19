@@ -88,6 +88,77 @@ BoundingBoxes Groups::BoundsOf()
     return Box;
 }
 
+std::pair<std::vector<std::shared_ptr<Object>>, std::vector<std::shared_ptr<Object>>> Groups::PartitionChildren()
+{
+    auto Box = BoundsOf();
+    auto SplitBoxes = Box.SplitBounds();
+    auto LeftBox = SplitBoxes.first;
+    auto RightBox = SplitBoxes.second;
+
+    std::vector<std::shared_ptr<Object>> Left {};
+    std::vector<std::shared_ptr<Object>> Right {};
+
+    // loop using iterator so we can delete element in the list while iterating
+    auto It = Shapes.begin();
+    while (It != Shapes.end())
+    {
+        auto S = *It;
+        auto Bounds = S->ParentSpaceBoundsOf();
+        if (LeftBox.ContainsBox(Bounds))
+        {
+            Left.push_back(S);
+            S->SetParent(nullptr);
+            It = Shapes.erase(It);
+        }
+        else if (RightBox.ContainsBox(Bounds))
+        {
+            Right.push_back(S);
+            S->SetParent(nullptr);
+            It = Shapes.erase(It);
+        }
+        else
+        {
+            ++It;
+        }
+    }
+
+    return std::pair<std::vector<std::shared_ptr<Object>>, std::vector<std::shared_ptr<Object>>> {Left, Right};
+}
+
+void Groups::MakeSubgroup(std::vector<std::shared_ptr<Object>> InShapes)
+{
+    std::shared_ptr<Object> G = std::make_shared<Groups>(Groups());
+    for (auto &S: InShapes)
+    {
+        G->AddChild(S);
+    }
+
+    AddChild(G);
+}
+
+void Groups::Divide(int Threshold)
+{
+    if (Threshold <= GetCount())
+    {
+        auto Partitions = PartitionChildren();
+        auto Left = Partitions.first;
+        auto Right = Partitions.second;
+        if (Left.size() > 0)
+        {
+            MakeSubgroup(Left);
+        }
+        if (Right.size() > 0)
+        {
+            MakeSubgroup(Right);
+        }
+    }
+
+    for (auto &S: Shapes)
+    {
+        S->Divide(Threshold);
+    }
+}
+
 // TEST_CASE("Creating a new group")
 // {
 //     Groups G;
