@@ -14,3 +14,6 @@ Multiple threads:
 
 With basic bounding box
 ./triangles  1513.92s user 4.47s system 778% cpu 3:14.93 total
+
+With BVH (bounding volume hierarchy)
+./triangles  643.39s user 2.40s system 739% cpu 1:27.28 total

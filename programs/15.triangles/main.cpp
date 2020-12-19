@@ -41,6 +41,7 @@ void RoomScene()
     std::shared_ptr<Object> TeapotPtr = Teapot;
     TeapotPtr->SetTransform(Transformations::Scaling(0.1, 0.1, 0.1).RotateX(-M_PI/2).Translate(0., 0., -1.));
     TeapotPtr->SetMaterial(Mat);
+    TeapotPtr->Divide(20);
 
     Plane Floor(1);
     Mat = Material();
