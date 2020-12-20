@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.0.0)
+cmake_minimum_required(VERSION 3.14.0)
 project(triangles VERSION 0.1.0)
 
 # specify the C++ standard
@@ -7,6 +7,17 @@ set(CMAKE_CXX_STANDARD_REQUIRED True)
 
 include(CTest)
 enable_testing()
+
+# add rapidyaml
+include(FetchContent)
+FetchContent_Declare(
+  ryml
+  GIT_REPOSITORY https://github.com/biojppm/rapidyaml.git
+  GIT_TAG        master
+)
+
+# CMake 3.14+
+FetchContent_MakeAvailable(ryml)
 
 get_filename_component(PARENT_DIR ../../ ABSOLUTE)
 
@@ -25,6 +36,8 @@ target_include_directories(triangles
         ${PROJECT_SOURCE_DIR}/../../include
         ${PROJECT_SOURCE_DIR}/../../threadpool
         )
+
+target_link_libraries(triangles PRIVATE ryml)
 
 set(CPACK_PROJECT_NAME ${PROJECT_NAME})
 set(CPACK_PROJECT_VERSION ${PROJECT_VERSION})
