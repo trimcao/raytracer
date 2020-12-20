@@ -83,7 +83,9 @@ void RoomScene()
 
     bool RenderShadow = true;
 
-    auto CV = Cam.Render(W, RenderShadow, true, 5, true);
+    uint numThreads = 8;
+    std::cout << "number of threads used: " << numThreads << '\n';
+    auto CV = Cam.Render(W, RenderShadow, true, 5, numThreads);
 
     std::ofstream out("smooth.ppm");
     out << CV.ToPPM();

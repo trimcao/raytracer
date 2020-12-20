@@ -63,7 +63,7 @@ Ray Camera::RayForPixel(int X, int Y)
     return Ray(Origin, Direction);
 }
 
-Canvas Camera::Render(World &W, bool RenderShadow, bool printLog, int RayDepth, bool multiThreads)
+Canvas Camera::Render(World &W, bool RenderShadow, bool printLog, int RayDepth, uint numThreads)
 {
     Canvas Image(HSize, VSize);
 
@@ -76,12 +76,6 @@ Canvas Camera::Render(World &W, bool RenderShadow, bool printLog, int RayDepth, 
     auto StartTime = std::chrono::system_clock::now();
 
     // Use a thread pool here
-    uint numThreads = 1;
-    if (multiThreads)
-    {
-        numThreads = std::thread::hardware_concurrency();
-    }
-    std::cout << "number of threads used: " << numThreads << '\n';
     ThreadPool pool{numThreads};
 
     for (int Y = 0; Y < VSize; ++Y)
