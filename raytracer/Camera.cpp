@@ -5,6 +5,7 @@
 #include <iostream>
 #include <cmath>
 #include <chrono>
+#include <atomic>
 #include "threadpool.h"
 
 Camera::Camera(int H, int V, double FOV)
@@ -69,55 +70,65 @@ Canvas Camera::Render(World &W, bool RenderShadow, bool printLog, int RayDepth, 
 
     // variables for progress bar
     int TotalPixels = HSize * VSize;
-    int CurPixel = 0;
+    std::atomic<int> CurPixel = 0;
     int Step = 1;
     int DisplayNext = 1;
 
     auto StartTime = std::chrono::system_clock::now();
+
+    // ProgressThread will print out the progress to screen
+    std::thread ProgressThread([&] {
+        std::chrono::milliseconds SleepDuration(250);
+        while (CurPixel < TotalPixels)
+        {
+            std::this_thread::sleep_for(SleepDuration);
+            if (printLog)
+            {
+                // Formatted progress indicator
+                auto Percent = (100 * (CurPixel + 1)) / TotalPixels ;
+                if (Percent >= DisplayNext)
+                {
+                    std::cout << "\r" << "Progress [" << std::string(Percent / 5, '=') << std::string(100 / 5 - Percent / 5, ' ') << "]";
+                    std::cout << ' ' << Percent << "%";
+
+                    auto CurrentTime = std::chrono::system_clock::now();
+                    std::chrono::duration<double> ElapsedSeconds = CurrentTime - StartTime;
+
+                    std::cout << "    " << "Elapsed time: " << (int)ElapsedSeconds.count() << "s";
+                    std::cout.flush();
+                    DisplayNext += Step;
+                }
+            }
+        }
+
+        if (printLog)
+            std::cout << std::endl;
+    });
 
     // Use a thread pool here
     ThreadPool pool{numThreads};
 
     for (int Y = 0; Y < VSize; ++Y)
     {
-        for (int X = 0; X < HSize; ++X)
-        {
-            auto CurY = Y;
-            auto CurX = X;
+        auto CurY = Y;
+        // auto CurX = X;
 
-            // enqueue a task
-            pool.enqueue([=, &W, &Image] {
+        // enqueue a task
+        pool.enqueue([=, &W, &Image, &CurPixel, &ProgressThread] {
+            for (int CurX = 0; CurX < HSize; ++CurX)
+            {
                 auto R = RayForPixel(CurX, CurY);
                 auto Col = W.ColorAt(R, RenderShadow, RayDepth);
-                // std::cout << "CurX-CurY: "  << CurX << '-' << CurY << "\n";
-                // std::cout << "Ray: "  << R.GetDirection() << '-' << R.GetOrigin() << "\n";
-                // std::cout << "Col: "  << Col << "\n";
+
                 Image.WritePixel(CurX, CurY, Col);
-            });
-
-            // if (printLog)
-            // {
-            //     // Formatted progress indicator
-            //     ++CurPixel;
-            //     auto Percent = (100 * (CurPixel + 1)) / TotalPixels ;
-            //     if (Percent >= DisplayNext)
-            //     {
-            //         std::cout << "\r" << "Progress [" << std::string(Percent / 5, '=') << std::string(100 / 5 - Percent / 5, ' ') << "]";
-            //         std::cout << ' ' << Percent << "%";
-
-            //         auto CurrentTime = std::chrono::system_clock::now();
-            //         std::chrono::duration<double> ElapsedSeconds = CurrentTime - StartTime;
-
-            //         std::cout << "    " << "Elapsed time: " << (int)ElapsedSeconds.count() << "s";
-            //         std::cout.flush();
-            //         DisplayNext += Step;
-            //     }
-            // }
-        }
+                ++CurPixel;
+                if (CurPixel == TotalPixels)
+                {
+                    ProgressThread.join();
+                }
+            }
+        });
     }
-
-    if (printLog)
-        std::cout << std::endl;
 
     return Image;
 }
