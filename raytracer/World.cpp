@@ -59,13 +59,14 @@ std::vector<Intersection<Object>> World::Intersect(const Ray &R)
     return Intersections;
 }
 
-Color World::ShadeHit(PreComputations<Object> &Comps, bool RenderShadow=true, int Remaining=5)
+Color World::ShadeHit(PreComputations<Object> &Comps, bool RenderShadow, int Remaining)
 {
     if (!ALight)
         return Color(0., 0., 0.);
 
     bool IsInShadow = false;
-    if (Comps.AObject->ShadowOn() && RenderShadow)
+
+    if (RenderShadow)
         IsInShadow = IsShadowed(Comps.OverPosition);
 
     Material Mat;
@@ -113,7 +114,16 @@ bool World::IsShadowed(Point &P)
 
     Ray R(P, Direction);
     auto Intersections = Intersect(R);
-    auto AHit = Hit(Intersections);
+    std::shared_ptr<Intersection<Object>> AHit {nullptr};
+
+    for (auto &I : Intersections)
+    {
+        if (I.GetT() > 0. && I.GetObject()->ShadowOn())
+        {
+            AHit = std::make_shared<Intersection<Object>>(I);
+            break;
+        }
+    }
 
     if (AHit && AHit->GetT() < Distance)
     {

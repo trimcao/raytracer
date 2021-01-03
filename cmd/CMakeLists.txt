@@ -8,16 +8,19 @@ set(CMAKE_CXX_STANDARD_REQUIRED True)
 include(CTest)
 enable_testing()
 
-# add ryml
-include(FetchContent)
-FetchContent_Declare(
-  ryml
-  GIT_REPOSITORY https://github.com/biojppm/rapidyaml.git
-  GIT_TAG        master
-)
 
-# CMake 3.14+
-FetchContent_MakeAvailable(ryml)
+include(FetchContent)
+
+# add json
+FetchContent_Declare(json
+        GIT_REPOSITORY https://github.com/nlohmann/json.git
+        GIT_TAG v3.9.1)
+
+FetchContent_GetProperties(json)
+if(NOT json_POPULATED)
+    FetchContent_Populate(json)
+    add_subdirectory(${json_SOURCE_DIR} ${json_BINARY_DIR} EXCLUDE_FROM_ALL)
+endif()
 
 get_filename_component(PARENT_DIR ../raytracer/ ABSOLUTE)
 
@@ -55,7 +58,7 @@ target_include_directories(raycmd
         ${PROJECT_SOURCE_DIR}/../raytracer/threadpool
 )
 
-target_link_libraries(raycmd PRIVATE ryml)
+target_link_libraries(raycmd PRIVATE nlohmann_json::nlohmann_json)
 
 set(CPACK_PROJECT_NAME ${PROJECT_NAME})
 set(CPACK_PROJECT_VERSION ${PROJECT_VERSION})

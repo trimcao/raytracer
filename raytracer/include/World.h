@@ -36,7 +36,7 @@ public:
     std::vector<Intersection<Object>> Intersect(const Ray &R);
     std::vector<Intersection<Object>> Intersect(const Ray &R, std::shared_ptr<Object> &ObjectPtr);
 
-    Color ShadeHit(PreComputations<Object> &Comps, bool RenderShadow, int Remaining);
+    Color ShadeHit(PreComputations<Object> &Comps, bool RenderShadow=true, int Remaining=5);
 
     Color ColorAt(Ray &R, bool RenderShadow, int Remaining);
 

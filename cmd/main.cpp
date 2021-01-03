@@ -3,7 +3,7 @@
 #include <string>
 #include <cmath>
 #include <fstream>
-#include <ryml.hpp>
+#include <nlohmann/json.hpp>
 
 #include "Point.h"
 #include "Vector.h"
@@ -23,9 +23,16 @@
 #include "Triangles.h"
 #include "ObjParser.h"
 
+
 int main(int argc, char **argv)
 {
+    using nlohmann::json;
     std::cout << "Hello from cmd\n";
+
+    std::ifstream ifs("/Users/trimcao/tri/raytracer/cmd/test.json");
+    json jf = json::parse(ifs);
+
+    std::cout << "print: " << jf["json"] << '\n';
 
     return 0;
 }
