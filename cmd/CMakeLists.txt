@@ -11,15 +11,15 @@ enable_testing()
 
 include(FetchContent)
 
-# add json
-FetchContent_Declare(json
-        GIT_REPOSITORY https://github.com/nlohmann/json.git
-        GIT_TAG v3.9.1)
+# add yaml-cpp
+FetchContent_Declare(yaml-cpp
+        GIT_REPOSITORY https://github.com/jbeder/yaml-cpp.git
+        GIT_TAG yaml-cpp-0.6.3)
 
-FetchContent_GetProperties(json)
-if(NOT json_POPULATED)
-    FetchContent_Populate(json)
-    add_subdirectory(${json_SOURCE_DIR} ${json_BINARY_DIR} EXCLUDE_FROM_ALL)
+FetchContent_GetProperties(yaml-cpp)
+if(NOT yaml-cpp_POPULATED)
+    FetchContent_Populate(yaml-cpp)
+    add_subdirectory(${yaml-cpp_SOURCE_DIR} ${yaml-cpp_BINARY_DIR} EXCLUDE_FROM_ALL)
 endif()
 
 get_filename_component(PARENT_DIR ../raytracer/ ABSOLUTE)
@@ -58,7 +58,7 @@ target_include_directories(raycmd
         ${PROJECT_SOURCE_DIR}/../raytracer/threadpool
 )
 
-target_link_libraries(raycmd PRIVATE nlohmann_json::nlohmann_json)
+target_link_libraries(raycmd PRIVATE yaml-cpp)
 
 set(CPACK_PROJECT_NAME ${PROJECT_NAME})
 set(CPACK_PROJECT_VERSION ${PROJECT_VERSION})

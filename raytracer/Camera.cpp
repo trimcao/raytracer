@@ -8,6 +8,10 @@
 #include <atomic>
 #include "threadpool.h"
 
+Camera::Camera()
+{
+}
+
 Camera::Camera(int H, int V, double FOV)
 {
     HSize = H;
