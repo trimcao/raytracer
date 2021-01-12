@@ -34,6 +34,45 @@ class Scene
 public:
 };
 
+Matrix getTransform(const YAML::Node transforms)
+{
+    Matrix transformMatrix = Matrix::Identity();
+
+    for (YAML::const_iterator it = transforms.begin(); it != transforms.end(); ++it)
+    {
+        const YAML::Node &transformNode = *it;
+        auto transformType = transformNode[0].as<std::string>();
+        if (transformType == "translate")
+        {
+            auto x = transformNode[1].as<double>();
+            auto y = transformNode[2].as<double>();
+            auto z = transformNode[3].as<double>();
+            transformMatrix = transformMatrix.Translate(x, y, z);
+        }
+        else if (transformType == "scale")
+        {
+            auto x = transformNode[1].as<double>();
+            auto y = transformNode[2].as<double>();
+            auto z = transformNode[3].as<double>();
+            transformMatrix = transformMatrix.Scale(x, y, z);
+        }
+        else if (transformType == "rotate-x")
+        {
+            transformMatrix = transformMatrix.RotateX(transformNode[1].as<double>());
+        }
+        else if (transformType == "rotate-y")
+        {
+            transformMatrix = transformMatrix.RotateY(transformNode[1].as<double>());
+        }
+        else if (transformType == "rotate-z")
+        {
+            transformMatrix = transformMatrix.RotateZ(transformNode[1].as<double>());
+        }
+    }
+
+    return transformMatrix;
+}
+
 int main(int argc, char **argv)
 {
 
@@ -71,39 +110,7 @@ int main(int argc, char **argv)
                 auto cube = std::make_shared<Cubes>();
                 // set transform matrix
                 auto transforms = node["transform"];
-                Matrix transformMatrix = Matrix::Identity();
-                for (YAML::const_iterator ite = transforms.begin(); ite != transforms.end(); ++ite)
-                {
-                    const YAML::Node &transformNode = *ite;
-                    auto transformType = transformNode[0].as<std::string>();
-                    if (transformType == "translate")
-                    {
-                        auto x = transformNode[1].as<double>();
-                        auto y = transformNode[2].as<double>();
-                        auto z = transformNode[3].as<double>();
-                        transformMatrix = transformMatrix.Translate(x, y, z);
-                    }
-                    else if (transformType == "scale")
-                    {
-                        auto x = transformNode[1].as<double>();
-                        auto y = transformNode[2].as<double>();
-                        auto z = transformNode[3].as<double>();
-                        transformMatrix = transformMatrix.Scale(x, y, z);
-                    }
-                    else if (transformType == "rotate-x")
-                    {
-                        transformMatrix = transformMatrix.RotateX(transformNode[1].as<double>());
-                    }
-                    else if (transformType == "rotate-y")
-                    {
-                        transformMatrix = transformMatrix.RotateY(transformNode[1].as<double>());
-                    }
-                    else if (transformType == "rotate-z")
-                    {
-                        transformMatrix = transformMatrix.RotateZ(transformNode[1].as<double>());
-                    }
-                }
-
+                auto transformMatrix = getTransform(transforms);
                 cube->SetTransform(transformMatrix);
 
                 // set shadow
@@ -153,6 +160,44 @@ int main(int argc, char **argv)
                     if (materialNode["refractive_index"])
                     {
                         material.SetRefractiveIndex(materialNode["refractive_index"].as<double>());
+                    }
+                    if (materialNode["pattern"])
+                    {
+                        auto patternNode = materialNode["pattern"];
+                        std::shared_ptr<Pattern> pat;
+                        auto typed = patternNode["typed"].as<std::string>();
+                        if (typed == "checkers")
+                        {
+                            Color col1(patternNode["colors"][0][0].as<double>(),
+                                       patternNode["colors"][0][1].as<double>(),
+                                       patternNode["colors"][0][2].as<double>());
+                            Color col2(patternNode["colors"][1][0].as<double>(),
+                                       patternNode["colors"][1][1].as<double>(),
+                                       patternNode["colors"][1][2].as<double>());
+                            pat = std::make_shared<CheckersPattern>(col1, col2);
+                            
+                        }
+                        else if (typed == "stripes")
+                        {
+                            Color col1(patternNode["colors"][0][0].as<double>(),
+                                       patternNode["colors"][0][1].as<double>(),
+                                       patternNode["colors"][0][2].as<double>());
+                            Color col2(patternNode["colors"][1][0].as<double>(),
+                                       patternNode["colors"][1][1].as<double>(),
+                                       patternNode["colors"][1][2].as<double>());
+                            pat = std::make_shared<StripePattern>(col1, col2);
+                        }
+                        
+                        if (pat)
+                        {
+                            // transform matrix
+                            auto transforms = patternNode["transform"];
+                            auto transformMatrix = getTransform(transforms);
+                            pat->SetTransform(transformMatrix);
+                            
+                            // set pattern
+                            material.SetPattern(pat);
+                        }
                     }
 
                     cube->SetMaterial(material);
