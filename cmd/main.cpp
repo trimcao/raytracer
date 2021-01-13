@@ -34,7 +34,7 @@ class Scene
 public:
 };
 
-Matrix getTransform(const YAML::Node transforms)
+Matrix getTransform(const YAML::Node &transforms)
 {
     Matrix transformMatrix = Matrix::Identity();
 
@@ -73,10 +73,122 @@ Matrix getTransform(const YAML::Node transforms)
     return transformMatrix;
 }
 
+std::shared_ptr<Object> getObject(const YAML::Node &node, std::string objType)
+{
+    std::shared_ptr<Object> obj;
+
+    if (objType == "cube")
+    {
+        obj = std::make_shared<Cubes>();
+    }
+    else if (objType == "sphere")
+    {
+        obj = std::make_shared<Sphere>();
+    }
+    else
+    {
+        return obj;
+    }
+
+    // set transform matrix
+    auto transforms = node["transform"];
+    auto transformMatrix = getTransform(transforms);
+    obj->SetTransform(transformMatrix);
+
+    // set shadow
+    if (node["shadow"])
+    {
+        obj->SetShadowOn(node["shadow"].as<bool>());
+    }
+
+    // set material
+    if (node["material"])
+    {
+        auto materialNode = node["material"];
+        Material material;
+
+        if (materialNode["ambient"])
+        {
+            material.SetAmbient(materialNode["ambient"].as<double>());
+        }
+        if (materialNode["diffuse"])
+        {
+            material.SetDiffuse(materialNode["diffuse"].as<double>());
+        }
+        if (materialNode["specular"])
+        {
+            material.SetSpecular(materialNode["specular"].as<double>());
+        }
+        if (materialNode["shininess"])
+        {
+            material.SetShininess(materialNode["shininess"].as<double>());
+        }
+        if (materialNode["reflective"])
+        {
+            material.SetReflective(materialNode["reflective"].as<double>());
+        }
+        if (materialNode["color"])
+        {
+            material.SetColor(Color(materialNode["color"][0].as<double>(),
+                                    materialNode["color"][1].as<double>(),
+                                    materialNode["color"][2].as<double>()));
+        }
+        if (materialNode["transparency"])
+        {
+            material.SetTransparency(materialNode["transparency"].as<double>());
+        }
+        if (materialNode["refractive_index"])
+        {
+            material.SetRefractiveIndex(materialNode["refractive_index"].as<double>());
+        }
+        if (materialNode["pattern"])
+        {
+            auto patternNode = materialNode["pattern"];
+            std::shared_ptr<Pattern> pat;
+            auto typed = patternNode["typed"].as<std::string>();
+            if (typed == "checkers")
+            {
+                Color col1(patternNode["colors"][0][0].as<double>(),
+                           patternNode["colors"][0][1].as<double>(),
+                           patternNode["colors"][0][2].as<double>());
+                Color col2(patternNode["colors"][1][0].as<double>(),
+                           patternNode["colors"][1][1].as<double>(),
+                           patternNode["colors"][1][2].as<double>());
+                pat = std::make_shared<CheckersPattern>(col1, col2);
+            }
+            else if (typed == "stripes")
+            {
+                Color col1(patternNode["colors"][0][0].as<double>(),
+                           patternNode["colors"][0][1].as<double>(),
+                           patternNode["colors"][0][2].as<double>());
+                Color col2(patternNode["colors"][1][0].as<double>(),
+                           patternNode["colors"][1][1].as<double>(),
+                           patternNode["colors"][1][2].as<double>());
+                pat = std::make_shared<StripePattern>(col1, col2);
+            }
+
+            if (pat)
+            {
+                // transform matrix
+                auto transforms = patternNode["transform"];
+                auto transformMatrix = getTransform(transforms);
+                pat->SetTransform(transformMatrix);
+
+                // set pattern
+                material.SetPattern(pat);
+            }
+        }
+
+        obj->SetMaterial(material);
+    }
+
+    return obj;
+}
+
 int main(int argc, char **argv)
 {
 
-    YAML::Node scene = YAML::LoadFile("/Users/trimcao/tri/raytracer/scenes/table.yml");
+    YAML::Node scene = YAML::LoadFile("/Users/trimcao/tri/raytracer/scenes/three-spheres.yml");
 
     // setup objects for the scene
     World world;
@@ -105,107 +217,15 @@ int main(int argc, char **argv)
                                    node["up"][2].as<double>());
                 cam.SetTransform(Transformations::ViewTransform(from, to, up));
             }
-            else if (objType == "cube")
+            else if (objType == "cube" || objType == "sphere")
             {
-                auto cube = std::make_shared<Cubes>();
-                // set transform matrix
-                auto transforms = node["transform"];
-                auto transformMatrix = getTransform(transforms);
-                cube->SetTransform(transformMatrix);
-
-                // set shadow
-                if (node["shadow"])
-                {
-                    cube->SetShadowOn(node["shadow"].as<bool>());
-                }
-
-                // set material
-                if (node["material"])
-                {
-                    auto materialNode = node["material"];
-                    Material material;
-
-                    // TODO: add patterned material
-
-                    if (materialNode["ambient"])
-                    {
-                        material.SetAmbient(materialNode["ambient"].as<double>());
-                    }
-                    if (materialNode["diffuse"])
-                    {
-                        material.SetDiffuse(materialNode["diffuse"].as<double>());
-                    }
-                    if (materialNode["specular"])
-                    {
-                        material.SetSpecular(materialNode["specular"].as<double>());
-                    }
-                    if (materialNode["shininess"])
-                    {
-                        material.SetShininess(materialNode["shininess"].as<double>());
-                    }
-                    if (materialNode["reflective"])
-                    {
-                        material.SetReflective(materialNode["reflective"].as<double>());
-                    }
-                    if (materialNode["color"])
-                    {
-                        material.SetColor(Color(materialNode["color"][0].as<double>(),
-                                                materialNode["color"][1].as<double>(),
-                                                materialNode["color"][2].as<double>()));
-                    }
-                    if (materialNode["transparency"])
-                    {
-                        material.SetTransparency(materialNode["transparency"].as<double>());
-                    }
-                    if (materialNode["refractive_index"])
-                    {
-                        material.SetRefractiveIndex(materialNode["refractive_index"].as<double>());
-                    }
-                    if (materialNode["pattern"])
-                    {
-                        auto patternNode = materialNode["pattern"];
-                        std::shared_ptr<Pattern> pat;
-                        auto typed = patternNode["typed"].as<std::string>();
-                        if (typed == "checkers")
-                        {
-                            Color col1(patternNode["colors"][0][0].as<double>(),
-                                       patternNode["colors"][0][1].as<double>(),
-                                       patternNode["colors"][0][2].as<double>());
-                            Color col2(patternNode["colors"][1][0].as<double>(),
-                                       patternNode["colors"][1][1].as<double>(),
-                                       patternNode["colors"][1][2].as<double>());
-                            pat = std::make_shared<CheckersPattern>(col1, col2);
-                            
-                        }
-                        else if (typed == "stripes")
-                        {
-                            Color col1(patternNode["colors"][0][0].as<double>(),
-                                       patternNode["colors"][0][1].as<double>(),
-                                       patternNode["colors"][0][2].as<double>());
-                            Color col2(patternNode["colors"][1][0].as<double>(),
-                                       patternNode["colors"][1][1].as<double>(),
-                                       patternNode["colors"][1][2].as<double>());
-                            pat = std::make_shared<StripePattern>(col1, col2);
-                        }
-                        
-                        if (pat)
-                        {
-                            // transform matrix
-                            auto transforms = patternNode["transform"];
-                            auto transformMatrix = getTransform(transforms);
-                            pat->SetTransform(transformMatrix);
-                            
-                            // set pattern
-                            material.SetPattern(pat);
-                        }
-                    }
-
-                    cube->SetMaterial(material);
-                }
-
-                std::shared_ptr<Object> cubePtr = cube;
+                auto obj = getObject(node, objType);
                 // mainGroup.AddChild(cubePtr);
-                world.AddObject(cubePtr);
+
+                if (obj)
+                {
+                    world.AddObject(obj);
+                }
             }
             else if (objType == "light")
             {

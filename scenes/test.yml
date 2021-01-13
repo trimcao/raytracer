@@ -1,11 +1,4 @@
-# ======================================================
-# table.yml
-#
-# This file describes the scene illustrated at the start
-# of chapter 12, "Cubes", in "The Ray Tracer Challenge"
-#
-# by Jamis Buck <jamis@jamisbuck.org>
-# ======================================================
+# Simple test scene
 
 # ======================================================
 # the camera
