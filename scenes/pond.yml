@@ -1,0 +1,69 @@
+# ======================================================
+# the camera
+# ======================================================
+
+- add: camera
+  width: 640
+  height: 360
+  field_of_view: 1.0473
+  from: [0.1, 1.5, -5]
+  to: [0, 1, 0]
+  up: [0, 1, 0]
+
+# ======================================================
+# light sources
+# ======================================================
+
+- add: light
+  at: [-10, 10, -10]
+  intensity: [1, 1, 1]
+
+# ======================================================
+# describe the elements of the scene
+# ======================================================
+
+# pond surface
+- add: plane
+  material:
+    color: [0.8, 0.8, 0.9]
+    specular: 0
+    reflective: 0.75
+    transparency: 0.8
+    refactive_index: 1.333
+
+# pond bottom
+- add: plane
+  transform:
+    - [translate, 0, -2, 0]
+  material:
+    pattern:
+      typed: checkers
+      colors:
+        - [0.191, 0.468, 0.449]
+        - [0, 0.5, 0.5]
+    # color: [0.8, 0.8, 0.9]
+    specular: 0
+
+# wall
+- add: plane
+  transform:
+    - [rotate-x, 1.571]
+    - [translate, 0, 0, 50]
+  material:
+    pattern:
+      typed: checkers
+      colors:
+        - [0.93, 0.453, 0.129]
+        - [0.95, 0.613, 0.387]
+    specular: 0
+
+# floating ball
+- add: sphere
+  transform:
+    - [scale, 0.5, 0.5, 0.5]
+    - [translate, 0, 0, 5]
+  material:
+    color: [0.99, 0, 0.96]
+    diffuse: 0.7
+    specular: 0.3
+  shadow: false

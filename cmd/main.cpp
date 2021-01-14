@@ -4,6 +4,7 @@
 #include <string>
 #include <cmath>
 #include <fstream>
+#include <set>
 
 #include "yaml-cpp/yaml.h"
 #include "Point.h"
@@ -25,6 +26,8 @@
 #include "ObjParser.h"
 
 // TODO: group does not use child's material?
+
+const std::set<std::string> SHAPES {"sphere", "cube", "plane"};
 
 class Scene
 {
@@ -84,6 +87,10 @@ std::shared_ptr<Object> getObject(const YAML::Node &node, std::string objType)
     else if (objType == "sphere")
     {
         obj = std::make_shared<Sphere>();
+    }
+    else if (objType == "plane")
+    {
+        obj = std::make_shared<Plane>();
     }
     else
     {
@@ -188,7 +195,7 @@ std::shared_ptr<Object> getObject(const YAML::Node &node, std::string objType)
 int main(int argc, char **argv)
 {
 
-    YAML::Node scene = YAML::LoadFile("/Users/trimcao/tri/raytracer/scenes/three-spheres.yml");
+    YAML::Node scene = YAML::LoadFile("/Users/trimcao/tri/raytracer/scenes/pond.yml");
 
     // setup objects for the scene
     World world;
@@ -217,10 +224,9 @@ int main(int argc, char **argv)
                                    node["up"][2].as<double>());
                 cam.SetTransform(Transformations::ViewTransform(from, to, up));
             }
-            else if (objType == "cube" || objType == "sphere")
+            else if (SHAPES.find(objType) != SHAPES.end())
             {
                 auto obj = getObject(node, objType);
-                // mainGroup.AddChild(cubePtr);
 
                 if (obj)
                 {
