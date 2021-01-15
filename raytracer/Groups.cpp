@@ -129,11 +129,6 @@ void Groups::MakeSubgroup(std::vector<std::shared_ptr<Object>> InShapes)
 {
     std::shared_ptr<Object> G = std::make_shared<Groups>(Groups());
 
-    // Need to copy the material for children
-    // (Note we don't need to copy the transformation matrix, because the algorithm here
-    // will use parent's transformation for children)
-    G->SetMaterial(AMaterial);
-
     for (auto &S: InShapes)
     {
         G->AddChild(S);

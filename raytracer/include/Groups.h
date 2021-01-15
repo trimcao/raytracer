@@ -33,4 +33,14 @@ public:
     {
         return Shapes;
     }
+
+    inline void SetMaterialChildren(Material &Mat) {
+        for (auto &S: Shapes)
+        {
+            S->SetMaterial(Mat);
+        }
+    }
+    inline void SetMaterialChildren(Material &&Mat) {
+        SetMaterialChildren(Mat);
+    }
 };

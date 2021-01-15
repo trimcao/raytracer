@@ -69,11 +69,7 @@ Color World::ShadeHit(PreComputations<Object> &Comps, bool RenderShadow, int Rem
     if (RenderShadow)
         IsInShadow = IsShadowed(Comps.OverPosition);
 
-    Material Mat;
-    if (Comps.AObject->GetParent())
-        Mat = Comps.AObject->GetParent()->GetMaterial();
-    else
-        Mat = Comps.AObject->GetMaterial();
+    auto Mat = Comps.AObject->GetMaterial();
 
     auto Surface = Lighting(Mat, Comps.AObject, *ALight, Comps.OverPosition, Comps.EyeV, Comps.NormalV, IsInShadow);
 

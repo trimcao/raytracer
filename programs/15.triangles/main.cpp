@@ -33,12 +33,15 @@ void RoomScene()
     auto ParsedObjs = Parser.ObjToGroup();
 
     auto Teapot = ParsedObjs["Teapot001"];
+    Mat.SetColor(Color(1., 0., 0.));
+    Teapot->SetMaterialChildren(Mat);
+
     std::shared_ptr<Object> TeapotPtr = Teapot;
     TeapotPtr->SetTransform(Transformations::Scaling(0.1, 0.1, 0.1)
                                 .RotateX(-M_PI / 2)
                                 .Translate(0., -0.3, 0.));
+
     TeapotPtr->Divide(200);
-    TeapotPtr->SetMaterial(Mat);
 
     Plane Floor(1);
     Floor.SetTransform(Transformations::Translation(0., -0.3, 0.));
@@ -97,7 +100,7 @@ void RoomScene()
     // W.AddObject(Middle);
     // W.AddObject(Right);
 
-    Camera Cam(640, 360, M_PI / 3);
+    Camera Cam(100, 50, M_PI / 3);
     Cam.SetTransform(Transformations::ViewTransform(Point(0.1, 2., -5.),
                                                     Point(0., 0., 1.),
                                                     Vector(0., 1., 0.)));
