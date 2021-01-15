@@ -1,7 +1,9 @@
 # raytracer
 A raytracing 3D renderer written in C++
 
-Example scene
+Example scenes
+
+![image](./gallery/teapot-3200.png)
 
 ![image](./cmd/output.png)
 
