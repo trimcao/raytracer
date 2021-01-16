@@ -25,9 +25,9 @@
 #include "Triangles.h"
 #include "ObjParser.h"
 
-// TODO: group does not use child's material?
-
-const std::set<std::string> SHAPES {"sphere", "cube", "plane"};
+const std::set<std::string> SHAPES{"sphere", "cube", "plane", "obj"};
+const std::string MODEL_PATH = "/Users/trimcao/tri/raytracer/models";
+const std::string SCENE_PATH = "/Users/trimcao/tri/raytracer/scenes";
 
 class Scene
 {
@@ -91,6 +91,19 @@ std::shared_ptr<Object> getObject(const YAML::Node &node, std::string objType)
     else if (objType == "plane")
     {
         obj = std::make_shared<Plane>();
+    }
+    else if (objType == "obj")
+    {
+        // parse the teapot obj
+        auto path = MODEL_PATH + "/" + node["file"].as<std::string>();
+        ObjParser parser(path, true);
+        parser.Parse();
+        auto parsedObjs = parser.ObjToGroup();
+        // FIXME: assume we only have one group in the obj file
+        for (auto group : parsedObjs)
+        {
+            obj = group.second;
+        }
     }
     else
     {
@@ -189,13 +202,19 @@ std::shared_ptr<Object> getObject(const YAML::Node &node, std::string objType)
         obj->SetMaterial(material);
     }
 
+    // use bounding volume hierarchy
+    if (objType == "obj")
+    {
+        obj->Divide(200);
+    }
+
     return obj;
 }
 
 int main(int argc, char **argv)
 {
 
-    YAML::Node scene = YAML::LoadFile("/Users/trimcao/tri/raytracer/scenes/pond.yml");
+    YAML::Node scene = YAML::LoadFile("/Users/trimcao/tri/raytracer/scenes/crystal-ball.yml");
 
     // setup objects for the scene
     World world;

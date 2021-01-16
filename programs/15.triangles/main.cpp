@@ -33,13 +33,14 @@ void RoomScene()
     auto ParsedObjs = Parser.ObjToGroup();
 
     auto Teapot = ParsedObjs["Teapot001"];
-    Mat.SetColor(Color(1., 0., 0.));
-    Teapot->SetMaterialChildren(Mat);
 
     std::shared_ptr<Object> TeapotPtr = Teapot;
     TeapotPtr->SetTransform(Transformations::Scaling(0.1, 0.1, 0.1)
                                 .RotateX(-M_PI / 2)
                                 .Translate(0., -0.3, 0.));
+
+    Mat.SetColor(Color(1., 0., 0.));
+    TeapotPtr->SetMaterial(Mat);
 
     TeapotPtr->Divide(200);
 

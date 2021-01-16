@@ -39,8 +39,8 @@ public:
     void SetTransform(Matrix &M);
     inline void SetTransform(Matrix &&M) { SetTransform(M); }
 
-    inline void SetMaterial(Material &M) { AMaterial = M; }
-    inline void SetMaterial(Material &&M) { AMaterial = M; }
+    inline virtual void SetMaterial(Material &M) { AMaterial = M; }
+    inline virtual void SetMaterial(Material &&M) { SetMaterial(M); }
 
     inline void SetParent(Object *P) { Parent = P; }
 

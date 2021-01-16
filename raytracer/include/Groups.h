@@ -34,13 +34,10 @@ public:
         return Shapes;
     }
 
-    inline void SetMaterialChildren(Material &Mat) {
+    inline void SetMaterial(Material &Mat) override {
         for (auto &S: Shapes)
         {
             S->SetMaterial(Mat);
         }
-    }
-    inline void SetMaterialChildren(Material &&Mat) {
-        SetMaterialChildren(Mat);
     }
 };
