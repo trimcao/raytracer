@@ -5,6 +5,7 @@
 #include <cmath>
 #include <fstream>
 #include <set>
+#include <filesystem>
 #include <string.h>
 
 #include "yaml-cpp/yaml.h"
@@ -27,8 +28,8 @@
 #include "ObjParser.h"
 
 const std::set<std::string> SHAPES{"sphere", "cube", "plane", "obj"};
-std::string MODEL_PATH = "";
-//std::string SCENE_PATH = "/Users/trimcao/tri/raytracer/scenes";
+std::filesystem::path SCENE_PATH;
+std::filesystem::path OUTPUT_PATH;
 
 class Scene
 {
@@ -95,13 +96,9 @@ std::shared_ptr<Object> getObject(const YAML::Node &node, std::string objType)
     }
     else if (objType == "obj")
     {
-        if (MODEL_PATH == "")
-        {
-            std::cout << "Model (obj) path is not provided. Exit program.\n";
-            exit(1);
-        }
         // parse the teapot obj
-        auto path = MODEL_PATH + "/" + node["file"].as<std::string>();
+        auto modelPath = SCENE_PATH.parent_path();
+        auto path = modelPath.append(node["file"].as<std::string>());
         ObjParser parser(path, true);
         parser.Parse();
         auto parsedObjs = parser.ObjToGroup();
@@ -220,34 +217,23 @@ std::shared_ptr<Object> getObject(const YAML::Node &node, std::string objType)
 int main(int argc, char *argv[])
 {
 
-    std::string sceneFile = "";
-    // std::string objPath = "";
-    std::string outFile = "";
+    // std::filesystem::path sceneFile;
+    // std::filesystem::path outFile;
 
     // Process command-line arguments
     for (int i = 1; i < argc; ++i)
     {
-        if (!strcmp(argv[i], "--scene") || !strcmp(argv[i], "-scene"))
+        if (!strcmp(argv[i], "--in") || !strcmp(argv[i], "-in") || !strcmp(argv[i], "-i"))
         {
-            sceneFile = argv[++i];
+            SCENE_PATH = argv[++i];
         }
-        else if (!strcmp(argv[i], "--objpath") || !strcmp(argv[i], "-objpath"))
+        else if (!strcmp(argv[i], "--out") || !strcmp(argv[i], "-out") || !strcmp(argv[i], "-o"))
         {
-            MODEL_PATH = argv[++i];
-        }
-        else if (!strcmp(argv[i], "--out") || !strcmp(argv[i], "-out"))
-        {
-            outFile = argv[++i];
+            OUTPUT_PATH = argv[++i];
         }
     }
 
-    // set the default objPath
-    //    if (objPath == "")
-    //    {
-    //        objPath =
-    //    }
-
-    YAML::Node scene = YAML::LoadFile(sceneFile);
+    YAML::Node scene = YAML::LoadFile(SCENE_PATH);
 
     // setup objects for the scene
     World world;
@@ -310,7 +296,7 @@ int main(int argc, char *argv[])
     std::cout << "number of threads used: " << numThreads << '\n';
     auto canvas = cam.Render(world, renderShadow, true, 5, numThreads);
 
-    std::ofstream out(outFile);
+    std::ofstream out(OUTPUT_PATH);
     out << canvas.ToPPM();
     out.close();
 
