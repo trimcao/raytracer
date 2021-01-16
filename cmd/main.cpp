@@ -5,6 +5,7 @@
 #include <cmath>
 #include <fstream>
 #include <set>
+#include <string.h>
 
 #include "yaml-cpp/yaml.h"
 #include "Point.h"
@@ -26,8 +27,8 @@
 #include "ObjParser.h"
 
 const std::set<std::string> SHAPES{"sphere", "cube", "plane", "obj"};
-const std::string MODEL_PATH = "/Users/trimcao/tri/raytracer/models";
-const std::string SCENE_PATH = "/Users/trimcao/tri/raytracer/scenes";
+std::string MODEL_PATH = "";
+//std::string SCENE_PATH = "/Users/trimcao/tri/raytracer/scenes";
 
 class Scene
 {
@@ -94,6 +95,11 @@ std::shared_ptr<Object> getObject(const YAML::Node &node, std::string objType)
     }
     else if (objType == "obj")
     {
+        if (MODEL_PATH == "")
+        {
+            std::cout << "Model (obj) path is not provided. Exit program.\n";
+            exit(1);
+        }
         // parse the teapot obj
         auto path = MODEL_PATH + "/" + node["file"].as<std::string>();
         ObjParser parser(path, true);
@@ -211,10 +217,37 @@ std::shared_ptr<Object> getObject(const YAML::Node &node, std::string objType)
     return obj;
 }
 
-int main(int argc, char **argv)
+int main(int argc, char *argv[])
 {
 
-    YAML::Node scene = YAML::LoadFile("/Users/trimcao/tri/raytracer/scenes/crystal-ball.yml");
+    std::string sceneFile = "";
+    // std::string objPath = "";
+    std::string outFile = "";
+
+    // Process command-line arguments
+    for (int i = 1; i < argc; ++i)
+    {
+        if (!strcmp(argv[i], "--scene") || !strcmp(argv[i], "-scene"))
+        {
+            sceneFile = argv[++i];
+        }
+        else if (!strcmp(argv[i], "--objpath") || !strcmp(argv[i], "-objpath"))
+        {
+            MODEL_PATH = argv[++i];
+        }
+        else if (!strcmp(argv[i], "--out") || !strcmp(argv[i], "-out"))
+        {
+            outFile = argv[++i];
+        }
+    }
+
+    // set the default objPath
+    //    if (objPath == "")
+    //    {
+    //        objPath =
+    //    }
+
+    YAML::Node scene = YAML::LoadFile(sceneFile);
 
     // setup objects for the scene
     World world;
@@ -270,10 +303,6 @@ int main(int argc, char **argv)
         }
     }
 
-    // divide the mainGroup
-    // mainGroup.Divide(2);
-    world.AddObject(mainGroup);
-
     // render
     bool renderShadow = true;
 
@@ -281,7 +310,7 @@ int main(int argc, char **argv)
     std::cout << "number of threads used: " << numThreads << '\n';
     auto canvas = cam.Render(world, renderShadow, true, 5, numThreads);
 
-    std::ofstream out("output.ppm");
+    std::ofstream out(outFile);
     out << canvas.ToPPM();
     out.close();
 
