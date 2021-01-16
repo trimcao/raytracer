@@ -25,6 +25,9 @@ endif()
 get_filename_component(PARENT_DIR ../raytracer/ ABSOLUTE)
 
 add_executable(raycmd main.cpp
+                scene.cpp
+                scene.h
+
                 ${PARENT_DIR}/Vector.cpp
                 ${PARENT_DIR}/Matrix.cpp
                 ${PARENT_DIR}/Point.cpp
@@ -50,6 +53,35 @@ add_executable(raycmd main.cpp
                 ${PARENT_DIR}/Triangles.cpp
                 ${PARENT_DIR}/ObjParser.cpp
                 ${PARENT_DIR}/BoundingBoxes.cpp
+
+                ${PARENT_DIR}/include/Vector.h
+                ${PARENT_DIR}/include/Matrix.h
+                ${PARENT_DIR}/include/Point.h
+                ${PARENT_DIR}/include/Util.h
+                ${PARENT_DIR}/include/Color.h
+                ${PARENT_DIR}/include/Canvas.h
+                ${PARENT_DIR}/include/Tuple.h
+                ${PARENT_DIR}/include/Sphere.h
+                ${PARENT_DIR}/include/Object.h
+                ${PARENT_DIR}/include/Ray.h
+                ${PARENT_DIR}/include/Light.h
+                ${PARENT_DIR}/include/Material.h
+                ${PARENT_DIR}/include/World.h
+                ${PARENT_DIR}/include/Transformations.h
+                ${PARENT_DIR}/include/Camera.h
+                ${PARENT_DIR}/include/Plane.h
+                ${PARENT_DIR}/include/Pattern.h
+                ${PARENT_DIR}/include/Functions.h
+                ${PARENT_DIR}/include/Cubes.h
+                ${PARENT_DIR}/include/Cylinders.h
+                ${PARENT_DIR}/include/Cones.h
+                ${PARENT_DIR}/include/Groups.h
+                ${PARENT_DIR}/include/Triangles.h
+                ${PARENT_DIR}/include/ObjParser.h
+                ${PARENT_DIR}/include/BoundingBoxes.h
+                ${PARENT_DIR}/include/Intersection.h
+                ${PARENT_DIR}/include/TRay.h
+                ${PARENT_DIR}/threadpool/threadpool.h
 )
 
 target_include_directories(raycmd
