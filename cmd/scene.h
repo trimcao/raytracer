@@ -11,6 +11,7 @@ class Scene
     std::filesystem::path outputPath;
     World world;
     Camera cam;
+    uint numThreads;
 
 public:
     Scene();
@@ -33,6 +34,11 @@ public:
         }
 
         std::cout << "Output: " << std::filesystem::absolute(outputPath) << "\n\n";
+    }
+
+    inline void SetNumThreads(uint n)
+    {
+        numThreads = n;
     }
 
     std::shared_ptr<Object> getObject(const YAML::Node &node, std::string objType);

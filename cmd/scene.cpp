@@ -1,8 +1,10 @@
 #include "scene.h"
 #include <fstream>
+#include <thread>
 
 Scene::Scene()
 {
+    numThreads = std::thread::hardware_concurrency();
 }
 
 std::shared_ptr<Object> Scene::getObject(const YAML::Node &node, std::string objType)
@@ -236,7 +238,6 @@ void Scene::Run()
     // render
     bool renderShadow = true;
 
-    uint numThreads = 8;
     std::cout << "number of threads used: " << numThreads << '\n';
     auto canvas = cam.Render(world, renderShadow, true, 5, numThreads);
 
