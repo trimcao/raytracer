@@ -37,15 +37,24 @@ std::shared_ptr<Object> Scene::getObject(const YAML::Node &node, std::string obj
             obj = group.second;
         }
     }
+    else if (definitions.find(objType) != definitions.end())
+    {
+        obj = definitions[objType];
+    }
     else
     {
+        // TODO: handle error here, invalid object name
+        std::cout << "Reach here\n";
         return obj;
     }
 
     // set transform matrix
-    auto transforms = node["transform"];
-    auto transformMatrix = getTransform(transforms);
-    obj->SetTransform(transformMatrix);
+    if (node["transform"])
+    {
+        auto transforms = node["transform"];
+        auto transformMatrix = getTransform(transforms);
+        obj->SetTransform(transformMatrix);
+    }
 
     // set shadow
     if (node["shadow"])
@@ -137,7 +146,7 @@ std::shared_ptr<Object> Scene::getObject(const YAML::Node &node, std::string obj
     // use bounding volume hierarchy
     if (objType == "obj")
     {
-        obj->Divide(200);
+        obj->Divide(divideThreshold);
     }
 
     return obj;
@@ -217,6 +226,15 @@ void Scene::Run()
                     world.AddObject(obj);
                 }
             }
+            else if (definitions.find(objType) != definitions.end())
+            {
+                auto obj = getObject(node, objType);
+
+                if (obj)
+                {
+                    world.AddObject(obj);
+                }
+            }
             else if (objType == "light")
             {
                 Color intensity = Color(node["intensity"][0].as<double>(),
@@ -231,7 +249,19 @@ void Scene::Run()
         }
         else if (node["define"])
         {
-            std::cout << "Define section: " << node["define"].as<std::string>() << '\n';
+            auto name = node["define"].as<std::string>();
+            std::cout << "Define section: " << name << '\n';
+            auto value = node["value"];
+            std::string objType = value["add"].as<std::string>();
+            if (SHAPES.find(objType) != SHAPES.end())
+            {
+                auto obj = getObject(value, objType);
+
+                if (obj)
+                {
+                    definitions[name] = obj;
+                }
+            }
         }
     }
 

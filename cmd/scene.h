@@ -2,6 +2,7 @@
 
 #include <set>
 #include <filesystem>
+#include <unordered_map>
 #include "yaml-cpp/yaml.h"
 #include "TRay.h"
 
@@ -12,6 +13,8 @@ class Scene
     World world;
     Camera cam;
     uint numThreads;
+    std::unordered_map<std::string, std::shared_ptr<Object>> definitions;
+    const int divideThreshold = 500;
 
 public:
     Scene();
