@@ -84,6 +84,8 @@ public:
         return std::vector<std::shared_ptr<Object>> {};
     }
 
+    inline virtual std::shared_ptr<Object> Clone() { return std::make_shared<Object>(*this); }
+
 };
 
 class TestShape : public Object

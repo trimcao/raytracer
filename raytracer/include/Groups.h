@@ -40,4 +40,9 @@ public:
             S->SetMaterial(Mat);
         }
     }
+
+    inline virtual std::shared_ptr<Object> Clone() override
+    {
+        return std::make_shared<Groups>(*this);
+    }
 };

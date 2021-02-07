@@ -14,9 +14,9 @@
 # ======================================================
 
 - add: camera
-  width: 500
-  height: 200
-  field-of-view: 1.2
+  width: 100
+  height: 40
+  field_of_view: 1.2
   from: [0, 2.5, -10]
   to: [0, 1, 0]
   up: [0, 1, 0]
@@ -86,27 +86,27 @@
 # scene
 # ======================================================
 
-- add: group
-  transform:
-    - [ translate, 0, 2, 0 ]
-  children:
-    - add: pedestal
-    - add: group
-      children:
-        - add: dragon
-          material:
-            color: [ 1, 0, 0.1 ]
-            ambient: 0.1
-            diffuse: 0.6
-            specular: 0.3
-            shininess: 15
-        - add: bbox
-          material:
-            ambient: 0
-            diffuse: 0.4
-            specular: 0
-            transparency: 0.6
-            refractive-index: 1
+# - add: group
+#   transform:
+#     - [ translate, 0, 2, 0 ]
+#   children:
+#     - add: pedestal
+#     - add: group
+#       children:
+#         - add: dragon
+#           material:
+#             color: [ 1, 0, 0.1 ]
+#             ambient: 0.1
+#             diffuse: 0.6
+#             specular: 0.3
+#             shininess: 15
+#         - add: bbox
+#           material:
+#             ambient: 0
+#             diffuse: 0.4
+#             specular: 0
+#             transparency: 0.6
+#             refractive-index: 1
 
 # - add: group
 #   transform:
@@ -222,3 +222,15 @@
 #         shininess: 15
 #       transform:
 #         - [ rotate-y, 3.1415 ]
+
+- add: pedestal
+
+- add: dragon
+  material:
+    color: [ 1, 1, 1 ]
+    ambient: 0.1
+    diffuse: 0.6
+    specular: 0.3
+    shininess: 15
+  transform:
+    - [ rotate-y, 3.1415 ]

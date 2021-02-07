@@ -22,6 +22,11 @@ public:
     virtual std::vector<Intersection<Object>> LocalIntersect(const Ray &LocalRay) override;
 
     virtual BoundingBoxes BoundsOf() override;
+
+    inline virtual std::shared_ptr<Object> Clone() override
+    {
+        return std::make_shared<Cubes>(*this);
+    }
 };
 
 std::vector<double> CheckAxis(double Origin, double Direction, double Min, double Max);

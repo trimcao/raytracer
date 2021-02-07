@@ -47,5 +47,5 @@ public:
     std::shared_ptr<Object> getObject(const YAML::Node &node, std::string objType);
     Matrix getTransform(const YAML::Node &transforms);
 
-    const static inline std::set<std::string> SHAPES{"sphere", "cube", "plane", "obj"};
+    const static inline std::set<std::string> SHAPES{"sphere", "cube", "plane", "obj", "cylinder", "group"};
 };

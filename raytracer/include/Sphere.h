@@ -27,4 +27,8 @@ public:
     static Sphere GlassSphere();
 
     virtual BoundingBoxes BoundsOf() override;
+    inline virtual std::shared_ptr<Object> Clone() override
+    {
+        return std::make_shared<Sphere>(*this);
+    }
 };

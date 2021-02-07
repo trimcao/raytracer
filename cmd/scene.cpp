@@ -23,6 +23,29 @@ std::shared_ptr<Object> Scene::getObject(const YAML::Node &node, std::string obj
     {
         obj = std::make_shared<Plane>();
     }
+    else if (objType == "cylinder")
+    {
+        auto cyl = std::make_shared<Cylinders>();
+
+        if (node["min"])
+        {
+            cyl->SetMin(node["min"].as<double>());
+        }
+        if (node["max"])
+        {
+            cyl->SetMax(node["max"].as<double>());
+        }
+        if (node["closed"])
+        {
+            cyl->SetClosed(node["closed"].as<bool>());
+        }
+
+        obj = cyl;
+    }
+    else if (objType == "group")
+    {
+        obj = std::make_shared<Groups>();
+    }
     else if (objType == "obj")
     {
         // parse the teapot obj
@@ -39,7 +62,7 @@ std::shared_ptr<Object> Scene::getObject(const YAML::Node &node, std::string obj
     }
     else if (definitions.find(objType) != definitions.end())
     {
-        obj = definitions[objType];
+        obj = definitions[objType]->Clone();
     }
     else
     {
@@ -141,6 +164,40 @@ std::shared_ptr<Object> Scene::getObject(const YAML::Node &node, std::string obj
         }
 
         obj->SetMaterial(material);
+    }
+
+    // add stuffs to a group
+    if (objType == "group")
+    {
+        if (node["children"])
+        {
+            for (YAML::const_iterator it = node["children"].begin(); it != node["children"].end(); ++it)
+            {
+                const YAML::Node &child = *it;
+                if (child["add"])
+                {
+                    std::string childType = child["add"].as<std::string>();
+                    if (SHAPES.find(childType) != SHAPES.end())
+                    {
+                        auto childObj = getObject(child, childType);
+
+                        if (childObj)
+                        {
+                            obj->AddChild(childObj);
+                        }
+                    }
+                    else if (definitions.find(childType) != definitions.end())
+                    {
+                        auto childObj = getObject(child, childType);
+
+                        if (childObj)
+                        {
+                            obj->AddChild(childObj);
+                        }
+                    }
+                }
+            }
+        }
     }
 
     // use bounding volume hierarchy
@@ -253,7 +310,7 @@ void Scene::Run()
             std::cout << "Define section: " << name << '\n';
             auto value = node["value"];
             std::string objType = value["add"].as<std::string>();
-            if (SHAPES.find(objType) != SHAPES.end())
+            if ( (SHAPES.find(objType) != SHAPES.end()) || (definitions.find(objType) != definitions.end()) )
             {
                 auto obj = getObject(value, objType);
 
