@@ -3,8 +3,8 @@
 # ======================================================
 
 - add: camera
-  width: 600
-  height: 300
+  width: 100
+  height: 50
   field_of_view: 1.0473
   from: [0.1, 2, -5]
   to: [0, 0, 1]
@@ -22,22 +22,27 @@
 # describe the elements of the scene
 # ======================================================
 
-# teapot model
-- add: obj
-  file: teapot.obj
-  transform:
-    - [scale, 0.1, 0.1, 0.1]
-    - [rotate-x, -1.571]
-    - [translate, 0, -0.3, 0]
-  material:
-    color: [0.5, 0.8, 0.6]
+- define: teapot
+  value:
+    add: obj
+    file: teapot.obj
+    transform:
+      - [scale, 0.1, 0.1, 0.1]
+      - [rotate-x, -1.571]
+      - [translate, 0, -0.3, 0]
 
-# floor
-- add: plane
-  transform:
-    - [translate, 0, -0.3, 0]
-  material:
-    color: [0.8, 0.2, 0.6]
-    specular: 0
-    diffuse: 0.4
-    reflective: 0.2
+- add: group
+  children:
+    - add: plane
+      transform:
+        - [translate, 0, -0.3, 0]
+      material:
+        color: [0.8, 0.2, 0.6]
+        specular: 0
+        diffuse: 0.4
+        reflective: 0.2
+    - add: teapot
+      material:
+        color: [0.5, 0.8, 0.6]
+      transform:
+        - [ rotate-y, 3.1415 ]

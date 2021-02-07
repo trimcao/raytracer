@@ -21,6 +21,8 @@ public:
 
     void Run();
 
+    const static inline std::set<std::string> SHAPES{"sphere", "cube", "plane", "obj", "cylinder", "group"};
+
     inline void SetScenePath(char *p)
     {
         scenePath = p;
@@ -45,7 +47,7 @@ public:
     }
 
     std::shared_ptr<Object> getObject(const YAML::Node &node, std::string objType);
-    Matrix getTransform(const YAML::Node &transforms);
+    Matrix getTransform(const Matrix currentTransform, const YAML::Node &transforms);
+    void parseGroup(std::shared_ptr<Object> &group, const YAML::Node &childrenNode);
 
-    const static inline std::set<std::string> SHAPES{"sphere", "cube", "plane", "obj", "cylinder", "group"};
 };

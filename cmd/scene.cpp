@@ -45,6 +45,10 @@ std::shared_ptr<Object> Scene::getObject(const YAML::Node &node, std::string obj
     else if (objType == "group")
     {
         obj = std::make_shared<Groups>();
+        if (node["children"])
+        {
+            parseGroup(obj, node["children"]);
+        }
     }
     else if (objType == "obj")
     {
@@ -75,7 +79,7 @@ std::shared_ptr<Object> Scene::getObject(const YAML::Node &node, std::string obj
     if (node["transform"])
     {
         auto transforms = node["transform"];
-        auto transformMatrix = getTransform(transforms);
+        auto transformMatrix = getTransform(obj->GetTransform(), transforms);
         obj->SetTransform(transformMatrix);
     }
 
@@ -155,7 +159,7 @@ std::shared_ptr<Object> Scene::getObject(const YAML::Node &node, std::string obj
             {
                 // transform matrix
                 auto transforms = patternNode["transform"];
-                auto transformMatrix = getTransform(transforms);
+                auto transformMatrix = getTransform(pat->GetTransform(), transforms);
                 pat->SetTransform(transformMatrix);
 
                 // set pattern
@@ -164,40 +168,6 @@ std::shared_ptr<Object> Scene::getObject(const YAML::Node &node, std::string obj
         }
 
         obj->SetMaterial(material);
-    }
-
-    // add stuffs to a group
-    if (objType == "group")
-    {
-        if (node["children"])
-        {
-            for (YAML::const_iterator it = node["children"].begin(); it != node["children"].end(); ++it)
-            {
-                const YAML::Node &child = *it;
-                if (child["add"])
-                {
-                    std::string childType = child["add"].as<std::string>();
-                    if (SHAPES.find(childType) != SHAPES.end())
-                    {
-                        auto childObj = getObject(child, childType);
-
-                        if (childObj)
-                        {
-                            obj->AddChild(childObj);
-                        }
-                    }
-                    else if (definitions.find(childType) != definitions.end())
-                    {
-                        auto childObj = getObject(child, childType);
-
-                        if (childObj)
-                        {
-                            obj->AddChild(childObj);
-                        }
-                    }
-                }
-            }
-        }
     }
 
     // use bounding volume hierarchy
@@ -209,9 +179,10 @@ std::shared_ptr<Object> Scene::getObject(const YAML::Node &node, std::string obj
     return obj;
 }
 
-Matrix Scene::getTransform(const YAML::Node &transforms)
+Matrix Scene::getTransform(const Matrix currentTransform, const YAML::Node &transforms)
 {
-    Matrix transformMatrix = Matrix::Identity();
+    // get the current transform matrix of the object
+    Matrix transformMatrix = currentTransform;
 
     for (YAML::const_iterator it = transforms.begin(); it != transforms.end(); ++it)
     {
@@ -246,6 +217,36 @@ Matrix Scene::getTransform(const YAML::Node &transforms)
     }
 
     return transformMatrix;
+}
+
+void Scene::parseGroup(std::shared_ptr<Object> &group, const YAML::Node &childrenNode)
+{
+    for (YAML::const_iterator it = childrenNode.begin(); it != childrenNode.end(); ++it)
+    {
+        const YAML::Node &child = *it;
+        if (child["add"])
+        {
+            std::string childType = child["add"].as<std::string>();
+            if (SHAPES.find(childType) != SHAPES.end())
+            {
+                auto childObj = getObject(child, childType);
+
+                if (childObj)
+                {
+                    group->AddChild(childObj);
+                }
+            }
+            else if (definitions.find(childType) != definitions.end())
+            {
+                auto childObj = getObject(child, childType);
+
+                if (childObj)
+                {
+                    group->AddChild(childObj);
+                }
+            }
+        }
+    }
 }
 
 void Scene::Run()
@@ -307,7 +308,6 @@ void Scene::Run()
         else if (node["define"])
         {
             auto name = node["define"].as<std::string>();
-            std::cout << "Define section: " << name << '\n';
             auto value = node["value"];
             std::string objType = value["add"].as<std::string>();
             if ( (SHAPES.find(objType) != SHAPES.end()) || (definitions.find(objType) != definitions.end()) )
