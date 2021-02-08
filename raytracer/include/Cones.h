@@ -36,6 +36,11 @@ public:
 
     virtual BoundingBoxes BoundsOf() override;
 
+    inline virtual std::shared_ptr<Object> Clone() override
+    {
+        return std::make_shared<Cones>(*this);
+    }
+
 private:
     // a helper function to reduce duplication.
     // checks to see if the intersection at 't' is within a radius

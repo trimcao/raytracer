@@ -39,4 +39,9 @@ public:
     virtual bool Include(Object *S) override;
 
     virtual BoundingBoxes BoundsOf() override;
+
+    inline virtual std::shared_ptr<Object> Clone() override
+    {
+        return std::make_shared<CSG>(*this);
+    }
 };
