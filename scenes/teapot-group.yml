@@ -3,8 +3,8 @@
 # ======================================================
 
 - add: camera
-  width: 100
-  height: 50
+  width: 200
+  height: 100
   field_of_view: 1.0473
   from: [0.1, 2, -5]
   to: [0, 0, 1]
@@ -44,5 +44,3 @@
     - add: teapot
       material:
         color: [0.5, 0.8, 0.6]
-      transform:
-        - [ rotate-y, 3.1415 ]
